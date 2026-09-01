@@ -673,6 +673,12 @@ arrange(
   }
 
   async function start() {
+    // iOS creates the context suspended and only lets a user gesture start
+    // it. Resume synchronously, before any await breaks the gesture chain.
+    if (typeof getAudioContext === 'function') {
+      const ctx = getAudioContext();
+      if (ctx.state !== 'running') ctx.resume().catch(() => {});
+    }
     const expr = expressionFor($('what').value);
     try {
       if (samplesReady) await samplesReady;   // never trigger before the map is in
@@ -1154,6 +1160,11 @@ registerProcessor('capture', Capture);
   // prebake registers the sample map ASYNCHRONOUSLY. A play that starts
   // before it resolves drops every s() trigger with "sound not found", so
   // keep the promise and make start() wait on it.
+  // iOS files Web Audio under "ambient": the Ring/Silent switch mutes it
+  // while every meter keeps moving. Declaring playback intent (iOS 17+)
+  // makes the page ignore the switch, like a music app does.
+  try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+
   let samplesReady = null;
   initStrudel({
     prebake: () => {
