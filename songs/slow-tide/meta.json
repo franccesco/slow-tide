@@ -1,0 +1,14 @@
+{
+  "id": "slow-tide",
+  "title": "Slow Tide",
+  "subtitle": "a calm piece in D minor (the original test song)",
+  "bpm": 54,
+  "key": "D minor",
+  "bars": 50,
+  "passSeconds": 222,
+  "added": "2026-09-01",
+  "status": "legacy",
+  "layers": ["pad", "bass", "bells", "glints", "melody", "pulse", "ticks", "rimshot", "air"],
+  "research": ["trainor1997", "hilton2022", "parga2018", "spencer1990"],
+  "exceptions": ["R2", "R8", "R9", "R12", "R13", "R14"]
+}

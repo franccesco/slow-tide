@@ -1,33 +1,51 @@
 # 🌊 slow tide
 
-a calm little piece in D minor, 54 bpm, that plays itself in your browser.
+Slow, quiet instrumental songs for settling a baby to sleep, played in the
+browser with [strudel](https://strudel.cc).
 
-**[▶ listen here](https://franccesco.github.io/slow-tide/)** — press `play`, dim the lights, keep working.
+**[▶ listen here](https://franccesco.github.io/slow-tide/)**
 
-## what is this?
+## What makes it different
 
-one HTML file. inside it lives:
+Every song is written to a set of numbered rules, and every rule cites
+published research:
 
-- 🎵 **the song** — 50 bars of pad, bass, bells, a slow melody, a soft
-  heartbeat, and a wash of pink noise. it ebbs in, swells, and lets go.
-- 📊 **a little listening lab** — spectrum, waveform, stereo field, octave
-  bands and chroma, all measuring the mix while it plays.
-- 🔬 **a defect scanner** — `scan song` records the whole piece and checks
-  every single sample for clicks, clips and gaps. it currently finds none. ✨
+- [docs/RESEARCH.md](docs/RESEARCH.md) — the studies, what each measured,
+  and what it does not show.
+- [docs/COMPOSITION_RULES.md](docs/COMPOSITION_RULES.md) — tempo, density,
+  melody range, timbre, noise bed, dynamics, form, level and safety rules.
+- `songs/<id>/README.md` — each song's rule-by-rule justification.
 
-no build, no server, nothing to install. open the file, press play.
+A checker (`node scripts/check-song.mjs`) rejects a song that breaks a
+machine-checkable rule or cites a study that is not in the notes, and
+`lab.html?song=<id>` measures the audio for clicks, clipping and level.
 
-## make it yours
+## Before you press play
 
-the music is written in [strudel](https://strudel.cc), a pattern language
-for the browser. press `code`, copy the song, paste it into strudel.cc,
-and bend the tide however you like.
+Speaker at least 2 metres from the crib, never in it. Volume low: under
+about 50 dB at the baby's ear. Use the sleep timer, not all-night playback.
+The site explains why, with sources.
 
-## why all the meters?
+These songs may help a baby settle. They are not a treatment for anything.
 
-the piece was composed together with claude, who cannot hear.
-the meters are its ears. 🤖🎧
+## Songs
 
----
+| Song | Key · tempo | Status |
+| --- | --- | --- |
+| [First Light](songs/first-light/) | C major · 60 bpm | meets every rule |
+| [Slow Tide](songs/slow-tide/) | D minor · 54 bpm | legacy (the original piece; exceptions listed) |
 
-made with 🌙 at 54 bpm
+## Adding a song
+
+See [CLAUDE.md](CLAUDE.md): research first, write the citations down,
+compose to the rules, run the checker, measure in the lab, open a PR.
+
+## Run locally
+
+```
+python3 -m http.server 8080
+# http://localhost:8080/            the site
+# http://localhost:8080/lab.html    the lab
+```
+
+No build, no install. Node 18+ for the checker.
