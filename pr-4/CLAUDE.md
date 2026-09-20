@@ -44,7 +44,9 @@ sources. Each song must add **at least two entries** to `docs/RESEARCH.md`
 that no earlier song cites (rule R23; the checker enforces it), following
 its "How to add an entry" section: what was measured, what it supports,
 what it does **not** show, and a grade. Reusing existing keys is expected,
-but on their own they do not satisfy step 1. If the survey date at the
+but on their own they do not satisfy step 1. If a genuine search finds
+nothing new, log it instead (step 4): the search is the requirement, the
+two entries are its usual result. If the survey date at the
 top of RESEARCH.md is more than a year old, re-run the searches listed
 under "Re-survey" below before composing.
 
@@ -66,7 +68,10 @@ parses both. Annotate choices with the rule they satisfy (`// R7`).
 MUST rule to the concrete choice in the code and cites research keys in
 backticks: `` `[trainor1997]` ``. Add a "What the new research changed" section
 (R23) with one line per key added in step 1 saying what that finding
-changed in the composition, or confirmed if nothing changed. Add an
+changed in the composition, or confirmed if nothing changed. If step 1
+found nothing new, that section instead holds a search log table (date,
+source, query, why nothing qualified; at least two rows), which the
+checker accepts in place of the two new keys. Add an
 "Ideas not taken" section for anything you considered and rejected on
 evidence. Status is `compliant`
 unless the song knowingly breaks rules, in which case it is `legacy` and

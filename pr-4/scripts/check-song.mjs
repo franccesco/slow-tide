@@ -19,7 +19,9 @@
 
   R23 (fresh evidence): a song must cite at least MIN_NEW_KEYS research keys
   that no song with an earlier "added" date cites, and name them in a
-  "## What the new research changed" README section.
+  "## What the new research changed" README section; or that section logs
+  the search that found nothing (≥ MIN_NEW_KEYS table rows: date, source,
+  query, why nothing qualified).
 */
 import { readFileSync, readdirSync, writeFileSync, existsSync, statSync } from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -260,11 +262,13 @@ for (const id of ids) {
       try { for (const m of readFileSync(join(songsDir, o, 'README.md'), 'utf8').matchAll(/`\[([a-z0-9]+)\]`/g)) used.add(m[1]); } catch {}
     }
     const fresh = [...cited].filter((k) => !used.has(k));
-    if (fresh.length < MIN_NEW_KEYS) {
-      fail('R23', `cites ${fresh.length} research key${fresh.length === 1 ? '' : 's'} no earlier song cites (${fresh.join(', ') || 'none'}); a new song adds ≥ ${MIN_NEW_KEYS} entries to docs/RESEARCH.md from a fresh search`);
-    }
     const section = readme.match(/^## What the new research changed\s*\n([\s\S]*?)(?=^## |(?![\s\S]))/m);
-    if (!section) fail('R23', 'README needs a "## What the new research changed" section naming each new key and what it changed');
+    // a logged search: table rows of | YYYY-MM-DD | source | query | why nothing qualified |
+    const searches = section ? [...section[1].matchAll(/^\|\s*\d{4}-\d{2}-\d{2}\s*\|([^|\n]*)\|([^|\n]*)\|([^|\n]*)\|/gm)].filter((m) => m.slice(1).every((c) => c.trim())) : [];
+    if (fresh.length < MIN_NEW_KEYS && searches.length < MIN_NEW_KEYS) {
+      fail('R23', `cites ${fresh.length} research key${fresh.length === 1 ? '' : 's'} no earlier song cites (${fresh.join(', ') || 'none'}); a new song adds ≥ ${MIN_NEW_KEYS} entries to docs/RESEARCH.md from a fresh search, or logs ≥ ${MIN_NEW_KEYS} searches (date, source, query, why nothing qualified) under "What the new research changed"`);
+    }
+    if (!section) fail('R23', 'README needs a "## What the new research changed" section naming each new key and what it changed, or logging the search');
     else for (const k of fresh) if (!section[1].includes('`[' + k + ']`')) fail('R23', `"What the new research changed" does not mention \`[${k}]\``);
   }
 
