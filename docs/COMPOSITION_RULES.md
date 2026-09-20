@@ -156,6 +156,24 @@ parent scrolls through at 3 a.m., and two near-identical entries are a
 choice they cannot make; and a song that changed after it was measured
 carries measurements that are no longer true (R17, R18).
 
+**R23 (MUST) Every new song brings new evidence.** Before a song is
+composed, a fresh search of the literature (Europe PMC, PubMed, Crossref;
+primary sources with a DOI) adds at least **two** entries to RESEARCH.md
+that no earlier song cites, for whatever the song leans on (an instrument,
+a tempo, a structure, a claim). The README cites them alongside the
+existing keys and has a "What the new research changed" section saying,
+per new key, what the finding changed in the composition (or confirmed,
+if the search found nothing new to change). "Earlier" means a song with
+an earlier `added` date. Variants are held to the same rule: their
+difference from the parent is what the new evidence has to bear on.
+
+The checker fails a song whose cited keys add nothing to what earlier
+songs already cite, or whose README lacks the section naming them. Why:
+a catalogue that keeps re-citing the same handful of studies stops being
+research-backed after the first song; each song is an occasion to re-read
+the literature, and the rules only improve (step 2 in CLAUDE.md) when
+something new is read.
+
 ## Quick reference
 
 | Rule | Check | Value |
@@ -174,3 +192,4 @@ carries measurements that are no longer true (R17, R18).
 | R17 | peak | ≤ −3 dBFS, 0 clips, 0 clicks, 0 gaps |
 | R18 | RMS | reference ± 2 dB |
 | R22 | identity | unique title and code; version + changelog; `built` only when verified at this version; tags from `songs/tags.json`; variants declare `variantOf` |
+| R23 | fresh evidence | ≥ 2 research keys no earlier song cites; README section "What the new research changed" names each |
