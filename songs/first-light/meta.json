@@ -8,11 +8,45 @@
   "passSeconds": 256,
   "added": "2026-09-20",
   "status": "compliant",
-  "layers": ["pad", "sub", "pulse", "melody", "bed"],
+  "version": 1,
+  "stage": "built",
+  "verified": {
+    "version": 1,
+    "scan": "2026-09-20"
+  },
+  "tags": [
+    "bedtime",
+    "major",
+    "melodic",
+    "heartbeat",
+    "noise-bed"
+  ],
+  "changelog": [
+    {
+      "version": 1,
+      "date": "2026-09-20",
+      "note": "first version"
+    }
+  ],
+  "layers": [
+    "pad",
+    "sub",
+    "pulse",
+    "melody",
+    "bed"
+  ],
   "research": [
-    "trainor1997", "hilton2022", "cirelli2020", "bainbridge2021",
-    "loewy2013", "standley2002", "spencer1990", "riedy2021",
-    "parga2018", "wang2025", "hugh2014"
+    "trainor1997",
+    "hilton2022",
+    "cirelli2020",
+    "bainbridge2021",
+    "loewy2013",
+    "standley2002",
+    "spencer1990",
+    "riedy2021",
+    "parga2018",
+    "wang2025",
+    "hugh2014"
   ],
   "exceptions": []
 }

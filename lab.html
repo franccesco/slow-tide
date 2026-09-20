@@ -492,7 +492,7 @@
     try {
       const meta = await (await fetch(file.replace(/song\.js$/, 'meta.json'))).json();
       $('title').textContent = meta.title;
-      $('lede').textContent = meta.key + ' · ' + meta.bpm + ' bpm · ';
+      $('lede').textContent = meta.key + ' · ' + meta.bpm + ' bpm · v' + (meta.version || 1) + (meta.stage ? ' ' + meta.stage : '') + ' · ';
       document.title = 'Lab · ' + meta.title;
     } catch (e) { document.title = 'Lab · ' + (id || 'song'); }
     return r.text();
