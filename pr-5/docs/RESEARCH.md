@@ -221,9 +221,10 @@ International Telecommunication Union, Recommendation ITU-R BS.1770-5
   **integrated loudness** in LUFS; 3 s windows give short-term loudness.
 - It is a measurement method, not evidence about infants.
 - **What it supports:** the loudness figures `scripts/scan.mjs` reports for
-  R12 (swell inside a section) and R18 (level match to the reference), so
-  that "same loudness" is measured the way the ear weighs it rather than
-  as plain RMS.
+  R12 (swell inside a section) and R18 (the −23 LUFS target), so that
+  "same loudness" is measured the way the ear weighs it rather than as
+  plain RMS. The −23 LUFS figure itself is the reference song's measured
+  level, not a recommendation of this document about infants.
 
 ## Open questions (things the literature does not settle)
 

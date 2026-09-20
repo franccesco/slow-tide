@@ -16,8 +16,8 @@ to [docs/RESEARCH.md](../../docs/RESEARCH.md).
 | R7 timbre | sawtooth pad behind a 500–2200 Hz low-pass; triangle and sine elsewhere | `[hilton2022]` |
 | R10 bed | pink noise, `hpf(110)`, `lpf` 900–2400 on a 37-bar drift, `lpq(1)` | `[spencer1990]` `[parga2018]` |
 | R16 | instrumental | |
-| R17 | headless scan 2026-09-20 (percussion samples unavailable offline): peak −10.4 dBFS, 0 clips, 0 clicks, 0 gaps | |
-| R18 | it is the level reference itself: section 5 measures −23.3 dB RMS | |
+| R17 | headless scans 2026-09-20 (percussion samples unavailable offline): peak −8.4 to −10.4 dBFS, 0 clips, 0 gaps; one run in three caught a single click at bar 28 from the randomised bells | |
+| R18 | it is the level reference itself: −22.7 LUFS integrated on the latest scan (the fixed target is −23 LUFS, its level as first measured); section 5 measures −22.4 to −23.3 dB RMS across runs, since `degradeBy` and `perlin` move it | |
 | R20 | this README, `meta.json`, `song.js` | |
 
 ## Where it does not (exceptions)
@@ -37,3 +37,9 @@ to [docs/RESEARCH.md](../../docs/RESEARCH.md).
 A parent can still use it. It is quiet, slow and smooth for most of its
 length. It is not what the rules describe, and new songs should not copy
 its percussion.
+
+## Verification log
+
+| Date | Check | Result |
+| --- | --- | --- |
+| 2026-09-20 | `node scripts/scan.mjs first-light slow-tide` with loudness and spectrum | peak −8.4 dBFS · −22.7 LUFS integrated · 0 clips · 0 clicks · 0 gaps · inner sections −24.2 to −22.4 dB RMS (1.8 dB spread) · largest in-section swell 0.2 LU · 99.8% below 2 kHz · >5 kHz sustained 0% |

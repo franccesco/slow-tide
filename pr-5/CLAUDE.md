@@ -103,10 +103,10 @@ node scripts/scan.mjs <id> slow-tide
 
 It records each song in headless Chromium and checks R9, R12, R17 and
 R18 (peak ≤ −3 dBFS, 0 clips, 0 clicks, 0 gaps, inner sections within
-6 dB and no swell over 3 LU inside one, loudest section within ±2 dB and
-integrated loudness within ±2 LU of `slow-tide`, and a warning when the
-spectrum is not weighted below 2 kHz). Paste the `log line` it prints
-into the song README's verification log and set `meta.verified` to
+6 dB and no 4-bar swell over 3 LU inside one, integrated loudness
+−23 ± 2 LUFS, and a warning when the spectrum is not weighted below
+2 kHz). Paste the `log line` it prints into the song README's
+verification log and set `meta.verified` to
 `{ "version": <current version>, "scan": "<date>" }`. If unpkg is unreachable,
 `npm pack @strudel/web@1.3.0`, extract it, and set
 `STRUDEL_WEB_JS=<dir>/package/dist/index.js`. For listening and the
