@@ -40,9 +40,13 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - name: Fetch pull request previews
+        run: git fetch origin previews:refs/remotes/origin/previews || echo "no previews branch yet"
+      - name: Assemble site with previews
+        run: scripts/assemble-site.sh _site
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
       - id: deployment
         uses: actions/deploy-pages@v4

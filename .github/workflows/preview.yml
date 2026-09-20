@@ -1,0 +1,162 @@
+name: Pull request previews
+
+# Each open pull request gets a preview of the site at
+#   https://franccesco.github.io/slow-tide/previews/pr-<N>/
+#
+# How: snapshots of each PR live in the orphan branch `previews` (one
+# pr-<N>/ folder each). Every Pages deployment, from main or from here,
+# ships the live site plus that folder (scripts/assemble-site.sh), so
+# previews survive main deploys and main survives preview deploys.
+#
+# Why workflow_run: the github-pages environment only lets the default
+# branch deploy, and workflow_run jobs run in main's context. So a PR's
+# check run finishing is what triggers its preview. Closing the PR
+# removes the snapshot and redeploys.
+
+on:
+  workflow_run:
+    workflows: ["Check songs and deploy to GitHub Pages"]
+    types: [completed]
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+  pull-requests: write
+  actions: write
+
+jobs:
+  publish:
+    if: >-
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.url.outputs.url }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+    steps:
+      - name: Find the pull request for this commit
+        id: pr
+        run: |
+          n="$(gh api "repos/${{ github.repository }}/commits/$HEAD_SHA/pulls" \
+                --jq '[.[] | select(.state == "open")][0].number // empty')"
+          if [ -z "$n" ]; then echo "no open PR for $HEAD_SHA"; fi
+          echo "number=$n" >> "$GITHUB_OUTPUT"
+
+      - name: Check out main (the live site)
+        if: steps.pr.outputs.number
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Snapshot the PR into the previews branch
+        if: steps.pr.outputs.number
+        env:
+          PR: ${{ steps.pr.outputs.number }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "$HEAD_SHA"
+          if git fetch origin previews:refs/remotes/origin/previews 2>/dev/null; then
+            git worktree add previews origin/previews
+          else
+            git worktree add --detach previews
+            (cd previews && git checkout --orphan previews && git rm -rfq . && git clean -fdxq)
+          fi
+          rm -rf "previews/pr-$PR"
+          mkdir -p "previews/pr-$PR"
+          git archive "$HEAD_SHA" | tar -x -C "previews/pr-$PR"
+          rm -rf "previews/pr-$PR/.github"
+          cd previews
+          git add -A
+          if git diff --cached --quiet; then
+            echo "preview for pr-$PR unchanged"
+          else
+            git commit -qm "Preview pr-$PR at ${HEAD_SHA:0:7}"
+            for i in 1 2 3; do
+              git push origin HEAD:previews && break
+              git fetch origin previews && git rebase origin/previews
+            done
+          fi
+          cd ..
+          git fetch origin previews:refs/remotes/origin/previews
+
+      - name: Assemble site with previews
+        if: steps.pr.outputs.number
+        run: scripts/assemble-site.sh _site
+
+      - if: steps.pr.outputs.number
+        uses: actions/configure-pages@v5
+      - if: steps.pr.outputs.number
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        if: steps.pr.outputs.number
+        uses: actions/deploy-pages@v4
+
+      - name: Preview URL
+        id: url
+        if: steps.pr.outputs.number
+        run: echo "url=${{ steps.deployment.outputs.page_url }}previews/pr-${{ steps.pr.outputs.number }}/" >> "$GITHUB_OUTPUT"
+
+      - name: Comment the preview link on the PR
+        if: steps.pr.outputs.number
+        env:
+          PR: ${{ steps.pr.outputs.number }}
+          URL: ${{ steps.url.outputs.url }}
+        run: |
+          marker='<!-- pr-preview -->'
+          body="$marker
+          **Preview:** $URL ([with drafts](${URL}index.html?drafts=1) · [lab](${URL}lab.html))
+
+          Built from ${HEAD_SHA:0:7}. Updated on every push; removed when the PR closes."
+          id="$(gh api "repos/${{ github.repository }}/issues/$PR/comments" --paginate \
+                 --jq "[.[] | select(.body | startswith(\"$marker\"))][0].id // empty")"
+          if [ -n "$id" ]; then
+            gh api -X PATCH "repos/${{ github.repository }}/issues/comments/$id" -f body="$body" >/dev/null
+          else
+            gh api "repos/${{ github.repository }}/issues/$PR/comments" -f body="$body" >/dev/null
+          fi
+
+  cleanup:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PR: ${{ github.event.pull_request.number }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Remove the snapshot from the previews branch
+        run: |
+          set -euo pipefail
+          git fetch origin previews:refs/remotes/origin/previews || { echo "no previews branch"; exit 0; }
+          git worktree add previews origin/previews
+          cd previews
+          [ -d "pr-$PR" ] || { echo "no preview for pr-$PR"; exit 0; }
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -rq "pr-$PR"
+          git commit -qm "Remove preview pr-$PR (closed)"
+          for i in 1 2 3; do
+            git push origin HEAD:previews && break
+            git fetch origin previews && git rebase origin/previews
+          done
+          # A merged PR already redeploys main; a closed one needs a nudge.
+          if [ "${{ github.event.pull_request.merged }}" != "true" ]; then
+            gh workflow run pages.yml --ref main
+          fi
