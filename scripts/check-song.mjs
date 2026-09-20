@@ -27,6 +27,7 @@ import { readFileSync, readdirSync, writeFileSync, existsSync, statSync } from '
 import { createHash } from 'node:crypto';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { readLayers, layerEvents, firstNumber, isPlainNumber } from './lib/mini.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
@@ -40,7 +41,21 @@ const LIMITS = {
   bedHpfMin: 80, bedHpfMax: 120,     // R11
   passMin: 180, passMax: 360,        // R15
   fadeBarsMin: 8,                    // R14
+  sustainedAttackMin: 0.2,           // R8: a layer whose envelope holds
+  onsetsPerBeatMax: 1,               // R2: per layer, on average
+  minOnsetGapBeats: 0.5,             // R2: no event faster than two per beat
+  melodyRangeMax: 12,                // R4: one octave, in semitones
+  melodyLeapMax: 7,                  // R4: a fifth
+  melodyLeapsPerPhrase: 1,           // R4: a leap is any step wider than a tone
+  phraseBarsMin: 2, phraseRestBeatsMin: 1,   // R5
+  melodyLow: 60, melodyHigh: 84,     // R6: C4–C6 (MIDI)
+  bedLpqMax: 1,                      // R11: flat resonance
+  bedModulationSecMin: 15,           // R11: slowest filter drift period
+  timerDefaultMin: 30, timerFadeSec: 60,     // R15: the site's sleep timer
 };
+const PAGES = ['index.html', 'lab.html'];   // R19, R21: every page of the site
+const R19_PHRASES = [[/2 m(?:etres?)? from the crib/i, '"2 metres from the crib"'], [/50 dB/i, '"50 dB"'], [/sleep timer/i, '"sleep timer"']];
+const R21_BANNED = /medically proven|clinically proven|scientifically proven|guaranteed|improves? (?:brain |cognitive |language |their |your baby'?s )?development|makes? (?:babies|your baby) smarter|cures?\b|treats?\b/i;
 const STAGES = ['draft', 'built'];   // R22
 const NEAR_DUPLICATE = 0.5;          // R22: share of code lines two unrelated songs may have in common
 const MIN_NEW_KEYS = 2;              // R23: research keys a song must cite that no earlier song cites
@@ -192,23 +207,124 @@ for (const id of ids) {
   for (const m of song.matchAll(/\.hpf\(([^)]*)\)/g)) {
     for (const v of numbersIn(m[1])) if (v > 3000) fail('R9', `hpf(${m[1]}) leaves only energy above 3 kHz`);
   }
-  // the noise bed must be band-limited
-  const bedLine = song.match(/(?:s|sound)\(\s*"(?:pink|brown)"\s*\)[\s\S]*?(?=\n\s*\n|$)/);
-  if (bedLine) {
-    const hp = bedLine[0].match(/\.hpf\(([^)]*)\)/);
-    const lp = bedLine[0].match(/\.lpf\(/);
-    if (!hp) fail('R11', 'noise bed has no hpf()');
-    else {
-      const v = numbersIn(hp[1])[0];
-      if (v < LIMITS.bedHpfMin || v > LIMITS.bedHpfMax) fail('R11', `noise bed hpf(${hp[1]}) is outside ${LIMITS.bedHpfMin}–${LIMITS.bedHpfMax} Hz`);
-    }
-    if (!lp) fail('R11', 'noise bed has no lpf()');
+  // ---- the layers: every `const name = …` with a sound source (scripts/lib/mini.mjs)
+  const layers = readLayers(song);
+  const barSec = 240 / (meta.bpm || 60);
+  const last = (layer, method) => layer.chain.filter((c) => c.method === method).at(-1);
+  const has = (layer, method) => layer.chain.some((c) => c.method === method);
+  const usedLayers = new Set([...song.matchAll(/\[\s*\d+\s*,\s*stack\(([^)]*)\)\s*\]/g)].flatMap((m) => m[1].split(',').map((s) => s.trim())));
+  for (const name of usedLayers) if (!layers.has(name)) fail('R20', `arrange() uses "${name}" but there is no "const ${name} = …" layer`);
+  const sounding = [...layers.values()].filter((l) => usedLayers.has(l.name) && l.source);
+
+  // ---- R8: attacks (every layer sets one; a held envelope needs ≥ 200 ms)
+  for (const l of sounding) {
+    const a = last(l, 'attack');
+    if (!a) { fail('R8', `layer "${l.name}" sets no attack(); strudel's default is 1 ms`); continue; }
+    const v = firstNumber(a.args);
+    if (v === undefined) { fail('R8', `layer "${l.name}": attack(${a.args}) is not a number`); continue; }
+    if (v < LIMITS.attackMin) fail('R8', `layer "${l.name}": attack(${a.args}) is under ${LIMITS.attackMin} s`);
+    const s = last(l, 'sustain');
+    const held = !s || firstNumber(s.args) > 0;   // no sustain() means strudel's default of 1
+    if (held && v < LIMITS.sustainedAttackMin) fail('R8', `layer "${l.name}" holds (sustain ${s ? s.args : 'unset = 1'}) but its attack is ${v} s, under ${LIMITS.sustainedAttackMin} s`);
   }
 
-  // ---- R8: attacks
-  for (const m of song.matchAll(/\.attack\(([^)]*)\)/g)) {
-    const v = numbersIn(m[1])[0];
-    if (v !== undefined && v < LIMITS.attackMin) fail('R8', `attack(${m[1]}) is under ${LIMITS.attackMin} s`);
+  // ---- R11: the noise bed is band-limited, flat, constant, under the pad
+  const pad = layers.get('pad');
+  const padGain = pad && last(pad, 'gain') && isPlainNumber(last(pad, 'gain').args) ? +last(pad, 'gain').args : undefined;
+  for (const l of sounding) {
+    if (!(l.source === 's' || l.source === 'sound') || !/^(pink|brown)$/.test((l.pattern || '').trim())) continue;
+    const hp = last(l, 'hpf'), lp = last(l, 'lpf'), lq = last(l, 'lpq'), g = last(l, 'gain');
+    if (!hp) fail('R11', `noise bed "${l.name}" has no hpf()`);
+    else {
+      const v = firstNumber(hp.args);
+      if (v < LIMITS.bedHpfMin || v > LIMITS.bedHpfMax) fail('R11', `noise bed hpf(${hp.args}) is outside ${LIMITS.bedHpfMin}–${LIMITS.bedHpfMax} Hz`);
+    }
+    if (!lp) fail('R11', `noise bed "${l.name}" has no lpf()`);
+    if (lq && firstNumber(lq.args) > LIMITS.bedLpqMax) fail('R11', `noise bed lpq(${lq.args}) is not flat (≤ ${LIMITS.bedLpqMax})`);
+    for (const f of [hp, lp].filter(Boolean)) {
+      if (isPlainNumber(f.args)) continue;
+      const sl = /\.slow\(\s*(\d+(?:\.\d+)?)\s*\)/.exec(f.args);
+      const period = sl ? +sl[1] * barSec : /\.fast\(/.test(f.args) ? 0 : barSec;
+      if (period < LIMITS.bedModulationSecMin) fail('R11', `noise bed ${f.method}(${f.args}) drifts with a period of ${Math.round(period)} s; R11 asks for ≥ ${LIMITS.bedModulationSecMin} s`);
+    }
+    if (!g) fail('R11', `noise bed "${l.name}" sets no gain()`);
+    else if (!isPlainNumber(g.args)) fail('R11', `noise bed gain(${g.args}) moves; the bed's level is constant (tremolo is not allowed)`);
+    else if (padGain !== undefined && +g.args > padGain) fail('R11', `noise bed gain ${g.args} exceeds the pad's ${padGain}`);
+    else if (padGain === undefined) warn('R11', 'no "pad" layer with a numeric gain to compare the bed against; check by ear that the bed sits under the music');
+  }
+
+  // ---- R2: density, per layer, from the mini-notation
+  const events = new Map();
+  for (const l of sounding) {
+    const ev = layerEvents(l);
+    events.set(l.name, ev);
+    if (ev.unreadable) { warn('R2', `layer "${l.name}" cannot be read (${ev.unreadable}); check density and melody by hand`); continue; }
+    if (!ev.onsets.length) continue;
+    const perBeat = ev.onsets.length / ev.cycles / 4;
+    if (perBeat > LIMITS.onsetsPerBeatMax) fail('R2', `layer "${l.name}" averages ${perBeat.toFixed(2)} onsets per beat (${(perBeat * 4).toFixed(1)} per bar); the limit is ${LIMITS.onsetsPerBeatMax}`);
+    let gap = Infinity;
+    for (let i = 1; i < ev.onsets.length; i++) gap = Math.min(gap, ev.onsets[i] - ev.onsets[i - 1]);
+    if (ev.onsets.length > 1) gap = Math.min(gap, ev.cycles - ev.onsets.at(-1) + ev.onsets[0]);   // across the loop
+    if (gap * 4 < LIMITS.minOnsetGapBeats - 1e-9) fail('R2', `layer "${l.name}" has onsets ${(gap * 4).toFixed(3)} beats apart; nothing faster than two per beat`);
+  }
+
+  // ---- R4 / R5 / R6: the melody layer
+  const melodyName = layers.has('melody') ? 'melody' : [...layers.keys()].find((n) => /melod|lead|tune/i.test(n));
+  if (!melodyName) {
+    if (tags.includes('melodic')) fail('R4', 'tagged "melodic" but there is no "const melody = …" layer to check');
+  } else if (!usedLayers.has(melodyName)) fail('R20', `the "${melodyName}" layer is defined but arrange() never plays it`);
+  else {
+    const ev = events.get(melodyName);
+    if (!ev || ev.unreadable) fail('R4', `melody cannot be read (${ev ? ev.unreadable : 'no events'}); write it as note("…") or n("…").scale("…") in plain mini-notation`);
+    else if (!ev.pitched) fail('R4', 'the melody layer is not pitched (use note() or n())');
+    else if (ev.pitches.length) {
+      // the top voice at each onset is the melody line
+      const line = [];
+      for (const p of ev.pitches) {
+        const l = line.at(-1);
+        if (l && Math.abs(l.t - p.t) < 1e-9) { if (p.midi > l.midi) l.midi = p.midi; }
+        else line.push({ ...p });
+      }
+      const midis = line.map((p) => p.midi);
+      const lo = Math.min(...midis), hi = Math.max(...midis);
+      if (hi - lo > LIMITS.melodyRangeMax) fail('R4', `melody spans ${hi - lo} semitones (${noteName(lo)}–${noteName(hi)}); the limit is one octave`);
+      const leapAt = [];
+      for (let i = 0; i < line.length; i++) {
+        const a = line[i], b = line[(i + 1) % line.length];
+        const iv = Math.abs(b.midi - a.midi);
+        if (iv > LIMITS.melodyLeapMax) fail('R4', `melody leaps ${iv} semitones (${noteName(a.midi)} → ${noteName(b.midi)}, bar ${Math.floor(a.t) + 1}); the limit is a fifth`);
+        if (iv > 2) leapAt.push(i);
+      }
+      // phrases: a rest of ≥ 1 beat separates them
+      const restMin = LIMITS.phraseRestBeatsMin / 4;
+      const phrases = [[line[0]]];
+      for (let i = 1; i < line.length; i++) {
+        const prev = line[i - 1];
+        if (line[i].t - (prev.t + prev.d) >= restMin - 1e-9) phrases.push([]);
+        phrases.at(-1).push(line[i]);
+      }
+      const tail = line.at(-1), wrapRest = ev.cycles - (tail.t + tail.d) + line[0].t;
+      if (phrases.length > 1 && wrapRest < restMin - 1e-9) { phrases[0] = phrases.pop().concat(phrases[0]); }   // the loop joins them
+      if (phrases.length === 1 && wrapRest < restMin - 1e-9) fail('R5', `the melody never rests for ${LIMITS.phraseRestBeatsMin} beat(s) in its ${ev.cycles}-bar period; phrases need a rest between them`);
+      else {
+        phrases.forEach((ph, k) => {
+          const first = ph[0], lastN = ph.at(-1);
+          const bars = lastN.t + lastN.d - first.t + (lastN.t < first.t ? ev.cycles : 0);
+          const closing = k === phrases.length - 1 && ph.length === 1;   // one held note before the loop may be shorter
+          if (bars < LIMITS.phraseBarsMin - 1e-9 && !closing) fail('R5', `melody phrase ${k + 1} (from bar ${Math.floor(first.t) + 1}) lasts ${+bars.toFixed(2)} bars; phrases are ≥ ${LIMITS.phraseBarsMin} bars`);
+          const leaps = leapAt.filter((i) => ph.includes(line[i]) && ph.includes(line[(i + 1) % line.length])).length;
+          if (leaps > LIMITS.melodyLeapsPerPhrase) fail('R4', `melody phrase ${k + 1} (from bar ${Math.floor(first.t) + 1}) has ${leaps} leaps wider than a tone; at most ${LIMITS.melodyLeapsPerPhrase} per phrase`);
+        });
+      }
+      // R6 (SHOULD): register, and the harmony below it
+      if (lo < LIMITS.melodyLow || hi > LIMITS.melodyHigh) warn('R6', `melody ${noteName(lo)}–${noteName(hi)} leaves the C4–C6 range`);
+      for (const l of sounding) {
+        const o = events.get(l.name);
+        if (l.name === melodyName || !o || o.unreadable || !o.pitched || !o.pitches.length) continue;
+        const top = Math.max(...o.pitches.map((p) => p.midi));
+        if (top > lo) warn('R6', `layer "${l.name}" reaches ${noteName(top)}, above the melody's lowest note ${noteName(lo)}; the harmony sits below the melody`);
+      }
+    }
   }
 
   // ---- R13 / R14 / R15: arrangement
@@ -291,6 +407,37 @@ for (const id of ids) {
   });
 }
 
+// ---- the site: R15 (timer), R19 (playback guidance on every page), R21 (claims)
+if (!only) {
+  const siteProblems = [];
+  for (const page of PAGES) {
+    const path = join(root, page);
+    if (!existsSync(path)) { siteProblems.push(['R19', `${page} is missing`]); continue; }
+    const html = readFileSync(path, 'utf8');
+    const notice = /<([a-z]+)[^>]*id="safety"[^>]*>([\s\S]*?)<\/\1>/.exec(html);
+    if (!notice) siteProblems.push(['R19', `${page} has no element with id="safety" carrying the playback guidance`]);
+    else for (const [re, what] of R19_PHRASES) if (!re.test(notice[2])) siteProblems.push(['R19', `${page}: the safety notice does not say ${what}`]);
+    const text = html.replace(/<script[\s\S]*?<\/script>/g, '').replace(/<style[\s\S]*?<\/style>/g, '').replace(/<[^>]+>/g, ' ');
+    const claim = R21_BANNED.exec(text);
+    if (claim) siteProblems.push(['R21', `${page} says "${claim[0]}"; claims stop at "may help your baby settle and fall asleep"`]);
+  }
+  for (const s of allIds) {
+    const rd = join(songsDir, s, 'README.md');
+    if (!existsSync(rd)) continue;
+    const claim = R21_BANNED.exec(readFileSync(rd, 'utf8'));
+    if (claim) siteProblems.push(['R21', `songs/${s}/README.md says "${claim[0]}"`]);
+  }
+  const indexHtml = existsSync(join(root, 'index.html')) ? readFileSync(join(root, 'index.html'), 'utf8') : '';
+  const timer = /<select id="timer">\s*<option value="(\d+)"/.exec(indexHtml);
+  if (!timer) siteProblems.push(['R15', 'index.html has no <select id="timer"> sleep timer']);
+  else if (+timer[1] !== LIMITS.timerDefaultMin) siteProblems.push(['R15', `index.html: the sleep timer's first option is ${timer[1]} min, not ${LIMITS.timerDefaultMin}`]);
+  const fade = /linearRampToValueAtTime\(0,\s*now\s*\+\s*(\d+)\)/.exec(indexHtml);
+  if (!fade) siteProblems.push(['R15', 'index.html: the timer does not fade the master gain with linearRampToValueAtTime(0, now + 60)']);
+  else if (+fade[1] !== LIMITS.timerFadeSec) siteProblems.push(['R15', `index.html: the timer fades over ${fade[1]} s, not ${LIMITS.timerFadeSec}`]);
+  report('..', siteProblems, [], 'site (index.html, lab.html, READMEs)');
+  if (siteProblems.length) failed = true;
+}
+
 // research entries nobody cites are noise
 if (!only) {
   const rulesDoc = readFileSync(join(root, 'docs/COMPOSITION_RULES.md'), 'utf8');
@@ -329,12 +476,16 @@ function jaccard(a, b) {
   for (const x of a) if (b.has(x)) inter++;
   return inter / (a.size + b.size - inter);
 }
+function noteName(midi) {
+  const names = ['c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b'];
+  return names[((midi % 12) + 12) % 12] + (Math.floor(midi / 12) - 1);
+}
 function titleKey(t) {
   return String(t).toLowerCase().replace(/[^a-z0-9]+/g, '');
 }
-function report(id, problems, warnings) {
+function report(id, problems, warnings, label) {
   const ok = !problems.length;
-  console.log(`${ok ? 'PASS' : 'FAIL'}  songs/${id}`);
+  console.log(`${ok ? 'PASS' : 'FAIL'}  ${label || 'songs/' + id}`);
   for (const [r, m] of problems) console.log(`  fail  ${r}: ${m}`);
   for (const [r, m] of warnings) console.log(`  warn  ${r}: ${m}`);
 }

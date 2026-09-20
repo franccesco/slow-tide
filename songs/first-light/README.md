@@ -24,13 +24,13 @@ refer to [docs/RESEARCH.md](../../docs/RESEARCH.md).
 | R9 spectrum | nothing sustained above 1.8 kHz; bed capped at 1.5 kHz | womb passes low frequencies best `[parga2018]`; low-frequency weighting `[trainor1997]` |
 | R10 bed | `s("brown")`, not white | broadband noise sped sleep onset in newborns `[spencer1990]`; evidence rated low overall, so it is a secondary layer `[riedy2021]`; low-weighted colour `[parga2018]` |
 | R11 bed limits | `hpf(100)`, `lpf` 800–1500 on a 31 s drift, `lpq(1)`, gain 0.24 < pad 0.32 | constant level `[standley2002]` `[hilton2022]` |
-| R12 loudness | layers enter one at a time and each is set under the pad; sections differ by one voice, so the level range is within 6 dB (verify with `lab.html?song=first-light` → scan) | `[hilton2022]` `[standley2002]` |
+| R12 loudness | layers enter one at a time and each is set under the pad; sections differ by one voice: the scan measures a 0.6 dB spread across inner sections and a largest 4-bar swell of 0.8 LU | `[hilton2022]` `[standley2002]` |
 | R13 form | 7 sections; each boundary adds or removes exactly one layer | simple repetitive structure `[wang2025]` `[standley2002]` |
 | R14 fade | `padIn` ramps the pad 0.02 → 0.32 over 8 bars; `padOut` reverses it, so bar 64 meets bar 1 at the same texture | rule derivation (no jump at the loop seam, R12) |
 | R15 length | 256 s per pass; the site's sleep timer defaults to 30 min | 30–45 min listening dose `[wang2025]`; limited nightly exposure `[hugh2014]` |
 | R16 instrumental | no samples, no voice | calming is carried by acoustics, not words `[bainbridge2021]` |
 | R17 peak | `.postgain(0.8)`; scan target peak ≤ −3 dBFS, no clips, clicks or gaps | rule derivation |
-| R18 level match | gains chosen against `slow-tide` section 5; confirm RMS within ±2 dB with the lab scan | `[hugh2014]` |
+| R18 level match | gains chosen against `slow-tide`; the scan measures −24.3 LUFS integrated, 1.3 LU under the −23 LUFS target | `[hugh2014]` |
 | R20 provenance | this README, `meta.json`, `song.js` | |
 | R19, R21 | site-level (index.html) | |
 
@@ -52,6 +52,7 @@ Keys not cited by Slow Tide, the only earlier song (R23):
 | --- | --- | --- |
 | 2026-09-20 | `node scripts/check-song.mjs` | PASS |
 | 2026-09-20 | `node scripts/scan.mjs first-light slow-tide` (headless Chromium, 44.1 kHz) | peak −11.8 dBFS · 0 clips · 0 clicks · 0 gaps · inner sections −25.3 to −24.3 dB RMS (1.0 dB spread) · loudest section 1.0 dB under Slow Tide section 5 (R18 ok) · fade sections −34.1 / −32.1 dB |
+| 2026-09-20 | `node scripts/scan.mjs first-light slow-tide` with loudness and spectrum (R9, R12 swell, R18 in LUFS) | peak −11.5 dBFS · −24.3 LUFS integrated · 0 clips · 0 clicks · 0 gaps · inner sections −25 to −24.4 dB RMS (0.6 dB spread) · largest in-section swell 0.8 LU · 100% below 2 kHz · >5 kHz sustained 0% |
 
 ## Ideas not taken, and why
 

@@ -210,6 +210,22 @@ Riedy SM, Smith MG, Rocchio S, Basner M. *Sleep Medicine Reviews* 55,
 - **What it supports:** noise is a secondary tool, not the song. Keep it
   quiet, band-limited and optional.
 
+### `[itu2023]` Algorithms to measure audio programme loudness and true-peak audio level — grade D
+International Telecommunication Union, Recommendation ITU-R BS.1770-5
+(11/2023). https://www.itu.int/rec/R-REC-BS.1770
+
+- The broadcast loudness standard: a K-weighting filter (a high shelf near
+  1.7 kHz and a high-pass near 38 Hz) approximating how loud a signal
+  sounds, then the mean square over 400 ms blocks with an absolute gate at
+  −70 LUFS and a relative gate 10 LU under the ungated mean, giving
+  **integrated loudness** in LUFS; 3 s windows give short-term loudness.
+- It is a measurement method, not evidence about infants.
+- **What it supports:** the loudness figures `scripts/scan.mjs` reports for
+  R12 (swell inside a section) and R18 (the −23 LUFS target), so that
+  "same loudness" is measured the way the ear weighs it rather than as
+  plain RMS. The −23 LUFS figure itself is the reference song's measured
+  level, not a recommendation of this document about infants.
+
 ## Open questions (things the literature does not settle)
 
 - **Key or mode.** No cross-cultural study we found shows major or minor
