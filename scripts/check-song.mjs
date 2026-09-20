@@ -16,6 +16,12 @@
   song is named: duplicate titles, identical or near-identical song.js,
   undeclared variants, unknown tags, a version bumped without a changelog
   entry, and a "built" song whose scan is from an older version.
+
+  R23 (fresh evidence): a song must cite at least MIN_NEW_KEYS research keys
+  that no song with an earlier "added" date cites, and name them in a
+  "## What the new research changed" README section; or that section logs
+  the search that found nothing (≥ MIN_NEW_KEYS table rows: date, source,
+  query, why nothing qualified).
 */
 import { readFileSync, readdirSync, writeFileSync, existsSync, statSync } from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -52,6 +58,7 @@ const R19_PHRASES = [[/2 m(?:etres?)? from the crib/i, '"2 metres from the crib"
 const R21_BANNED = /medically proven|clinically proven|scientifically proven|guaranteed|improves? (?:brain |cognitive |language |their |your baby'?s )?development|makes? (?:babies|your baby) smarter|cures?\b|treats?\b/i;
 const STAGES = ['draft', 'built'];   // R22
 const NEAR_DUPLICATE = 0.5;          // R22: share of code lines two unrelated songs may have in common
+const MIN_NEW_KEYS = 2;              // R23: research keys a song must cite that no earlier song cites
 const MUST = ['R1', 'R2', 'R4', 'R5', 'R7', 'R8', 'R11', 'R12', 'R13', 'R14', 'R16', 'R17', 'R18', 'R20'];
 const PERCUSSION_SAMPLES = ['bd', 'sd', 'hh', 'oh', 'cp', 'rs', 'rim', 'cr', 'ride', 'lt', 'mt', 'ht', 'perc', 'tabla', 'drum'];
 
@@ -362,12 +369,31 @@ for (const id of ids) {
   }
   if (!cited.size) fail('R20', 'README cites no research keys');
 
+  // ---- R23: fresh evidence, keys no earlier song cites (README + meta.research of every earlier folder)
+  const earlier = [...registry].filter(([o, r]) => o !== id && r.meta.added && meta.added && r.meta.added < meta.added);
+  if (earlier.length) {
+    const used = new Set();
+    for (const [o, r] of earlier) {
+      for (const k of r.meta.research || []) used.add(k);
+      try { for (const m of readFileSync(join(songsDir, o, 'README.md'), 'utf8').matchAll(/`\[([a-z0-9]+)\]`/g)) used.add(m[1]); } catch {}
+    }
+    const fresh = [...cited].filter((k) => !used.has(k));
+    const section = readme.match(/^## What the new research changed\s*\n([\s\S]*?)(?=^## |(?![\s\S]))/m);
+    // a logged search: table rows of | YYYY-MM-DD | source | query | why nothing qualified |
+    const searches = section ? [...section[1].matchAll(/^\|\s*\d{4}-\d{2}-\d{2}\s*\|([^|\n]*)\|([^|\n]*)\|([^|\n]*)\|/gm)].filter((m) => m.slice(1).every((c) => c.trim())) : [];
+    if (fresh.length < MIN_NEW_KEYS && searches.length < MIN_NEW_KEYS) {
+      fail('R23', `cites ${fresh.length} research key${fresh.length === 1 ? '' : 's'} no earlier song cites (${fresh.join(', ') || 'none'}); a new song adds ≥ ${MIN_NEW_KEYS} entries to docs/RESEARCH.md from a fresh search, or logs ≥ ${MIN_NEW_KEYS} searches (date, source, query, why nothing qualified) under "What the new research changed"`);
+    }
+    if (!section) fail('R23', 'README needs a "## What the new research changed" section naming each new key and what it changed, or logging the search');
+    else for (const k of fresh) if (!section[1].includes('`[' + k + ']`')) fail('R23', `"What the new research changed" does not mention \`[${k}]\``);
+  }
+
   // ---- legacy handling
   const hard = [], soft = [];
   for (const p of problems) (legacy && exceptions.has(p[0]) ? soft : hard).push(p);
   if (legacy && !exceptions.size) hard.push(['R20', 'legacy song must list its exceptions in meta.exceptions']);
   if (!legacy && exceptions.size) hard.push(['R20', 'a compliant song cannot list exceptions']);
-  for (const r of ['R20', 'R22']) if (exceptions.has(r)) hard.push(['R20', r + ' is a provenance rule and cannot be an exception']);
+  for (const r of ['R20', 'R22', 'R23']) if (exceptions.has(r)) hard.push(['R20', r + ' is a provenance rule and cannot be an exception']);
   for (const p of soft) warn(p[0], p[1] + ' (legacy exception)');
   report(id, hard, warnings);
   if (hard.length) failed = true;

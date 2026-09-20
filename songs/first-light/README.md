@@ -34,6 +34,18 @@ refer to [docs/RESEARCH.md](../../docs/RESEARCH.md).
 | R20 provenance | this README, `meta.json`, `song.js` | |
 | R19, R21 | site-level (index.html) | |
 
+## What the new research changed
+
+Keys not cited by Slow Tide, the only earlier song (R23):
+
+- `[bainbridge2021]` unfamiliar lullabies calm infants on acoustics alone, so the piece is instrumental and makes no use of a familiar tune (R16).
+- `[cirelli2020]` soothing-style singing lowered arousal where playful singing raised it, so density stays at two onsets per bar and nothing is rhythmically exaggerated (R2).
+- `[loewy2013]` a steady heartbeat-like rhythm calmed NICU infants, so a soft sine pulse every two beats was added (R3).
+- `[standley2002]` constant-level, simple, repetitive music worked in the meta-analysis, so layers enter one at a time and sections repeat (R11, R12, R13).
+- `[riedy2021]` the noise-as-sleep-aid evidence is rated low, so the brown bed is a secondary layer under the pad, not the main sound (R10).
+- `[wang2025]` effective sleep music sat at 60–80 bpm with a 30–45 min dose, so 60 bpm and a 30 min default timer (R1, R15).
+- `[hugh2014]` sleep machines can exceed safe levels, so the level is matched to the reference and exposure is time-limited (R15, R18).
+
 ## Verification log
 
 | Date | Check | Result |

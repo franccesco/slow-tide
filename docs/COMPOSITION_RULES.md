@@ -195,6 +195,29 @@ parent scrolls through at 3 a.m., and two near-identical entries are a
 choice they cannot make; and a song that changed after it was measured
 carries measurements that are no longer true (R17, R18).
 
+**R23 (MUST) Every new song starts from a fresh search of the literature.**
+Before a song is composed, an online search (Europe PMC, PubMed, Crossref;
+primary sources with a DOI) is run for whatever the song leans on (an
+instrument, a tempo, a structure, a claim). What it finds goes into
+RESEARCH.md as new entries, at least **two** that no earlier song cites,
+and the README cites them alongside the existing keys, with a "What the
+new research changed" section saying, per new key, what the finding
+changed in the composition (or confirmed). "Earlier" means a song with an
+earlier `added` date. Variants are held to the same rule: their
+difference from the parent is what the new evidence has to bear on.
+
+When a search turns up nothing new (the literature is finite), the same
+section instead logs the search: a table with at least two rows of date,
+source, query and why nothing qualified. The search is what the rule
+requires; the count of new entries is what it normally produces.
+
+The checker fails a song whose cited keys add nothing to what earlier
+songs already cite unless its README logs the search, and a song whose
+README lacks the section naming the new keys. Why: a catalogue that keeps
+re-citing the same handful of studies stops being research-backed after
+the first song; each song is an occasion to re-read the literature, and
+the rules only improve (step 2 in CLAUDE.md) when something new is read.
+
 ## Quick reference
 
 | Rule | Check | Value | Enforced by |
@@ -221,3 +244,4 @@ carries measurements that are no longer true (R17, R18).
 | R20 | provenance | README maps every MUST rule; every key exists in RESEARCH.md | checker |
 | R21 | claims | no "proven", "guaranteed", "improves development" | checker |
 | R22 | identity | unique title and code; version + changelog; `built` only when verified at this version; tags from `songs/tags.json`; variants declare `variantOf` | checker |
+| R23 | fresh evidence | ≥ 2 research keys no earlier song cites, or a logged search (≥ 2 rows) that found none; README section "What the new research changed" | checker |
