@@ -17,8 +17,8 @@ to [docs/RESEARCH.md](../../docs/RESEARCH.md).
 | R7 timbre | sawtooth pad behind a 500–2200 Hz low-pass; triangle and sine elsewhere | `[hilton2022]` |
 | R10/R11 bed | pink noise, `hpf(110)`, `lpf` 900–2400, `lpq(1)`, level under the pad | `[spencer1990]` `[parga2018]` |
 | R16 | instrumental | |
-| R17 | scan finds no clicks, clips or gaps; loudest section peaks near −4 dBFS | |
-| R18 | it is the level reference itself | |
+| R17 | headless scan 2026-09-20 (percussion samples unavailable offline): peak −10.4 dBFS, 0 clips, 0 clicks, 0 gaps | |
+| R18 | it is the level reference itself: section 5 measures −23.3 dB RMS | |
 | R20 | this README, `meta.json`, `song.js` | |
 
 ## Where it does not (exceptions)

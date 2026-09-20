@@ -65,13 +65,20 @@ node scripts/check-song.mjs
 It must print `PASS` for every song and rewrite `songs/index.json`. Commit
 the regenerated index.
 
-**Step 6. Measure.** Serve the repo (`python3 -m http.server 8080`), open
-`http://localhost:8080/lab.html?song=<id>`, press *scan song*. Requirements
-(R12, R17, R18): 0 clips, 0 clicks, 0 gaps, peak ≤ −3 dBFS, sections within
-6 dB of each other, loudest-section RMS within ±2 dB of `slow-tide`
-section 5. Paste the scan summary into the song README's verification log.
-Headless: `node scripts/scan.mjs <id>` if present; otherwise a Playwright
-script that opens the lab and calls `Lab.scan()`.
+**Step 6. Measure.**
+
+```
+node scripts/scan.mjs <id> slow-tide
+```
+
+It records each song in headless Chromium and checks R12, R17 and R18
+(peak ≤ −3 dBFS, 0 clips, 0 clicks, 0 gaps, inner sections within 6 dB,
+loudest section within ±2 dB of `slow-tide` section 5). Paste the summary
+line into the song README's verification log. If unpkg is unreachable,
+`npm pack @strudel/web@1.3.0`, extract it, and set
+`STRUDEL_WEB_JS=<dir>/package/dist/index.js`. For listening and the
+spectrum view, serve the repo (`python3 -m http.server 8080`) and open
+`http://localhost:8080/lab.html?song=<id>`.
 
 **Step 7. Listen once** in `index.html` for at least one full pass
 (the seam at the loop is where mistakes hide), then open a draft PR.

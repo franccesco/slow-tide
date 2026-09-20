@@ -38,8 +38,8 @@ refer to [docs/RESEARCH.md](../../docs/RESEARCH.md).
 
 | Date | Check | Result |
 | --- | --- | --- |
-| 2026-09-20 | `node scripts/check-song.mjs` | see PR |
-| 2026-09-20 | `lab.html?song=first-light` → scan song | see PR |
+| 2026-09-20 | `node scripts/check-song.mjs` | PASS |
+| 2026-09-20 | `node scripts/scan.mjs first-light slow-tide` (headless Chromium, 44.1 kHz) | peak −11.8 dBFS · 0 clips · 0 clicks · 0 gaps · inner sections −25.3 to −24.3 dB RMS (1.0 dB spread) · loudest section 1.0 dB under Slow Tide section 5 (R18 ok) · fade sections −34.1 / −32.1 dB |
 
 ## Ideas not taken, and why
 
