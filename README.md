@@ -20,6 +20,12 @@ A checker (`node scripts/check-song.mjs`) rejects a song that breaks a
 machine-checkable rule or cites a study that is not in the notes, and
 `lab.html?song=<id>` measures the audio for clicks, clipping and level.
 
+Each song is versioned in place, so a change is a new version with a
+changelog entry and a fresh measurement, not a second copy. A different
+take on a song is a variant that names its parent. The checker rejects
+duplicate titles and duplicate or near-duplicate code, and only songs
+marked `built` (checked, measured, listened to) appear on the site.
+
 ## Before you press play
 
 Speaker at least 2 metres from the crib, never in it. Volume low: under
@@ -30,15 +36,17 @@ These songs may help a baby settle. They are not a treatment for anything.
 
 ## Songs
 
-| Song | Key · tempo | Status |
-| --- | --- | --- |
-| [First Light](songs/first-light/) | C major · 60 bpm | meets every rule |
-| [Slow Tide](songs/slow-tide/) | D minor · 54 bpm | legacy (the original piece; exceptions listed) |
+| Song | Version | Key · tempo | Tags | Status |
+| --- | --- | --- | --- | --- |
+| [First Light](songs/first-light/) | v1, built | C major · 60 bpm | bedtime, major, melodic, heartbeat, noise-bed | meets every rule |
+| [Slow Tide](songs/slow-tide/) | v1, built | D minor · 54 bpm | minor, melodic, noise-bed, reference | legacy (the original piece; exceptions listed) |
 
 ## Adding a song
 
 See [CLAUDE.md](CLAUDE.md): research first, write the citations down,
-compose to the rules, run the checker, measure in the lab, open a PR.
+scaffold with `node scripts/new-song.mjs`, compose to the rules, run the
+checker, measure in the lab, open a PR. To improve a song, bump its
+version; for a different take, make a variant.
 
 ## Run locally
 

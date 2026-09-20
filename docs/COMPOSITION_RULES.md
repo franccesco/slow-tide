@@ -132,6 +132,30 @@ citation in the README or an entry added to RESEARCH.md.
 "may help your baby settle and fall asleep". Never "improves development",
 "medically proven", or similar `[haslbeck2023]` `[vanderheijden2016]`.
 
+**R22 (MUST) One song, one folder, one identity.** `meta.json` carries:
+
+- `version`, an integer from 1, bumped whenever `song.js` changes what a
+  listener hears, with a matching `changelog` entry (`version`, `date`,
+  `note`). Editing a song in place is the way to improve it; a second
+  folder is not a new version.
+- `stage`: `draft` until the checker passes, `scripts/scan.mjs` is logged
+  in the README and someone has listened through a full pass; then
+  `built`, with `verified` (`version`, `scan` date) naming the version that
+  was measured. A bump without a new scan drops the song back to draft.
+- `tags`, each a key of `songs/tags.json` (a new tag is added there first,
+  with its meaning), so the same idea is never tagged two ways.
+- `variantOf`, for a different take on an existing song: the original's id.
+  The variant's own id is `<parent>-<what differs>`, its README has a
+  "What differs from <parent>" section, and it cites its own evidence for
+  the difference. A variant of a variant names the original.
+
+The checker rejects a second folder with the same title or the same code,
+and any song that shares half or more of its code lines with another
+without declaring the variant relation. Why: the catalogue is what a
+parent scrolls through at 3 a.m., and two near-identical entries are a
+choice they cannot make; and a song that changed after it was measured
+carries measurements that are no longer true (R17, R18).
+
 ## Quick reference
 
 | Rule | Check | Value |
@@ -149,3 +173,4 @@ citation in the README or an entry added to RESEARCH.md.
 | R15 | pass length | 3–6 min |
 | R17 | peak | ≤ −3 dBFS, 0 clips, 0 clicks, 0 gaps |
 | R18 | RMS | reference ± 2 dB |
+| R22 | identity | unique title and code; version + changelog; `built` only when verified at this version; tags from `songs/tags.json`; variants declare `variantOf` |
