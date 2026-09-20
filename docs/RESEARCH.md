@@ -238,3 +238,7 @@ Riedy SM, Smith MG, Rocchio S, Basner M. *Sleep Medicine Reviews* 55,
    what it does **not** show, grade.
 4. Cite the key from a rule or from a song README. An entry nothing cites
    is removed at the next survey.
+5. Every new song adds at least two entries here that no earlier song
+   cites (rule R23), found by a fresh online search, not by re-reading
+   this file. Europe PMC's REST API answers a query with abstracts:
+   `https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=lullaby+infant+heart+rate&format=json`.

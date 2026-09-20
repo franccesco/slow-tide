@@ -74,6 +74,15 @@ ${parent ? `
 | --- | --- | --- |
 | R1 tempo | | |
 
+## What the new research changed
+
+- \`[key]\` (what this study, found in step 1 and new to the catalogue, changed or confirmed here)
+
+If the search found nothing new, log it here instead (R23):
+
+| Date | Source | Query | Why nothing qualified |
+| --- | --- | --- | --- |
+
 ## Verification log
 
 | Date | Check | Result |
@@ -89,7 +98,7 @@ writeFileSync(join(songsDir, id, 'song.js'), readFileSync(join(songsDir, source,
 writeFileSync(join(songsDir, id, 'meta.json'), JSON.stringify(meta, null, 2) + '\n');
 writeFileSync(join(songsDir, id, 'README.md'), readme);
 console.log(`created songs/${id}/ from songs/${source}/ (version 1, draft${parent ? ', variant of ' + parent : ''})`);
-console.log('next: edit song.js and README.md, pick tags from songs/tags.json, then node scripts/check-song.mjs');
+console.log('next: search the literature and add ≥ 2 new entries to docs/RESEARCH.md (R23), edit song.js and README.md, pick tags from songs/tags.json, then node scripts/check-song.mjs');
 console.log('the checker will fail until song.js differs enough from ' + source + (parent ? '' : ' or you declare variantOf'));
 
 function die(msg) { console.error(msg); process.exit(1); }
