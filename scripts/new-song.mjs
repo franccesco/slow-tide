@@ -78,6 +78,11 @@ ${parent ? `
 
 - \`[key]\` (what this study, found in step 1 and new to the catalogue, changed or confirmed here)
 
+If the search found nothing new, log it here instead (R23):
+
+| Date | Source | Query | Why nothing qualified |
+| --- | --- | --- | --- |
+
 ## Verification log
 
 | Date | Check | Result |
