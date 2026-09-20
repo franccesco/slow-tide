@@ -26,6 +26,8 @@ docs/COMPOSITION_RULES.md   numbered rules R1…R21
 scripts/check-song.mjs      enforces rules + citations + identity (R22), writes songs/index.json
 scripts/new-song.mjs        scaffolds a song or a variant folder with the right identity
 .github/workflows/pages.yml runs the checker on every push/PR; deploys main to Pages
+.github/workflows/preview.yml publishes each open PR at previews/pr-<N>/ on the live site
+scripts/assemble-site.sh    builds the Pages tree: the site plus the `previews` branch
 ```
 
 ## Adding a song: the process
@@ -92,6 +94,10 @@ spectrum view, serve the repo (`python3 -m http.server 8080`) and open
 (the seam at the loop is where mistakes hide; drafts show up with
 `index.html?drafts=1`). Then set `meta.stage` to `built`, re-run the
 checker, and open a draft PR. Only built songs appear in the catalogue.
+Once the checker passes on the PR, a bot comment links a preview of the
+site at `https://franccesco.github.io/slow-tide/previews/pr-<N>/` (add
+`?drafts=1` to see drafts). Snapshots live on the `previews` branch, which
+is generated; never edit it by hand.
 
 ## Versions, variants and tags (R22)
 
