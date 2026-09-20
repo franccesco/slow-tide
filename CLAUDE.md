@@ -23,7 +23,9 @@ songs/<id>/README.md        the rule-by-rule justification with citations
 songs/index.json            generated catalogue, do not edit by hand
 docs/RESEARCH.md            literature notes
 docs/COMPOSITION_RULES.md   numbered rules R1…R21
-scripts/check-song.mjs      enforces rules + citations + identity (R22), writes songs/index.json
+scripts/check-song.mjs      enforces rules + citations + identity (R22) + site copy (R15, R19, R21), writes songs/index.json
+scripts/lib/mini.mjs        reads strudel mini-notation and song.js layers for the checker (R2, R4–R6, R8, R11)
+scripts/scan.mjs            records a song headlessly and measures R9, R12, R17, R18 (peak, LUFS, spectrum)
 scripts/new-song.mjs        scaffolds a song or a variant folder with the right identity
 .github/workflows/pages.yml runs the checker on every push/PR; deploys main to Pages
 .github/workflows/preview.yml publishes each open PR at previews/pr-<N>/ on the live site
@@ -71,8 +73,13 @@ new tag there, with its meaning, before using it). Leave `stage` at
 node scripts/check-song.mjs
 ```
 
-It must print `PASS` for every song and rewrite `songs/index.json`. Commit
-the regenerated index.
+It must print `PASS` for every song and for the site, and rewrite
+`songs/index.json`. Commit the regenerated index. Besides tempo, filters,
+form and citations, it reads every layer's mini-notation: density (R2),
+the `melody` layer's range, leaps and phrases (R4, R5, warns on R6),
+attacks per layer (R8) and the noise bed's gain and drift (R11). Name the
+melody layer `melody` and write patterns as plain mini-notation strings
+(a layer the reader cannot follow is reported for review by hand).
 
 **Step 6. Measure.**
 
@@ -80,10 +87,12 @@ the regenerated index.
 node scripts/scan.mjs <id> slow-tide
 ```
 
-It records each song in headless Chromium and checks R12, R17 and R18
-(peak ≤ −3 dBFS, 0 clips, 0 clicks, 0 gaps, inner sections within 6 dB,
-loudest section within ±2 dB of `slow-tide` section 5). Paste the summary
-line into the song README's verification log and set `meta.verified` to
+It records each song in headless Chromium and checks R9, R12, R17 and
+R18 (peak ≤ −3 dBFS, 0 clips, 0 clicks, 0 gaps, inner sections within
+6 dB and no swell over 3 LU inside one, loudest section within ±2 dB and
+integrated loudness within ±2 LU of `slow-tide`, and a warning when the
+spectrum is not weighted below 2 kHz). Paste the `log line` it prints
+into the song README's verification log and set `meta.verified` to
 `{ "version": <current version>, "scan": "<date>" }`. If unpkg is unreachable,
 `npm pack @strudel/web@1.3.0`, extract it, and set
 `STRUDEL_WEB_JS=<dir>/package/dist/index.js`. For listening and the
