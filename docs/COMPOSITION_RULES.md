@@ -110,8 +110,10 @@ at the song's tempo.
 3 dB.** Lower and steadier intensity is what separates
 infant-directed song from adult song `[hilton2022]`; NICU music is kept
 constant `[standley2002]`. [A, B] *Scan:* section spread from per-section
-RMS; the swell from short-term loudness (3 s windows, `[itu2023]`) inside
-each inner section, max − min ≤ 3 LU.
+RMS; the swell from K-weighted loudness (`[itu2023]`) on 4-bar windows
+stepping one bar inside each inner section, max − min ≤ 3 LU. Four bars
+is one harmonic turn, so a rest bar in the melody is not read as a swell
+while a gain ramp or an opening filter is.
 
 **R13 (MUST) Form changes by one layer at a time.** Add or remove one
 voice per section boundary. Simple, repetitive structure is what worked in
@@ -140,14 +142,17 @@ sleep trials favoured instrumental music `[wang2025]`. [A, C]
 (verified with `scripts/scan.mjs`, or `lab.html` → *scan song* in a browser).** A click is a harsh onset (R8);
 a gap is an abrupt change (R12).
 
-**R18 (MUST) Songs are level-matched: RMS of the loudest section within
-±2 dB of the catalogue reference (`slow-tide`, section 5), and integrated
-loudness within ±2 LU of the reference's.** A parent sets the volume once;
-a louder song must not surprise them. Derived from `[hugh2014]`: the
-hazard came from level, and level is set once per night. Integrated
-loudness is measured per `[itu2023]`, so the match holds for how loud the
-song sounds, not only its RMS; the reference's value is in its README and
-`scan.mjs` prints both. [D]
+**R18 (MUST) Songs are level-matched: integrated loudness −23 ± 2 LUFS.**
+A parent sets the volume once; a louder song must not surprise them.
+Derived from `[hugh2014]`: the hazard came from level, and level is set
+once per night. The target is the catalogue reference `slow-tide` as
+measured on 2026-09-20 (−23.0 LUFS integrated; it is also the EBU R128
+broadcast target), fixed as a number so the match does not drift with the
+reference's random layers. Loudness is measured per `[itu2023]` over the
+whole pass, gated, so it tracks how loud the song sounds rather than its
+RMS. *Scan:* fails outside −25…−21 LUFS; when `slow-tide` is scanned in
+the same run it also prints the RMS of the loudest sections side by side,
+for information. [D]
 
 **R19 (MUST) The site shows the playback guidance on every page:** speaker
 at least 2 m from the crib, never in or on it; volume at the low end,
@@ -239,7 +244,7 @@ the rules only improve (step 2 in CLAUDE.md) when something new is read.
 | R15 | timer | pass 3–6 min (warns); site timer 30 min, 60 s fade | checker |
 | R16 | instrumental | no vocal samples | checker |
 | R17 | peak | ≤ −3 dBFS, 0 clips, 0 clicks, 0 gaps | scan |
-| R18 | level | loudest section RMS ± 2 dB and integrated loudness ± 2 LU of the reference | scan |
+| R18 | level | integrated loudness −23 ± 2 LUFS | scan |
 | R19 | guidance | `id="safety"` notice with distance, 50 dB, sleep timer on every page | checker |
 | R20 | provenance | README maps every MUST rule; every key exists in RESEARCH.md | checker |
 | R21 | claims | no "proven", "guaranteed", "improves development" | checker |

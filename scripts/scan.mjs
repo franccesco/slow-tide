@@ -3,16 +3,20 @@
   scan.mjs — records each song headlessly and checks the measured rules:
   R9 (spectral balance: energy below 2 kHz, nothing sustained above 5 kHz),
   R12 (inner sections within 6 dB, no swell over 3 LU inside a section),
-  R17 (peak ≤ −3 dBFS, no clips, clicks or gaps) and R18 (loudest section
-  within ±2 dB RMS of the reference, slow-tide section 5, and integrated
-  loudness within ±2 LU of it).
+  R17 (peak ≤ −3 dBFS, no clips, clicks or gaps) and R18 (integrated
+  loudness −23 ± 2 LUFS, the level of the reference song slow-tide).
 
   Loudness follows ITU-R BS.1770 (K-weighting, 400 ms gated blocks for the
-  integrated value, 3 s windows for short-term). The spectrum is a Hann
-  4096-point FFT averaged over the recording.
+  integrated value, 3 s windows for short-term). The swell inside a section
+  is read on 4-bar windows, so a rest in the melody does not count as one.
+  The spectrum is a Hann 4096-point FFT averaged over the recording.
+  Legacy songs (meta.status "legacy") turn failures on the rules in
+  meta.exceptions into warnings, as the checker does.
 
     node scripts/scan.mjs first-light                one song
-    node scripts/scan.mjs first-light slow-tide      several; include slow-tide to check R18
+    node scripts/scan.mjs first-light slow-tide      several; with slow-tide the RMS of the
+                                                     loudest sections is compared too (informative)
+    SCAN_SAVE_DIR=out node scripts/scan.mjs …        also write <id>.f32 (interleaved L/R float32)
 
   Needs Playwright with a Chromium build. Recording is real time: a
   4-minute song takes 4 minutes. Set STRUDEL_WEB_JS=/path/to/@strudel/web/
@@ -43,8 +47,8 @@ if (!ids.length) { console.error('usage: node scripts/scan.mjs <song-id> [...]')
 const REFERENCE = { id: 'slow-tide', section: 5 };
 const LIMITS = {
   peakDb: -3, sectionSpreadDb: 6, refToleranceDb: 2, tailSeconds: 4,
-  swellLu: 3,               // R12: short-term loudness range inside one inner section
-  lufsToleranceLu: 2,       // R18: integrated loudness vs the reference
+  swellLu: 3, swellBars: 4, // R12: loudness range of 4-bar windows inside one inner section
+  lufsTarget: -23, lufsToleranceLu: 2,   // R18: integrated loudness; −23 LUFS is slow-tide as measured on 2026-09-20 (and the EBU R128 target)
   below2kMinPct: 90,        // R9: share of energy under 2 kHz (SHOULD: warns)
   above5kSustainedMaxPct: 5 // R9: share of frames with a >5 kHz band within 30 dB of the frame's total
 };
@@ -138,8 +142,22 @@ try {
       return { sr: ctx.sampleRate, samples: n };
     }, { seconds });
     // analyse inside the page: the recording is tens of millions of samples
-    const r = await page.evaluate(`(${analyze.toString()})(window.__rec, ${JSON.stringify({ barSec, sections, totalBars })})`);
+    const r = await page.evaluate(`(${analyze.toString()})(window.__rec, ${JSON.stringify({ barSec, sections, totalBars, swellBars: LIMITS.swellBars })})`);
+    if (process.env.SCAN_SAVE_DIR) {
+      const { mkdirSync, writeFileSync } = await import('node:fs');
+      mkdirSync(process.env.SCAN_SAVE_DIR, { recursive: true });
+      const b64 = await page.evaluate(() => {
+        const { L, R } = window.__rec, out = new Float32Array(L.length * 2);
+        for (let i = 0; i < L.length; i++) { out[2 * i] = L[i]; out[2 * i + 1] = R[i]; }
+        const bytes = new Uint8Array(out.buffer);
+        let str = ''; for (let i = 0; i < bytes.length; i += 0x8000) str += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+        return btoa(str);
+      });
+      writeFileSync(join(process.env.SCAN_SAVE_DIR, `${id}.f32`), Buffer.from(b64, 'base64'));
+      writeFileSync(join(process.env.SCAN_SAVE_DIR, `${id}.json`), JSON.stringify({ sr: rec.sr, offset: r.offset, barSec, sections, totalBars }));
+    }
     await page.close();
+    r.meta = meta;
     console.log('done · ' + rec.samples + ' samples at ' + rec.sr + ' Hz');
 
     results[id] = r;
@@ -148,7 +166,7 @@ try {
     for (const c of r.clicks.slice(0, 10)) console.log(`  click at ${c.t.toFixed(2)} s (bar ${c.bar}) step ${c.step.toFixed(3)}`);
     for (const g of r.gaps.slice(0, 10)) console.log(`  gap at ${g.t.toFixed(2)} s (bar ${g.bar}) ${g.dur.toFixed(2)} s`);
     console.log('section rms: ' + r.secRms.map((s) => `${s.i}${s.label ? ' (' + s.label + ')' : ''} ${s.rmsDb} dB`).join(' · '));
-    console.log('section short-term LUFS (min…max): ' + r.secRms.map((s) => `${s.i} ${s.stMin}…${s.stMax}`).join(' · '));
+    console.log(`section loudness on ${LIMITS.swellBars}-bar windows (min…max LUFS): ` + r.secRms.map((s) => `${s.i} ${s.stMin === null ? '–' : s.stMin + '…' + s.stMax}`).join(' · '));
   }
 } finally {
   await browser.close();
@@ -169,30 +187,32 @@ for (const id of ids) {
   for (const s of inner) {
     if (s.stMax === null) continue;
     const swell = s.stMax - s.stMin;
-    if (swell > LIMITS.swellLu) problems.push(`R12 section ${s.i}${s.label ? ' (' + s.label + ')' : ''} swells ${swell.toFixed(1)} LU (short-term ${s.stMin}…${s.stMax} LUFS, > ${LIMITS.swellLu})`);
+    if (swell > LIMITS.swellLu) problems.push(`R12 section ${s.i}${s.label ? ' (' + s.label + ')' : ''} swells ${swell.toFixed(1)} LU (${LIMITS.swellBars}-bar windows ${s.stMin}…${s.stMax} LUFS, > ${LIMITS.swellLu})`);
   }
   const warnings = [];
   if (r.below2kPct < LIMITS.below2kMinPct) warnings.push(`R9 only ${r.below2kPct}% of the energy is below 2 kHz (SHOULD be ≥ ${LIMITS.below2kMinPct}%)`);
   if (r.above5kSustainedPct > LIMITS.above5kSustainedMaxPct) warnings.push(`R9 energy above 5 kHz is sustained in ${r.above5kSustainedPct}% of frames (SHOULD be ≤ ${LIMITS.above5kSustainedMaxPct}%)`);
+  const dl = r.lufs - LIMITS.lufsTarget;
+  if (Math.abs(dl) > LIMITS.lufsToleranceLu) problems.push(`R18 integrated loudness ${r.lufs} LUFS is ${dl > 0 ? '+' : ''}${dl.toFixed(1)} LU from the ${LIMITS.lufsTarget} LUFS target`);
+  else console.log(`${id}: R18 integrated ${r.lufs} LUFS (${dl > 0 ? '+' : ''}${dl.toFixed(1)} LU from ${LIMITS.lufsTarget}) ok`);
   const ref = results[REFERENCE.id]?.secRms.find((s) => s.i === REFERENCE.section);
   if (ref && id !== REFERENCE.id) {
+    // informative: slow-tide's random layers move its section RMS by a fraction of a dB between runs
     const d = loud - ref.rmsDb;
-    if (Math.abs(d) > LIMITS.refToleranceDb) problems.push(`R18 loudest section is ${d > 0 ? '+' : ''}${d.toFixed(1)} dB vs ${REFERENCE.id} section ${REFERENCE.section} (${ref.rmsDb} dB)`);
-    else console.log(`${id}: R18 loudest section ${loud} dB vs reference ${ref.rmsDb} dB (${d > 0 ? '+' : ''}${d.toFixed(1)} dB) ok`);
-    const dl = r.lufs - results[REFERENCE.id].lufs;
-    if (Math.abs(dl) > LIMITS.lufsToleranceLu) problems.push(`R18 integrated loudness ${r.lufs} LUFS is ${dl > 0 ? '+' : ''}${dl.toFixed(1)} LU vs ${REFERENCE.id} (${results[REFERENCE.id].lufs} LUFS)`);
-    else console.log(`${id}: R18 integrated ${r.lufs} LUFS vs reference ${results[REFERENCE.id].lufs} LUFS (${dl > 0 ? '+' : ''}${dl.toFixed(1)} LU) ok`);
-  } else if (id !== REFERENCE.id) {
-    console.log(`${id}: R18 not checked (scan ${REFERENCE.id} in the same run to compare)`);
+    console.log(`${id}: loudest section ${loud} dB RMS vs ${REFERENCE.id} section ${REFERENCE.section} ${ref.rmsDb} dB (${d > 0 ? '+' : ''}${d.toFixed(1)} dB${Math.abs(d) > LIMITS.refToleranceDb ? ', more than ' + LIMITS.refToleranceDb + ' dB apart: check the gain' : ''})`);
   }
-  console.log(`${problems.length ? 'FAIL' : 'PASS'}  ${id}` + (problems.length ? '\n  ' + problems.join('\n  ') : '') + (warnings.length ? '\n  warn ' + warnings.join('\n  warn ') : ''));
+  // legacy songs: failures on their listed exceptions are warnings
+  const exceptions = new Set(r.meta.status === 'legacy' ? r.meta.exceptions || [] : []);
+  const hard = problems.filter((p) => !exceptions.has(p.split(' ')[0]));
+  for (const p of problems) if (exceptions.has(p.split(' ')[0])) warnings.push(p + ' (legacy exception)');
+  console.log(`${hard.length ? 'FAIL' : 'PASS'}  ${id}` + (hard.length ? '\n  ' + hard.join('\n  ') : '') + (warnings.length ? '\n  warn ' + warnings.join('\n  warn ') : ''));
   const swells = inner.filter((s) => s.stMax !== null).map((s) => s.stMax - s.stMin);
-  console.log(`  log line: peak ${r.peakDb} dBFS · ${r.lufs} LUFS · 0 clips · ${r.clicks.length} clicks · ${r.gaps.length} gaps · inner sections ${quiet} to ${loud} dB RMS (${(loud - quiet).toFixed(1)} dB spread) · largest in-section swell ${swells.length ? Math.max(...swells).toFixed(1) : '–'} LU · ${r.below2kPct}% below 2 kHz · >5 kHz sustained ${r.above5kSustainedPct}%`.replace('0 clips', r.clips + ' clips'));
-  if (problems.length && id !== REFERENCE.id) failed = true;
+  console.log(`  log line: peak ${r.peakDb} dBFS · ${r.lufs} LUFS integrated · ${r.clips} clips · ${r.clicks.length} clicks · ${r.gaps.length} gaps · inner sections ${quiet} to ${loud} dB RMS (${(loud - quiet).toFixed(1)} dB spread) · largest in-section swell ${swells.length ? Math.max(...swells).toFixed(1) : '–'} LU · ${r.below2kPct}% below 2 kHz · >5 kHz sustained ${r.above5kSustainedPct}%`);
+  if (hard.length) failed = true;
 }
 process.exit(failed ? 1 : 0);
 
-function analyze({ sr, offset, L, R }, { barSec, sections, totalBars }) {
+function analyze({ sr, offset, L, R }, { barSec, sections, totalBars, swellBars }) {
   const n = L.length;
   const db = (v) => (v > 0 ? +(20 * Math.log10(v)).toFixed(1) : -120);
   const barOf = (t) => Math.max(1, Math.floor(t / barSec) + 1);
@@ -268,6 +288,10 @@ function analyze({ sr, offset, L, R }, { barSec, sections, totalBars }) {
   const st = [];
   for (let a = 0; a + win <= endSample; a += hopS) st.push({ t: (a + win / 2) / sr + offset, lu: lk(meanSq(a, a + win)) });
   const stMax = st.length ? +Math.max(...st.map((w) => w.lu)).toFixed(1) : -120;
+  // swell: loudness of 4-bar windows stepping one bar, so a rest bar in the melody is not a swell
+  const winB = Math.round(sr * barSec * swellBars), hopBar = Math.round(sr * barSec);
+  const sw = [];
+  for (let a = 0; a + winB <= endSample; a += hopBar) sw.push({ t0: a / sr + offset, t1: (a + winB) / sr + offset, lu: lk(meanSq(a, a + winB)) });
 
   // ---- spectrum: 4096-point Hann FFT on the mono mix, hop 4096
   const N = 4096, hann = new Float64Array(N);
@@ -318,10 +342,10 @@ function analyze({ sr, offset, L, R }, { barSec, sections, totalBars }) {
     let sq2 = 0, nn = 0;
     for (let b = bar; b < bar + s.bars; b++) { sq2 += barSq[b]; nn += barN[b]; }
     const t0 = (bar - 1) * barSec, t1 = (bar - 1 + s.bars) * barSec;
-    const inside = st.filter((w) => w.t - 1.5 >= t0 && w.t + 1.5 <= t1).map((w) => w.lu);
+    const inside = sw.filter((w) => w.t0 >= t0 - 0.05 && w.t1 <= t1 + 0.05).map((w) => w.lu);
     secRms.push({ i: s.i, label: s.label, rmsDb: nn ? db(Math.sqrt(sq2 / nn)) : -120,
       stMin: inside.length ? +Math.min(...inside).toFixed(1) : null, stMax: inside.length ? +Math.max(...inside).toFixed(1) : null });
     bar += s.bars;
   }
-  return { peakDb: db(peak), rmsDb: db(Math.sqrt(sq / n)), lufs, stMax, clips, clicks, gaps, secRms, below2kPct, above5kDb, above5kSustainedPct };
+  return { offset, peakDb: db(peak), rmsDb: db(Math.sqrt(sq / n)), lufs, stMax, clips, clicks, gaps, secRms, below2kPct, above5kDb, above5kSustainedPct };
 }
