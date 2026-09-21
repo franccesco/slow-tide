@@ -18,47 +18,56 @@ Enforcement has three tiers, and each rule below says which applies:
 
 ## 1. Tempo and rhythm
 
-**R1 (MUST) Tempo 50–72 bpm, felt in 4.** Lullabies are sung slower than
-the same songs sung to adults `[trainor1997]`; the sleep-music trials that
-worked used 60–80 bpm `[wang2025]`, and we take the lower half of that
-band because infant-directed song is the more subdued register
-`[hilton2022]`. Declare it with `setcpm(bpm / 4)` on its own line.
-[B, C]
+**R1 (MUST) Tempo 50–72 bpm, felt in 4.** Lullabies are slower than the
+other song types of the same societies `[mehr2019]` `[bainbridge2021]`, and
+a mother's lullaby is slower than her playsong `[nguyen2023]`
+`[cirelli2020]`; the sleep-music trials that worked used 60–80 bpm
+`[wang2025]`, and we take the lower half of that band because
+infant-directed song is the more subdued register `[hilton2022]`. Declare
+it with `setcpm(bpm / 4)` on its own line. [B, C]
 
 **R2 (MUST) No event faster than two per beat, and no layer with more than
-one onset per beat on average.** Playsongs carry the rhythmic exaggeration;
-lullabies carry the smoothness `[trainor1997]` `[cirelli2020]`. [B] *Checker:* onsets are counted from
+one onset per beat on average.** Playsongs carry the rhythmic exaggeration
+and pulse clarity; lullabies carry the smoothness and the fewest accents
+`[cirelli2020]` `[mehr2019]` `[bruder2025]`. [B] *Checker:* onsets are counted from
 each layer's mini-notation over one period (chords count once; `off`,
 `superimpose`, `ply` and `echo` copies count; a layer it cannot read is
 reported for review).
 
 **R3 (SHOULD) If there is a pulse, it is one soft low-passed onset per beat
-or per two beats, never a drum kit.** The NICU heartbeat-rhythm
-intervention worked because it was slow, steady and matched to the infant
-`[loewy2013]`; the womb pulse is a low-frequency periodic component
-`[parga2018]`. Filter it below ~400 Hz and keep it under the pad. [A, B]
+or per two beats, never a drum kit.** A soft heartbeat-like periodic sound
+at 45 dB calmed preterm infants under a painful procedure `[yarahmadi2024]`;
+the womb pulse is a low-frequency periodic component `[parga2018]`. Filter
+it below ~400 Hz and keep it under the pad. [A, B]
 
 ## 2. Pitch and melody
 
 **R4 (MUST) Melody range within one octave, mostly stepwise: no leap larger
-than a fifth, and at most one leap per phrase.** Lullabies have low pitch
-variability compared with playsongs `[trainor1997]`. [B] *Checker:* the
+than a fifth, and at most one leap per phrase.** Lullabies have a smaller
+pitch range and fewer pitch classes than other song types `[mehr2019]`
+`[bainbridge2021]`, and infant-directed song has less pitch variability
+than adult-directed song `[hilton2022]`. [B] *Checker:* the
 layer named `melody` (top voice at each onset, `note("…")` or
 `n("…").scale("…")`): range ≤ 12 semitones, no interval over 7 semitones
 including across the loop, and no phrase with more than one step wider
 than a tone.
 
 **R5 (MUST) Phrases are long (≥ 2 bars) and separated by rests of at least
-one beat.** Infant-directed singing lengthens the pauses between phrases
-`[trainor1997]`. [B] *Checker:* a rest of ≥ 1 beat separates phrases;
+one beat.** Derived: no open-access study measures pause length in
+lullabies, so this rule follows from the low-accent, low-density profile
+that does distinguish them `[mehr2019]` `[bainbridge2021]` and from R2; a
+rest is the cheapest way to keep density down without a busier texture.
+[B, derived] *Checker:* a rest of ≥ 1 beat separates phrases;
 every phrase spans ≥ 2 bars from its first onset to the end of its last
 note, except that the pass may close on a single held note followed by
 rest. A melody with no rest in its whole period fails.
 
 **R6 (SHOULD) Melody sits in the C4–C6 range and the harmony below it.**
-Infant-directed song is not pitched higher than adult song `[hilton2022]`;
-energy is weighted towards lower frequencies `[trainor1997]`. Mode (major
-or minor) is unconstrained: no infant evidence favours either. [B]
+Infant-directed song is not pitched higher than adult song `[hilton2022]`,
+lullaby singing is no higher than pop singing `[bruder2025]`, and a
+mother's soothing rendition sits lower than her playful one `[cirelli2020]`
+`[nguyen2023]`. Mode (major or minor) is unconstrained: no infant evidence
+favours either. [B]
 *Checker:* warns when the melody leaves C4–C6 or another pitched layer
 reaches above the melody's lowest note.
 
@@ -67,19 +76,21 @@ reaches above the melody's lowest note.
 **R7 (MUST) Smooth timbres only: sine, triangle, or sawtooth/square behind
 a low-pass filter with cutoff ≤ 2.5 kHz and resonance ≤ 4.** No distortion,
 no bit-crush, no high resonance. Infant-directed song has lower acoustic
-roughness and a less harsh timbre `[hilton2022]`. [B]
+roughness and a less harsh timbre `[hilton2022]`, and lullaby singing is
+the least pressed voice of any style `[bruder2025]`. [B]
 
 **R8 (MUST) Every sound has an attack of at least 5 ms; sustained layers at
 least 200 ms.** Sudden onsets are the acoustic definition of harshness
-`[hilton2022]` and the opposite of the "constant, without abrupt changes"
-music in the NICU protocols `[standley2002]`. [A, B] *Checker:* every
+`[hilton2022]`; lullaby singing has the smallest loudness fluctuation of
+any vocal style `[bruder2025]`, and NICU music is "softly played" with few
+elements `[vanderheijden2016]`. [A, B] *Checker:* every
 layer in `arrange()` sets `attack()` (strudel's default is 1 ms); a layer
 whose envelope holds (`sustain` unset or > 0) needs ≥ 0.2 s.
 
 **R9 (SHOULD) Spectral energy concentrates below 2 kHz; nothing sustained
 above 5 kHz.** The womb passes 10–100 Hz best and filters mid and high
-bands `[parga2018]`; infant-directed singing puts more energy at low
-frequencies `[trainor1997]`. [B] *Scan (warns):* ≥ 90 % of the energy in
+bands `[parga2018]`; infant-directed song is the lower-intensity,
+lower-roughness register `[hilton2022]`. [B] *Scan (warns):* ≥ 90 % of the energy in
 the averaged spectrum lies below 2 kHz, and the band above 5 kHz comes
 within 30 dB of the frame's total in ≤ 5 % of frames. *Checker:* an
 `hpf()` above 3 kHz fails.
@@ -87,16 +98,18 @@ within 30 dB of the frame's total in ≤ 5 % of frames. *Checker:* an
 ## 4. Broadband bed (noise)
 
 **R10 (SHOULD) A steady pink or brown bed is allowed; white noise is not.**
-One controlled trial found 80% of newborns asleep within five minutes with
-broadband noise versus 25% without `[spencer1990]`, but the systematic
-review of noise as a sleep aid rates the evidence low `[riedy2021]`, so
-the bed is optional and secondary. Pink or brown, not white, keeps the
-energy low-weighted `[parga2018]` `[trainor1997]`. [A, C, B]
+Newborn studies collected in the white-noise review report longer sleep
+and lower stress with a broadband bed, but the same review lists hearing
+and neurodevelopmental cautions and grades none of the evidence
+`[oz2025]`, so the bed is optional and secondary. White noise at
+conversation level measurably changes the sleeping infant brain
+`[li2025]`; pink or brown keeps the energy low-weighted, as the womb does
+`[parga2018]`. [C, B]
 
 **R11 (MUST if a bed is present) The bed is high-passed at 80–120 Hz,
 low-passed at ≤ 2.5 kHz, flat resonance, and its gain never exceeds the
 pad's.** Constant level; slow modulation of the filter (≥ 15 s period) is
-fine, tremolo is not. `[hilton2022]` `[standley2002]`. [A, B] *Checker:*
+fine, tremolo is not. `[hilton2022]` `[vanderheijden2016]`. [A, B] *Checker:*
 the layer whose source is `s("pink")` or `s("brown")`: `hpf` 80–120,
 `lpf` present and ≤ 2500, `lpq` ≤ 1, a plain-number `gain` no higher
 than the `pad` layer's, and any `.slow(n)` on its filters lasting ≥ 15 s
@@ -108,8 +121,10 @@ at the song's tempo.
 (R14), no section is more than 6 dB louder than the quietest section
 (measured with `scripts/scan.mjs`), and no swell inside a section exceeds
 3 dB.** Lower and steadier intensity is what separates
-infant-directed song from adult song `[hilton2022]`; NICU music is kept
-constant `[standley2002]`. [A, B] *Scan:* section spread from per-section
+infant-directed song from adult song `[hilton2022]`, a lullaby varies
+less in loudness than a playsong `[nguyen2023]` `[bruder2025]`, and the
+probability of waking tracks the loudest moment, not the average
+`[basner2018]`. [A, B, C] *Scan:* section spread from per-section
 RMS; the swell from K-weighted loudness (`[itu2023]`) on 4-bar windows
 stepping one bar inside each inner section, max − min ≤ 3 LU. Four bars
 is one harmonic turn, so a rest bar in the melody is not read as a swell
@@ -117,8 +132,8 @@ while a gain ramp or an opening filter is.
 
 **R13 (MUST) Form changes by one layer at a time.** Add or remove one
 voice per section boundary. Simple, repetitive structure is what worked in
-the sleep trials `[wang2025]` and what NICU protocols specify
-`[standley2002]`. [A, C]
+the sleep trials `[wang2025]` and what NICU music is described as: "not
+too many different elements" `[vanderheijden2016]`. [A, C]
 
 **R14 (MUST) Fade in over ≥ 8 bars; the last section returns to the first
 section's texture so the loop seam is inaudible.** Strudel repeats the
@@ -127,7 +142,9 @@ arrangement; a seam that jumps in level violates R12.
 **R15 (SHOULD) One pass of the arrangement is 3–6 minutes; the player's
 sleep timer defaults to 30 minutes then fades out over 60 seconds.** The
 listening dose in the sleep trials was 30–45 minutes `[wang2025]`; timed
-playback also limits total nightly exposure `[hugh2014]` `[aap2023]`. [C, D]
+playback limits the duration of exposure the white-noise review asks
+parents to watch `[oz2025]`, and a fade rather than a stop avoids the
+abrupt change that wakes a sleeper `[basner2018]`. [C]
 *Checker:* warns on the pass length; fails if `index.html`'s timer does
 not default to 30 min or fade over 60 s.
 
@@ -144,8 +161,10 @@ a gap is an abrupt change (R12).
 
 **R18 (MUST) Songs are level-matched: integrated loudness −23 ± 2 LUFS.**
 A parent sets the volume once; a louder song must not surprise them.
-Derived from `[hugh2014]`: the hazard came from level, and level is set
-once per night. The target is the catalogue reference `slow-tide` as
+Derived: the NICU ceiling is 45 dB `[mccallig2024]`, the music trials
+delivered 40–70 dB at the incubator `[vanderheijden2016]`, and a parent
+sets the level once per night, so every song must sit at the same
+loudness for that one setting to hold. The target is the catalogue reference `slow-tide` as
 measured on 2026-09-20 (−23.0 LUFS integrated; it is also the EBU R128
 broadcast target), fixed as a number so the match does not drift with the
 reference's random layers. Loudness is measured per `[itu2023]` over the
@@ -157,8 +176,11 @@ for information. [D]
 **R19 (MUST) The player page shows the playback guidance:** speaker
 at least 2 m from the crib, never in or on it; volume at the low end,
 aiming for ≤ 50 dBA at the baby's ear (about a quiet conversation, and the
-NICU ceiling is 45 dB); use the sleep timer rather than all-night
-playback. `[hugh2014]` `[aap1997]` `[aap2023]`. [D] The lab page is a
+NICU ceiling is 45 dB `[mccallig2024]`; white noise at 55 dBA reaches the
+sleeping infant brain `[li2025]`; awakenings begin above 33–38 dBA peaks
+`[basner2018]`); use the sleep timer rather than all-night playback, since
+volume and duration are the two things the white-noise review asks
+parents to limit `[oz2025]`. [D, B, C] The lab page is a
 measurement tool and links back to the player, so it does not repeat the
 notice. *Checker:* `index.html` has an element with `id="safety"` that
 says "2 metres from the crib", "50 dB" and "sleep timer".
@@ -173,7 +195,8 @@ citation in the README or an entry added to RESEARCH.md.
 
 **R21 (MUST) Claims on the site are limited to what the evidence shows:**
 "may help your baby settle and fall asleep". Never "improves development",
-"medically proven", or similar `[haslbeck2023]` `[vanderheijden2016]`.
+"medically proven", or similar: the systematic review of the NICU trials
+found it "impossible to draw strong conclusions" `[vanderheijden2016]`.
 *Checker:* the pages and song READMEs are searched for "proven",
 "guaranteed", "improves development", "cures", "treats" and the like.
 
