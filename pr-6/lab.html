@@ -96,9 +96,6 @@
   <span class="lede"><span id="lede"></span><span id="bars">&hellip;</span></span>
   <button id="play">play</button>
   <button id="stop">stop</button>
-  <select id="what"></select>
-  <button id="measure">measure 8 s</button>
-  <button id="scan">scan song</button>
   <button id="showcode">code</button>
   <span class="spacer"></span>
   <span class="lede" id="state">loading&hellip;</span>
@@ -525,13 +522,6 @@
       .map((m, i) => ({ i, bars: +m[1], names: m[2].split(',').map((s) => s.trim()),
                         label: (m[3] || '').trim() }));
 
-    const opts = ['<option value="song">whole song</option>',
-                  '<option value="all">everything at once</option>'];
-    sections.forEach((s) => opts.push(
-      `<option value="sec:${s.i}">section ${s.i + 1} — ${s.label || s.names.join(' + ')}</option>`));
-    names.forEach((n) => opts.push(`<option value="solo:${n}">solo: ${n}</option>`));
-    $('what').innerHTML = opts.join('');
-
     const palette = Object.values(LAYER_COLORS);
     names.forEach((n, i) => { if (!LAYER_COLORS[n]) LAYER_COLORS[n] = palette[i % palette.length]; });
     $('eqlegend').innerHTML = names
@@ -551,8 +541,17 @@
     if (v.startsWith('sec:')) return 'stack(' + sections[+v.slice(4)].names.join(', ') + ')' + tail;
     return v.slice(5) + tail;
   }
+  // What plays: the whole song by default. Sections and solos are still
+  // reachable from the console with Lab.select('sec:0' | 'solo:pad' | 'all').
+  const selection = { value: 'song', text: 'whole song' };
+  function selectionText(v) {
+    if (v === 'song') return 'whole song';
+    if (v === 'all') return 'everything at once';
+    if (v.startsWith('sec:')) { const s = sections[+v.slice(4)]; return 'section ' + (s.i + 1) + ' — ' + (s.label || s.names.join(' + ')); }
+    return 'solo: ' + v.slice(5);
+  }
   function activeNames() {
-    const v = $('what').value;
+    const v = selection.value;
     if (v.startsWith('solo:')) return [v.slice(5)];
     if (v.startsWith('sec:')) return sections[+v.slice(4)].names;
     return names;
@@ -565,7 +564,7 @@
       const ctx = getAudioContext();
       if (ctx.state !== 'running') ctx.resume().catch(() => {});
     }
-    const expr = expressionFor($('what').value);
+    const expr = expressionFor(selection.value);
     try {
       if (samplesReady) await samplesReady;   // never trigger before the map is in
       // Anchor the cycle clock only when starting from stopped: strudel's
@@ -576,7 +575,7 @@
       masterFade(1, 0.05);
       playing = true;
       $('play').classList.add('on');
-      $('state').textContent = 'playing · ' + ($('what').selectedOptions[0] || {}).text;
+      $('state').textContent = 'playing · ' + selection.text;
     } catch (e) {
       $('state').textContent = 'error: ' + e.message;
     }
@@ -610,7 +609,6 @@
     quietStop();
     $('state').textContent = 'stopped';
   };
-  $('what').onchange = () => { if (playing) start(); };
   function openDrawer(title, text) {
     $('drawertitle').textContent = title;
     $('report').textContent = text;
@@ -624,12 +622,6 @@
       $('copy').textContent = 'copied';
       setTimeout(() => ($('copy').textContent = 'copy'), 1200);
     } catch (e) { $('copy').textContent = 'select and copy'; }
-  };
-  $('measure').onclick = async () => {
-    openDrawer('report', 'measuring 8 s…');
-    const r = await Analysis.report(8000);
-    r.what = ($('what').selectedOptions[0] || {}).text;
-    openDrawer('report', JSON.stringify(r, null, 2));
   };
 
   // ============================================================ scanner
@@ -784,10 +776,10 @@ registerProcessor('capture', Capture);
     if (typeof note !== 'function') throw new Error('strudel is not ready yet');
     const totalBars = sections.reduce((a, s) => a + s.bars, 0);
     const barSec = 60 / cpm;
-    const wholeSong = $('what').value === 'song';
+    const wholeSong = selection.value === 'song';
     const musicSecs = (wholeSong ? totalBars : 16) * barSec;
     const secs = opts.seconds ?? musicSecs + 4;   // + tail for release and reverb
-    const label = ($('what').selectedOptions[0] || {}).text || $('what').value;
+    const label = selection.text;
     scanState.running = true; scanState.cancel = false;
     scanState.total = secs; scanState.done = 0;
     try {
@@ -1010,7 +1002,7 @@ registerProcessor('capture', Capture);
   }
 
   function scanText(r) {
-    if (!r) return 'no scan yet — press “scan song”';
+    if (!r) return 'no scan yet — run Lab.scan()';
     const where = (e) => 'bar ' + e.bar + (e.section ? ' · sec ' + e.section + (e.sectionLabel ? ' (' + e.sectionLabel + ')' : '') : '');
     const lines = [];
     lines.push((r.aborted ? 'ABORTED — partial scan · ' : '') + r.what + ' · ' + r.seconds + ' s at ' + r.sr + ' Hz');
@@ -1037,11 +1029,6 @@ registerProcessor('capture', Capture);
     lines.push('full data: Lab.lastScan · Lab.reanalyze({clickRatio,clickAbs,clipLevel}) · Lab.playBack(secs)');
     return lines.join('\n');
   }
-
-  $('scan').onclick = () => {
-    if (scanState.running) { $('state').textContent = 'scan already running — stop aborts it'; return; }
-    scanSong().catch((e) => { $('state').textContent = 'scan failed: ' + e.message; });
-  };
 
   // prebake registers the sample map ASYNCHRONOUSLY. A play that starts
   // before it resolves drops every s() trigger with "sound not found", so
@@ -1378,7 +1365,7 @@ registerProcessor('capture', Capture);
   window.Lab = {
     play: start,
     stop: () => $('stop').onclick(),
-    select: (v) => { $('what').value = v; return start(); },
+    select: (v) => { selection.value = v; selection.text = selectionText(v); return start(); },
     report: (ms) => Analysis.report(ms || 8000),
     parts: () => parts,
     eq: () => eqCurves(),

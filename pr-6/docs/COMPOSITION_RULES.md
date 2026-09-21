@@ -139,7 +139,7 @@ sleep trials favoured instrumental music `[wang2025]`. [A, C]
 ## 6. Output level and playback safety
 
 **R17 (MUST) Master peak ≤ −3 dBFS, no clipping, no clicks, no gaps
-(verified with `scripts/scan.mjs`, or `lab.html` → *scan song* in a browser).** A click is a harsh onset (R8);
+(verified with `scripts/scan.mjs`, or `Lab.scan()` in the lab page console).** A click is a harsh onset (R8);
 a gap is an abrupt change (R12).
 
 **R18 (MUST) Songs are level-matched: integrated loudness −23 ± 2 LUFS.**

@@ -15,7 +15,7 @@ Read, in this order, before touching a song:
 
 ```
 index.html                  the site: catalogue, player, safety notice
-lab.html                    measurement lab: lab.html?song=<id> (spectrum, scan for clicks/clips/level)
+lab.html                    measurement lab: lab.html?song=<id> (spectrum and meters; Lab.scan() from the console)
 songs/<id>/song.js          the strudel source (also pasteable into strudel.cc)
 songs/<id>/meta.json        title, bpm, key, bars, status, version, stage, tags, variantOf, research keys
 songs/tags.json             the tag vocabulary (a tag must be defined here before a song uses it)
