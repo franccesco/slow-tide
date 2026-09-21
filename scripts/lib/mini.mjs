@@ -113,7 +113,14 @@ export const fastcat = (ps) => fast(slowcat(ps), ps.length);
 export const timecat = (pairs) => {
   const total = pairs.reduce((a, [w]) => a + w, 0);
   let pos = 0;
-  const parts = pairs.map(([w, p]) => { const part = shift(fast(p, total / w), pos / total); pos += w; return part; });
+  const parts = pairs.map(([w, p]) => {
+    // squeeze the step into its slice of the cycle, then keep only the
+    // onsets that fall inside that slice (the squeezed pattern repeats)
+    const from = pos / total, to = (pos + w) / total;
+    const squeezed = shift(fast(p, total / w), from);
+    pos += w;
+    return (b, e) => squeezed(b, e).filter((ev) => { const f = ev.t - Math.floor(ev.t + EPS); return f >= from - EPS && f < to - EPS; });
+  });
   return stack(parts);
 };
 export const mapValue = (p, f) => (b, e) => p(b, e).map((ev) => ({ ...ev, v: f(ev.v) }));
