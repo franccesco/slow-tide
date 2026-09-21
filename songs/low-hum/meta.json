@@ -1,0 +1,59 @@
+{
+  "id": "low-hum",
+  "title": "Low Hum",
+  "subtitle": "a chant-like hum in A minor",
+  "bpm": 60,
+  "key": "A minor",
+  "bars": 64,
+  "passSeconds": 256,
+  "added": "2026-09-21",
+  "status": "compliant",
+  "version": 1,
+  "stage": "built",
+  "verified": {
+    "version": 1,
+    "scan": "2026-09-21"
+  },
+  "tags": [
+    "bedtime",
+    "minor",
+    "melodic",
+    "heartbeat",
+    "noise-bed",
+    "drone"
+  ],
+  "changelog": [
+    {
+      "version": 1,
+      "date": "2026-09-21",
+      "note": "first version"
+    }
+  ],
+  "layers": [
+    "hum",
+    "pad",
+    "pulse",
+    "melody",
+    "bed"
+  ],
+  "research": [
+    "canessapollard2025",
+    "carvalho2024",
+    "weinkoetz2025",
+    "bainbridge2021",
+    "basner2018",
+    "bruder2025",
+    "cirelli2020",
+    "hilton2022",
+    "li2025",
+    "mccallig2024",
+    "mehr2019",
+    "nguyen2023",
+    "oz2025",
+    "parga2018",
+    "vanderheijden2016",
+    "wang2025",
+    "yarahmadi2024"
+  ],
+  "exceptions": []
+}

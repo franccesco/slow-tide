@@ -98,9 +98,77 @@
       "doi": "https://doi.org/10.3390/ijerph15030519",
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5877064/",
       "openAccess": true
+    },
+    "canessapollard2025": {
+      "title": "Chants across seven traditions share acoustic traits that enhance subjective relaxation",
+      "grade": "C",
+      "doi": "https://doi.org/10.1073/pnas.2506480122",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12415189/",
+      "openAccess": true
+    },
+    "carvalho2024": {
+      "title": "Maternal humming during kangaroo care: effects on preterm dyads' physiological parameters",
+      "grade": "B",
+      "doi": "https://doi.org/10.3390/children11030373",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10969544/",
+      "openAccess": true
+    },
+    "weinkoetz2025": {
+      "title": "Effects of live-performed sansula music versus storytelling on physiological and behavioral parameters in preterm infants: a randomized controlled trial",
+      "grade": "A",
+      "doi": "https://doi.org/10.1038/s41598-025-25875-8",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12594991/",
+      "openAccess": true
     }
   },
   "songs": [
+    {
+      "id": "low-hum",
+      "title": "Low Hum",
+      "subtitle": "a chant-like hum in A minor",
+      "bpm": 60,
+      "key": "A minor",
+      "bars": 64,
+      "passSeconds": 256,
+      "added": "2026-09-21",
+      "status": "compliant",
+      "exceptions": [],
+      "research": [
+        "canessapollard2025",
+        "carvalho2024",
+        "weinkoetz2025",
+        "bainbridge2021",
+        "basner2018",
+        "bruder2025",
+        "cirelli2020",
+        "hilton2022",
+        "li2025",
+        "mccallig2024",
+        "mehr2019",
+        "nguyen2023",
+        "oz2025",
+        "parga2018",
+        "vanderheijden2016",
+        "wang2025",
+        "yarahmadi2024"
+      ],
+      "version": 1,
+      "stage": "built",
+      "tags": [
+        "bedtime",
+        "minor",
+        "melodic",
+        "heartbeat",
+        "noise-bed",
+        "drone"
+      ],
+      "variantOf": null,
+      "verified": {
+        "version": 1,
+        "scan": "2026-09-21"
+      },
+      "fingerprint": "92f502e48f92"
+    },
     {
       "id": "first-light",
       "title": "First Light",

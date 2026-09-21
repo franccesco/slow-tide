@@ -319,6 +319,84 @@ Open access: https://www.itu.int/dms_pubrec/itu-r/rec/bs/R-REC-BS.1770-5-202311-
   plain RMS. The −23 LUFS figure itself is the reference song's measured
   level, not a recommendation of this document about infants.
 
+### `[canessapollard2025]` Chants across seven traditions share acoustic traits that enhance subjective relaxation — grade C
+Canessa-Pollard V, Anikin A, Reby D. *Proceedings of the National Academy of
+Sciences* 122(35), e2506480122 (2025). https://doi.org/10.1073/pnas.2506480122
+Open access: https://pmc.ncbi.nlm.nih.gov/articles/PMC12415189/ (CC BY-NC-ND; full text read 2026-09-21)
+
+- 242 chants from seven traditions compared acoustically with 126 songs
+  and 616 speech samples from 14 language families (Study 1); then
+  playback ratings of original chants (61 listeners), resynthesised chants
+  with pitch, tempo and pitch-excursion manipulated (114 listeners) and
+  fully synthetic vowel chants (80 listeners), all adults on Prolific.
+- Across traditions chants share "relatively flat and slow-changing
+  intonation and steady, unbroken voicing in a comfortable, rather low
+  pitch range", few vibrato-like inflections, and mostly mid-central
+  vowels; the rate of pitch change was the feature that most set them
+  apart from song and speech.
+- Listeners rated chants more relaxing than songs (+0.60) and speech
+  (+0.97). In the synthetic chants a tempo of **60 bpm** was the "sweet
+  spot" for pleasantness and relaxation; a light vibrato of **0.15
+  semitones** rated better than none or 0.5 semitones (no vibrato: −0.3
+  relaxation); the vowels **[u] and [o]** rated more relaxing (+0.6, +0.4)
+  than [a], [e], [i]; lower average pitch (93 Hz vs 235 Hz) was slightly
+  more relaxed (−0.2 for the high pitch) and less alert; a rising contour
+  rated more pleasant and relaxed (+0.4) than a flat one.
+- **What it supports:** a sustained low drone with a light vibrato and an
+  [u]-shaped spectrum, phrases with slow, mostly rising contours, and
+  60 bpm as a tempo listeners find relaxing (R1, R4, R7).
+- **What it does not show:** infants, or sleep; ratings are adults'
+  self-reports of relaxation after 20-second clips.
+
+### `[carvalho2024]` Maternal humming during kangaroo care: effects on preterm dyads' physiological parameters — grade B
+Carvalho MES, Justo JMRM. *Children* 11(3), 373 (2024).
+https://doi.org/10.3390/children11030373
+Open access: https://pmc.ncbi.nlm.nih.gov/articles/PMC10969544/ (CC BY; full text read 2026-09-21)
+
+- 36 mother–preterm infant dyads in kangaroo care, a single-group
+  repeated-measures protocol (silent baseline, speech, humming, silence)
+  with heart rate and oxygen saturation read once a minute; the humming
+  was transcribed and its melodic contours (linear, rising, falling,
+  bell, U, sinusoidal) and the lengthening of each phrase's final note
+  were measured.
+- Infant heart rate was lower during humming than during speech (153.3
+  vs 157.3 bpm, p = 0.028, d = −0.38) and the oxygen-saturation-to-heart-
+  rate ratio higher (p = 0.027); humming did **not** differ significantly
+  from the silent baseline (p = 0.114). Among the humming features, only
+  the duration of **sinusoidal contours** together with the **lengthening
+  of the final note** predicted the infants' heart rate and ratio (final
+  regression step p = 0.025 and 0.037); the other contour shapes did not.
+- **What it supports:** a hummed, wordless line whose phrases rise and
+  settle in a slow wave and hold their last note before the rest (R4, R5,
+  R16).
+- **What it does not show:** sleep, term infants at home, or that
+  humming beats silence; the sample is small and the design has no
+  control group.
+
+### `[weinkoetz2025]` Effects of live-performed sansula music versus storytelling on physiological and behavioral parameters in preterm infants: a randomized controlled trial — grade A
+Weinkoetz A, Klasen NJ, Felderhoff-Mueser U, Bruns N, Kobus S. *Scientific
+Reports* 15, 38995 (2025). https://doi.org/10.1038/s41598-025-25875-8
+Open access: https://pmc.ncbi.nlm.nih.gov/articles/PMC12594991/ (CC BY; full text read 2026-09-21)
+
+- Randomised trial, 60 preterm infants (32–36 weeks), 30 per arm, 552
+  sessions: live sansula music (a kalimba on a drumhead, "gentle and
+  sustained, with a resonant, soft timbre", **tuned in A minor**, "of its
+  nine notes, the three lowest, A, C' and E', were played
+  predominantly", improvised, held 20–30 cm from the infant) against
+  live storytelling, three to four sessions a week of about 25 minutes.
+- Heart rate fell from 151 to 141 bpm and respiratory rate from 48 to 40
+  per minute across a music session and stayed down afterwards; both
+  fell less with storytelling (adjusted difference 7.3 bpm and 6.3
+  breaths per minute in favour of music); the COMFORTneo distress score
+  fell 35 % against 12 %.
+- **What it supports:** a soft, sustained, few-note texture built on A,
+  C and E in A minor calms preterm infants over a 20–35 minute session
+  (R13, R15; the key and note set of this catalogue's A minor song), and
+  live attention alone explains only part of the effect.
+- **What it does not show:** sleep, term infants, recorded music, or
+  that the key or the instrument mattered rather than the live
+  improvisation to the infant's cues.
+
 ## Open questions (things the literature does not settle)
 
 - **Key or mode.** No cross-cultural study we found shows major or minor

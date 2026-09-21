@@ -117,7 +117,7 @@ try {
       await page.route('https://unpkg.com/@strudel/web**', (route) => route.fulfill({ path: process.env.STRUDEL_WEB_JS, contentType: 'text/javascript' }));
     }
     page.on('console', (m) => { if (m.type() === 'error' && !/ERR_|Failed to fetch/.test(m.text())) console.error('  [browser]', m.text().slice(0, 300)); });
-    await page.goto(`http://127.0.0.1:${port}/index.html?song=${id}`);
+    await page.goto(`http://127.0.0.1:${port}/index.html?song=${id}&drafts=1`);
     await page.waitForFunction(() => /ready$/.test(document.getElementById('state').textContent), null, { timeout: 60000 });
     process.stdout.write(`\n=== ${id} · ${totalBars} bars · recording ${Math.round(seconds)} s `);
 

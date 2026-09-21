@@ -8,5 +8,6 @@
   "minor": "in a minor key",
   "pad-only": "no melody layer; sustained chords only",
   "melodic": "has a melody layer",
-  "reference": "used by the lab as the level-matching reference (R18)"
+  "reference": "used by the lab as the level-matching reference (R18)",
+  "drone": "a low sustained tone, hummed or chant-like, runs under everything the whole way through"
 }
