@@ -1,0 +1,58 @@
+{
+  "id": "slow-tide",
+  "title": "Slow Tide",
+  "subtitle": "a calm piece in D minor (the original test song)",
+  "bpm": 54,
+  "key": "D minor",
+  "bars": 50,
+  "passSeconds": 222,
+  "added": "2026-09-01",
+  "status": "legacy",
+  "version": 1,
+  "stage": "built",
+  "verified": {
+    "version": 1,
+    "scan": "2026-09-20"
+  },
+  "tags": [
+    "minor",
+    "melodic",
+    "noise-bed",
+    "reference"
+  ],
+  "changelog": [
+    {
+      "version": 1,
+      "date": "2026-09-01",
+      "note": "the original test piece, kept as the level reference"
+    }
+  ],
+  "layers": [
+    "pad",
+    "bass",
+    "bells",
+    "glints",
+    "melody",
+    "pulse",
+    "ticks",
+    "rimshot",
+    "air"
+  ],
+  "research": [
+    "trainor1997",
+    "hilton2022",
+    "parga2018",
+    "spencer1990"
+  ],
+  "exceptions": [
+    "R2",
+    "R4",
+    "R5",
+    "R8",
+    "R9",
+    "R11",
+    "R12",
+    "R13",
+    "R14"
+  ]
+}

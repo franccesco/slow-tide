@@ -1,0 +1,144 @@
+{
+  "generated": "2026-09-21",
+  "sources": {
+    "bainbridge2021": {
+      "title": "Infants relax in response to unfamiliar foreign lullabies",
+      "grade": "A/B",
+      "url": "https://doi.org/10.1038/s41562-020-00963-z"
+    },
+    "hilton2022": {
+      "title": "Acoustic regularities in infant-directed speech and song across cultures",
+      "grade": "B",
+      "url": "https://doi.org/10.1038/s41562-022-01410-x"
+    },
+    "trainor1997": {
+      "title": "The acoustic basis of preferences for infant-directed singing",
+      "grade": "B",
+      "url": "https://doi.org/10.1016/S0163-6383(97)90009-6"
+    },
+    "cirelli2020": {
+      "title": "Effects of maternal singing style on mother–infant arousal and behavior",
+      "grade": "B",
+      "url": "https://doi.org/10.1162/jocn_a_01402"
+    },
+    "loewy2013": {
+      "title": "The effects of music therapy on vital signs, feeding, and sleep in premature infants",
+      "grade": "A",
+      "url": "https://doi.org/10.1542/peds.2012-1367"
+    },
+    "standley2002": {
+      "title": "A meta-analysis of the efficacy of music therapy for premature infants",
+      "grade": "A",
+      "url": "https://doi.org/10.1053/jpdn.2002.124128"
+    },
+    "spencer1990": {
+      "title": "White noise and sleep induction",
+      "grade": "A",
+      "url": "https://doi.org/10.1136/adc.65.1.135"
+    },
+    "parga2018": {
+      "title": "A description of externally recorded womb sounds in human subjects during gestation",
+      "grade": "B",
+      "url": "https://doi.org/10.1371/journal.pone.0197045"
+    },
+    "wang2025": {
+      "title": "Elements of music that work to improve sleep, a narrative review",
+      "grade": "C",
+      "url": "https://doi.org/10.3389/frsle.2025.1707162"
+    },
+    "hugh2014": {
+      "title": "Infant sleep machines and hazardous sound pressure levels",
+      "grade": "D",
+      "url": "https://doi.org/10.1542/peds.2013-3617"
+    },
+    "riedy2021": {
+      "title": "Noise as a sleep aid: a systematic review",
+      "grade": "C",
+      "url": "https://doi.org/10.1016/j.smrv.2020.101385"
+    }
+  },
+  "songs": [
+    {
+      "id": "first-light",
+      "title": "First Light",
+      "subtitle": "a slow lullaby in C major",
+      "bpm": 60,
+      "key": "C major",
+      "bars": 64,
+      "passSeconds": 256,
+      "added": "2026-09-20",
+      "status": "compliant",
+      "exceptions": [],
+      "research": [
+        "trainor1997",
+        "hilton2022",
+        "cirelli2020",
+        "bainbridge2021",
+        "loewy2013",
+        "standley2002",
+        "spencer1990",
+        "riedy2021",
+        "parga2018",
+        "wang2025",
+        "hugh2014"
+      ],
+      "version": 1,
+      "stage": "built",
+      "tags": [
+        "bedtime",
+        "major",
+        "melodic",
+        "heartbeat",
+        "noise-bed"
+      ],
+      "variantOf": null,
+      "verified": {
+        "version": 1,
+        "scan": "2026-09-20"
+      },
+      "fingerprint": "8327da58cfd2"
+    },
+    {
+      "id": "slow-tide",
+      "title": "Slow Tide",
+      "subtitle": "a calm piece in D minor (the original test song)",
+      "bpm": 54,
+      "key": "D minor",
+      "bars": 50,
+      "passSeconds": 222,
+      "added": "2026-09-01",
+      "status": "legacy",
+      "exceptions": [
+        "R2",
+        "R4",
+        "R5",
+        "R8",
+        "R9",
+        "R11",
+        "R12",
+        "R13",
+        "R14"
+      ],
+      "research": [
+        "trainor1997",
+        "hilton2022",
+        "parga2018",
+        "spencer1990"
+      ],
+      "version": 1,
+      "stage": "built",
+      "tags": [
+        "minor",
+        "melodic",
+        "noise-bed",
+        "reference"
+      ],
+      "variantOf": null,
+      "verified": {
+        "version": 1,
+        "scan": "2026-09-20"
+      },
+      "fingerprint": "a27aa6aa39bb"
+    }
+  ]
+}
