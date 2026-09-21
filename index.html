@@ -57,6 +57,10 @@
   #tagbar .count { flex: 1 1 100%; color: var(--dim); font-size: 13px; }
   .song .links { grid-column: 1 / -1; font-size: 13px; color: var(--dim); }
   .song .links a { margin-right: 12px; }
+  .song details { grid-column: 1 / -1; font-size: 13px; color: var(--dim); }
+  .song details summary { cursor: pointer; }
+  .song details ol { margin: 6px 0 0; padding-left: 20px; }
+  .song details li { margin: 3px 0; }
   button, select {
     font: inherit; color: var(--ink); background: var(--bg);
     border: 1px solid var(--line); border-radius: 8px; padding: 10px 18px; cursor: pointer;
@@ -164,7 +168,7 @@
 <p class="lede">Slow, quiet instrumental songs for settling a baby to sleep. Each one is
 written to <a href="https://github.com/franccesco/slow-tide/blob/main/docs/COMPOSITION_RULES.md">rules
 drawn from published research</a>, and each song's page shows which studies
-it relies on. They may help your baby settle; nothing here is a treatment.</p>
+it relies on, each one free to read in full. They may help your baby settle; nothing here is a treatment.</p>
 
 <div class="notice" id="safety">
   <b>Before you press play</b>
@@ -174,10 +178,12 @@ it relies on. They may help your baby settle; nothing here is a treatment.</p>
       (under about 50 dB; a phone sound-meter app will tell you). Set it once, with the loudest song.</li>
     <li>Use the sleep timer instead of playing all night. It fades out over a minute.</li>
   </ul>
-  <p style="margin:8px 0 0;font-size:13px;color:var(--dim)">Why: consumer sleep machines have been measured above hazardous levels at crib distance
-    (Hugh et al., <i>Pediatrics</i> 2014); the AAP's ceiling for infant environments is 45 dB and its 2023 noise
-    policy asks parents to use sleep sound at low volume and limited duration.
-    Sources are in <a href="https://github.com/franccesco/slow-tide/blob/main/docs/RESEARCH.md">the research notes</a>.</p>
+  <p style="margin:8px 0 0;font-size:13px;color:var(--dim)">Why: the published ceiling for a newborn's sound environment is 45 dB
+    (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11153338/">McCallig et al. 2024</a>); white noise at 55 dB measurably reaches
+    the sleeping infant brain (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12340116/">Li et al. 2025</a>); and the review of
+    white noise in newborn care asks parents to limit volume and duration
+    (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12818530/">Öz and Demirci 2025</a>). Every study behind these songs is open access,
+    listed under each song and in <a href="https://github.com/franccesco/slow-tide/blob/main/docs/RESEARCH.md">the research notes</a>.</p>
 </div>
 
 <h2>Songs</h2>
@@ -708,7 +714,9 @@ script rejects a song that breaks a rule or cites a study that is not in the not
 
   async function loadCatalogue() {
     const r = await fetch('songs/index.json');
-    const all = (await r.json()).songs;
+    const index = await r.json();
+    const all = index.songs;
+    const sources = index.sources || {};
     try {
       const tj = await (await fetch('songs/tags.json')).json();
       for (const [k, v] of Object.entries(tj)) if (k[0] !== '_') tagDefs[k] = v;
@@ -737,8 +745,10 @@ script rejects a song that breaks a rule or cites a study that is not in the not
           <span class="tag ${s.status}">${s.status === 'compliant' ? 'meets every rule' : 'legacy: exceptions ' + s.exceptions.join(', ')}</span>
           <a href="https://github.com/franccesco/slow-tide/blob/main/songs/${s.id}/README.md">why it sounds this way</a>
           <a href="songs/${s.id}/song.js">code</a>
-        </div>`;
+        </div>
+        ${papers(s)}`;
       el.querySelector('button').onclick = (ev) => { ev.stopPropagation(); choose(s.id, true); };
+      el.querySelectorAll('details, details a').forEach((d) => (d.onclick = (ev) => ev.stopPropagation()));
       el.querySelectorAll('.tags a').forEach((a) => (a.onclick = (ev) => { ev.preventDefault(); ev.stopPropagation(); toggleTag(a.dataset.tag); }));
       el.querySelectorAll('.links a').forEach((a) => (a.onclick = (ev) => ev.stopPropagation()));
       el.title = 'open ' + s.title + ' in the lab';
@@ -750,6 +760,19 @@ script rejects a song that breaks a rule or cites a study that is not in the not
     if (wanted && catalogue.some((s) => s.id === wanted)) await choose(wanted, false);
     await ready.catch((e) => { $('state').textContent = e.message; });
     applyRoute(false);
+
+    // Every paper the song cites, linked so it can be read (the checker
+    // requires each cited entry in docs/RESEARCH.md to carry its link).
+    function papers(s) {
+      const items = (s.research || []).map((k) => {
+        const p = sources[k];
+        if (!p) return `<li>${esc(k)}</li>`;
+        const grade = p.grade ? ` <span class="v">grade ${esc(p.grade)}</span>` : '';
+        return `<li>${p.url ? `<a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>` : esc(p.title)}${grade}</li>`;
+      });
+      if (!items.length) return '';
+      return `<details><summary>${items.length} paper${items.length === 1 ? '' : 's'} it relies on, free to read</summary><ol>${items.join('')}</ol></details>`;
+    }
   }
 
   async function choose(id, andPlay) {

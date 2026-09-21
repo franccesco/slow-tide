@@ -2,7 +2,9 @@
 /*
   check-song.mjs — enforces the machine-checkable parts of
   docs/COMPOSITION_RULES.md on every song in songs/, verifies citations
-  against docs/RESEARCH.md, and writes songs/index.json for the site.
+  against docs/RESEARCH.md (every cited entry must link the free full text
+  of its paper), and writes songs/index.json, with each paper's title and
+  open-access link, for the site.
 
     node scripts/check-song.mjs            check all songs, write the index
     node scripts/check-song.mjs first-light check one song, do not write
@@ -65,6 +67,24 @@ const PERCUSSION_SAMPLES = ['bd', 'sd', 'hh', 'oh', 'cp', 'rs', 'rim', 'cr', 'ri
 
 const research = readFileSync(join(root, 'docs/RESEARCH.md'), 'utf8');
 const researchKeys = new Set([...research.matchAll(/^### `\[([a-z0-9]+)\]`/gm)].map((m) => m[1]));
+// Each entry's title, DOI link and open-access full-text link ("Open access: <url>"
+// in the citation lines, before the first bullet); the site links the full text
+// under every song. A DOI resolver or a known paywall host is not open access.
+const PAYWALL_HOSTS = /^(?:[a-z0-9-]+\.)*(?:doi\.org|sciencedirect\.com|onlinelibrary\.wiley\.com|cochranelibrary\.com|publications\.aap\.org|journals\.sagepub\.com|tandfonline\.com|academic\.oup\.com|link\.springer\.com|nature\.com|cell\.com|jamanetwork\.com|nejm\.org|thelancet\.com|liebertpub\.com|karger\.com|bmj\.com|pubmed\.ncbi\.nlm\.nih\.gov|scholar\.google\.com)$/i;
+const sources = {};
+for (const m of research.matchAll(/^### `\[([a-z0-9]+)\]` (.+?)(?: — grade ([A-D/]+))?\s*\n([\s\S]*?)(?=^### |^## |(?![\s\S]))/gm)) {
+  const head = m[4].split(/^\s*-/m)[0];
+  const doi = /https?:\/\/doi\.org\/\S+/.exec(head);
+  const oa = /^Open access:\s*(https?:\/\/\S+)/m.exec(head);
+  let host = null;
+  try { host = oa ? new URL(oa[1]).hostname : null; } catch (e) { host = null; }
+  sources[m[1]] = {
+    title: m[2].trim(), grade: m[3] || null,
+    doi: doi ? doi[0].replace(/[.,;)]+$/, '') : null,
+    url: oa ? oa[1].replace(/[.,;)]+$/, '') : null,
+    openAccess: !!(oa && host && !PAYWALL_HOSTS.test(host)),
+  };
+}
 
 const songsDir = join(root, 'songs');
 const allIds = readdirSync(songsDir).filter((d) => statSync(join(songsDir, d)).isDirectory()).sort();
@@ -367,6 +387,8 @@ for (const id of ids) {
     if (!researchKeys.has(k)) fail('R20', `meta.research lists "${k}" but docs/RESEARCH.md has no such entry`);
     if (!cited.has(k)) fail('R20', `meta.research lists "${k}" but the README never cites it`);
     citedAnywhere.add(k);
+    if (researchKeys.has(k) && !sources[k].url) fail('R20', `[${k}] in docs/RESEARCH.md has no "Open access: https://…" line; every cited study links its free full text, which was read (docs/RESEARCH.md, "How to add an entry")`);
+    else if (researchKeys.has(k) && !sources[k].openAccess) fail('R20', `[${k}] in docs/RESEARCH.md links ${sources[k].url} as open access, but that is a DOI resolver or a paywall host; link the free full text (PMC, Europe PMC, the OA publisher page or an author copy)`);
   }
   if (!cited.size) fail('R20', 'README cites no research keys');
 
@@ -455,7 +477,9 @@ if (write) {
   index.sort((a, b) => a.stage !== b.stage ? (a.stage === 'built' ? -1 : 1)
     : a.status !== b.status ? (a.status === 'compliant' ? -1 : 1)
     : a.added < b.added ? 1 : -1);
-  const out = { generated: new Date().toISOString().slice(0, 10), songs: index };
+  const used = new Set(index.flatMap((s) => s.research));
+  const papers = Object.fromEntries(Object.entries(sources).filter(([k]) => used.has(k)));
+  const out = { generated: new Date().toISOString().slice(0, 10), sources: papers, songs: index };
   writeFileSync(join(songsDir, 'index.json'), JSON.stringify(out, null, 2) + '\n');
   console.log(`wrote songs/index.json (${index.length} songs)`);
 }

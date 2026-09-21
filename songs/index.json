@@ -1,5 +1,105 @@
 {
   "generated": "2026-09-21",
+  "sources": {
+    "bainbridge2021": {
+      "title": "Infants relax in response to unfamiliar foreign lullabies",
+      "grade": "A/B",
+      "doi": "https://doi.org/10.1038/s41562-020-00963-z",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8220405/",
+      "openAccess": true
+    },
+    "hilton2022": {
+      "title": "Acoustic regularities in infant-directed speech and song across cultures",
+      "grade": "B",
+      "doi": "https://doi.org/10.1038/s41562-022-01410-x",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10101735/",
+      "openAccess": true
+    },
+    "mehr2019": {
+      "title": "Universality and diversity in human song",
+      "grade": "B",
+      "doi": "https://doi.org/10.1126/science.aax0868",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7001657/",
+      "openAccess": true
+    },
+    "nguyen2023": {
+      "title": "Sing to me, baby: infants show neural tracking and rhythmic movements to live and dynamic maternal singing",
+      "grade": "B",
+      "doi": "https://doi.org/10.1016/j.dcn.2023.101313",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10618693/",
+      "openAccess": true
+    },
+    "bruder2025": {
+      "title": "CoVox: a dataset of contrasting vocalizations",
+      "grade": "B",
+      "doi": "https://doi.org/10.3758/s13428-025-02664-9",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11991967/",
+      "openAccess": true
+    },
+    "cirelli2020": {
+      "title": "Effects of maternal singing style on mother–infant arousal and behavior",
+      "grade": "B",
+      "doi": "https://doi.org/10.1162/jocn_a_01402",
+      "url": "https://utoronto.scholaris.ca/bitstreams/b5581668-c250-4593-979f-5aa7a7133166/download",
+      "openAccess": true
+    },
+    "yarahmadi2024": {
+      "title": "The effect of simulated intrauterine sound on behavioral and physiological indices of pain during capillary blood sampling in preterm infants",
+      "grade": "A/B",
+      "doi": "https://doi.org/10.1186/s12887-024-04604-6",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10863201/",
+      "openAccess": true
+    },
+    "vanderheijden2016": {
+      "title": "Do hospitalized premature infants benefit from music interventions? A systematic review of RCTs",
+      "grade": "A",
+      "doi": "https://doi.org/10.1371/journal.pone.0161848",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5015899/",
+      "openAccess": true
+    },
+    "parga2018": {
+      "title": "A description of externally recorded womb sounds in human subjects during gestation",
+      "grade": "B",
+      "doi": "https://doi.org/10.1371/journal.pone.0197045",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5944959/",
+      "openAccess": true
+    },
+    "wang2025": {
+      "title": "Elements of music that work to improve sleep, a narrative review",
+      "grade": "C",
+      "doi": "https://doi.org/10.3389/frsle.2025.1707162",
+      "url": "https://www.frontiersin.org/articles/10.3389/frsle.2025.1707162/full",
+      "openAccess": true
+    },
+    "oz2025": {
+      "title": "Applications of white noise in maternal and neonatal care: a comprehensive review",
+      "grade": "C",
+      "doi": "https://doi.org/10.4103/nah.nah_154_25",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12818530/",
+      "openAccess": true
+    },
+    "li2025": {
+      "title": "Task-based functional connectivity in infants after exposure to regular white noise during natural sleep",
+      "grade": "B",
+      "doi": "https://doi.org/10.1038/s41598-025-14774-7",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12340116/",
+      "openAccess": true
+    },
+    "mccallig2024": {
+      "title": "Evaluation of noise levels and noise sources in an Irish neonatal intensive care unit",
+      "grade": "D",
+      "doi": "https://doi.org/10.1093/annweh/wxae031",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11153338/",
+      "openAccess": true
+    },
+    "basner2018": {
+      "title": "WHO environmental noise guidelines for the European region: a systematic review on environmental noise and effects on sleep",
+      "grade": "C",
+      "doi": "https://doi.org/10.3390/ijerph15030519",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5877064/",
+      "openAccess": true
+    }
+  },
   "songs": [
     {
       "id": "first-light",
@@ -13,17 +113,20 @@
       "status": "compliant",
       "exceptions": [],
       "research": [
-        "trainor1997",
-        "hilton2022",
-        "cirelli2020",
         "bainbridge2021",
-        "loewy2013",
-        "standley2002",
-        "spencer1990",
-        "riedy2021",
+        "basner2018",
+        "bruder2025",
+        "cirelli2020",
+        "hilton2022",
+        "li2025",
+        "mccallig2024",
+        "mehr2019",
+        "nguyen2023",
+        "oz2025",
         "parga2018",
+        "vanderheijden2016",
         "wang2025",
-        "hugh2014"
+        "yarahmadi2024"
       ],
       "version": 1,
       "stage": "built",
@@ -63,10 +166,11 @@
         "R14"
       ],
       "research": [
-        "trainor1997",
         "hilton2022",
+        "mehr2019",
+        "oz2025",
         "parga2018",
-        "spencer1990"
+        "wang2025"
       ],
       "version": 1,
       "stage": "built",

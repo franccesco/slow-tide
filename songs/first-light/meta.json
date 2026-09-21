@@ -36,17 +36,20 @@
     "bed"
   ],
   "research": [
-    "trainor1997",
-    "hilton2022",
-    "cirelli2020",
     "bainbridge2021",
-    "loewy2013",
-    "standley2002",
-    "spencer1990",
-    "riedy2021",
+    "basner2018",
+    "bruder2025",
+    "cirelli2020",
+    "hilton2022",
+    "li2025",
+    "mccallig2024",
+    "mehr2019",
+    "nguyen2023",
+    "oz2025",
     "parga2018",
+    "vanderheijden2016",
     "wang2025",
-    "hugh2014"
+    "yarahmadi2024"
   ],
   "exceptions": []
 }

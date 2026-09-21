@@ -12,9 +12,9 @@ to [docs/RESEARCH.md](../../docs/RESEARCH.md).
 
 | Rule | Choice in `song.js` | Evidence |
 | --- | --- | --- |
-| R1 tempo | 54 bpm | `[trainor1997]` |
+| R1 tempo | 54 bpm | lullabies are the slow song type `[mehr2019]`; the lower half of the 60–80 bpm sleep-music band `[wang2025]` |
 | R7 timbre | sawtooth pad behind a 500–2200 Hz low-pass; triangle and sine elsewhere | `[hilton2022]` |
-| R10 bed | pink noise, `hpf(110)`, `lpf` 900–2400 on a 37-bar drift, `lpq(1)` | `[spencer1990]` `[parga2018]` |
+| R10 bed | pink noise, `hpf(110)`, `lpf` 900–2400 on a 37-bar drift, `lpq(1)` | `[parga2018]` `[oz2025]` |
 | R16 | instrumental | |
 | R17 | headless scans 2026-09-20 (percussion samples unavailable offline): peak −8.4 to −10.4 dBFS, 0 clips, 0 gaps; one run in three caught a single click at bar 28 from the randomised bells | |
 | R18 | it is the level reference itself: −22.7 LUFS integrated on the latest scan (the fixed target is −23 LUFS, its level as first measured); section 5 measures −22.4 to −23.3 dB RMS across runs, since `degradeBy` and `perlin` move it | |
