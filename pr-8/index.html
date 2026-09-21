@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Slow, quiet instrumental songs for settling a baby to sleep. Every song is written to rules drawn from published research, and each one cites its sources.">
+<link rel="icon" href="data:,">
+<title>Slow Tide · sleep songs</title>
+<style>
+  :root {
+    --bg: #0b0f14; --panel: #11171f; --ink: #e8e6df; --dim: #8a929d;
+    --line: #1e2733; --accent: #7fb3a3; --warn: #d8a657; --bad: #e07a5f;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 20px 16px 60px; max-width: 720px; margin-inline: auto;
+  }
+  h1 { font-weight: 400; letter-spacing: .1em; font-size: 22px; margin: 0 0 4px; }
+  h2 { font-weight: 400; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); margin: 28px 0 10px; }
+  p { margin: 0 0 10px; }
+  a { color: var(--accent); }
+  .lede { color: var(--dim); margin-bottom: 18px; }
+  .notice {
+    background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--warn);
+    border-radius: 8px; padding: 12px 14px; margin: 14px 0; font-size: 15px;
+  }
+  .notice b { color: var(--warn); font-weight: 500; }
+  .notice ul { margin: 6px 0 0; padding-left: 20px; }
+  .notice li { margin: 2px 0; }
+  .song {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px; margin: 10px 0; display: grid; grid-template-columns: 1fr auto; gap: 8px 14px; align-items: center;
+  }
+  .song.now { border-color: var(--accent); }
+  .song .t { font-size: 18px; }
+  .song .s { color: var(--dim); font-size: 14px; }
+  .song .tag { font-size: 12px; color: var(--dim); letter-spacing: .06em; }
+  .song .tag.legacy { color: var(--warn); }
+  .song .tag.draft { color: var(--bad); }
+  .song .v { color: var(--dim); font-size: 12px; margin-left: 6px; letter-spacing: .06em; }
+  .song .tags { grid-column: 1 / -1; font-size: 12px; color: var(--dim); letter-spacing: .06em; }
+  .song .tags a { color: var(--dim); text-decoration: none; border-bottom: 1px dotted var(--line); }
+  .song .tags a:hover, .song .tags a.on { color: var(--accent); border-bottom-color: var(--accent); }
+  .song.hidden { display: none; }
+  #tagbar { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; }
+  #tagbar button { padding: 4px 10px; min-height: 30px; font-size: 13px; letter-spacing: .04em; }
+  #tagbar button small { color: var(--dim); margin-left: 4px; }
+  #tagbar button:disabled small { color: inherit; }
+  #tagbar .count { flex: 1 1 100%; color: var(--dim); font-size: 13px; }
+  .song .links { grid-column: 1 / -1; font-size: 13px; color: var(--dim); }
+  .song .links a { margin-right: 12px; }
+  button, select {
+    font: inherit; color: var(--ink); background: var(--bg);
+    border: 1px solid var(--line); border-radius: 8px; padding: 10px 18px; cursor: pointer;
+    min-height: 44px;
+  }
+  button:hover, select:hover { border-color: var(--accent); }
+  button.on { border-color: var(--accent); color: var(--accent); }
+  button:disabled { opacity: .5; cursor: default; }
+  .bar {
+    position: sticky; bottom: 0; background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 10px 12px; margin-top: 18px; display: flex; flex-wrap: wrap;
+    gap: 8px 14px; align-items: center; box-shadow: 0 -8px 30px rgba(0,0,0,.5);
+  }
+  .bar label { color: var(--dim); font-size: 13px; display: flex; align-items: center; gap: 6px; }
+  .bar input[type=range] { width: 120px; accent-color: var(--accent); }
+  #state { color: var(--dim); font-size: 13px; flex: 1 1 100%; }
+  footer { color: var(--dim); font-size: 13px; margin-top: 30px; }
+  footer p { margin: 4px 0; }
+</style>
+</head>
+<body>
+
+<h1>🌊 slow tide</h1>
+<p class="lede">Slow, quiet instrumental songs for settling a baby to sleep. Each one is
+written to <a href="https://github.com/franccesco/slow-tide/blob/main/docs/COMPOSITION_RULES.md">rules
+drawn from published research</a>, and each song's page shows which studies
+it relies on. They may help your baby settle; nothing here is a treatment.</p>
+
+<div class="notice" id="safety">
+  <b>Before you press play</b>
+  <ul>
+    <li>Put the speaker at least 2 metres from the crib. Never in it or on it.</li>
+    <li>Keep the volume low: at the baby's ear it should be quieter than a calm conversation
+      (under about 50 dB; a phone sound-meter app will tell you). Set it once, with the loudest song.</li>
+    <li>Use the sleep timer instead of playing all night. It fades out over a minute.</li>
+  </ul>
+  <p style="margin:8px 0 0;font-size:13px;color:var(--dim)">Why: consumer sleep machines have been measured above hazardous levels at crib distance
+    (Hugh et al., <i>Pediatrics</i> 2014); the AAP's ceiling for infant environments is 45 dB and its 2023 noise
+    policy asks parents to use sleep sound at low volume and limited duration.
+    Sources are in <a href="https://github.com/franccesco/slow-tide/blob/main/docs/RESEARCH.md">the research notes</a>.</p>
+</div>
+
+<h2>Songs</h2>
+<div id="tagbar" hidden></div>
+<div id="songs"><p class="lede">loading the catalogue…</p></div>
+
+<div class="bar">
+  <button id="play" disabled>play</button>
+  <button id="stop" disabled>stop</button>
+  <label>volume <input type="range" id="vol" min="0" max="100" value="60"></label>
+  <label>timer
+    <select id="timer">
+      <option value="30">30 min</option>
+      <option value="45">45 min</option>
+      <option value="60">60 min</option>
+      <option value="0">off</option>
+    </select>
+  </label>
+  <span id="state">pick a song</span>
+</div>
+
+<h2>How the songs are made</h2>
+<p>An agent surveys the literature on infant sleep and infant-directed song, keeps the
+findings in <a href="https://github.com/franccesco/slow-tide/blob/main/docs/RESEARCH.md">RESEARCH.md</a>,
+distils them into numbered rules in
+<a href="https://github.com/franccesco/slow-tide/blob/main/docs/COMPOSITION_RULES.md">COMPOSITION_RULES.md</a>,
+and writes each song in <a href="https://strudel.cc">strudel</a> against those rules. A checker
+script rejects a song that breaks a rule or cites a study that is not in the notes, and the
+<a href="lab.html">lab</a> measures the audio for clicks, clipping and level.</p>
+
+<footer>
+  <p>Songs play in your browser with <a href="https://strudel.cc">strudel</a>; nothing is uploaded.</p>
+  <p><a href="https://github.com/franccesco/slow-tide">source and research on GitHub</a></p>
+</footer>
+
+<script>
+// A master gain in front of every AudioContext destination, so the page can
+// set the volume and fade out on the timer. Same patch as lab.html.
+(function () {
+  const origConnect = AudioNode.prototype.connect;
+  const gains = new WeakMap();
+  window.__masterGains = [];
+  AudioNode.prototype.connect = function (dest, ...rest) {
+    if (typeof AudioDestinationNode !== 'undefined' && dest instanceof AudioDestinationNode) {
+      const ctx = dest.context;
+      let g = gains.get(ctx);
+      if (!g) {
+        g = ctx.createGain();
+        g.gain.value = window.__volume ?? 0.6;
+        gains.set(ctx, g);
+        window.__masterGains.push(g);
+        origConnect.call(g, dest);
+      }
+      return origConnect.call(this, g, ...rest);
+    }
+    return origConnect.call(this, dest, ...rest);
+  };
+})();
+</script>
+<script src="https://unpkg.com/@strudel/web@1.3.0"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  let catalogue = [], current = null, code = '', playing = false, timerHandle = null, fadeHandle = null;
+  window.__volume = $('vol').value / 100;
+
+  try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+
+  initStrudel();   // no samples: every song is synthesised (rules R2/R8/R16)
+
+  function setVolume(v) {
+    window.__volume = v;
+    for (const g of window.__masterGains) {
+      const now = g.context.currentTime;
+      g.gain.cancelScheduledValues(now);
+      g.gain.setValueAtTime(g.gain.value, now);
+      g.gain.linearRampToValueAtTime(v, now + 0.05);
+    }
+  }
+  $('vol').oninput = () => setVolume($('vol').value / 100);
+
+  // Tag filter: ?tags=a,b keeps the songs carrying every listed tag (AND).
+  let tagDefs = {}, selected = new Set();
+  function setQuery(patch) {
+    const q = new URLSearchParams(location.search);
+    for (const [k, v] of Object.entries(patch)) v == null || v === '' ? q.delete(k) : q.set(k, v);
+    const qs = q.toString().replace(/%2C/g, ',');
+    history.replaceState(null, '', qs ? '?' + qs : location.pathname);
+  }
+  function toggleTag(tag) {
+    selected.has(tag) ? selected.delete(tag) : selected.add(tag);
+    applyFilter();
+  }
+  function applyFilter() {
+    setQuery({ tags: [...selected].join(',') });
+    const counts = {};
+    let shown = 0;
+    for (const s of catalogue) {
+      const tags = s.tags || [];
+      const show = [...selected].every((t) => tags.includes(t));
+      $('song-' + s.id).classList.toggle('hidden', !show);
+      if (show) { shown++; for (const t of tags) counts[t] = (counts[t] || 0) + 1; }
+    }
+    document.querySelectorAll('.song .tags a').forEach((a) => a.classList.toggle('on', selected.has(a.dataset.tag)));
+    const bar = $('tagbar');
+    bar.innerHTML = '';
+    const all = document.createElement('button');
+    all.textContent = 'all';
+    all.classList.toggle('on', !selected.size);
+    all.onclick = () => { selected.clear(); applyFilter(); };
+    bar.appendChild(all);
+    for (const t of Object.keys(tagDefs)) {
+      const b = document.createElement('button');
+      const n = counts[t] || 0;
+      b.innerHTML = esc(t) + '<small>' + n + '</small>';
+      b.title = tagDefs[t];
+      b.classList.toggle('on', selected.has(t));
+      b.disabled = !n && !selected.has(t);
+      b.onclick = () => toggleTag(t);
+      bar.appendChild(b);
+    }
+    const c = document.createElement('span');
+    c.className = 'count';
+    c.textContent = selected.size
+      ? shown + (shown === 1 ? ' song' : ' songs') + ' tagged ' + [...selected].join(' and ')
+      : 'pick tags to narrow the list';
+    bar.appendChild(c);
+    bar.hidden = false;
+  }
+
+  async function loadCatalogue() {
+    const r = await fetch('songs/index.json');
+    const all = (await r.json()).songs;
+    try {
+      const tj = await (await fetch('songs/tags.json')).json();
+      for (const [k, v] of Object.entries(tj)) if (k[0] !== '_') tagDefs[k] = v;
+    } catch (e) {}
+    for (const s of all) for (const t of s.tags || []) if (!(t in tagDefs)) tagDefs[t] = '';
+    // Drafts are songs not yet measured and listened to; they show only with ?drafts=1
+    const params = new URLSearchParams(location.search);
+    catalogue = params.get('drafts') !== null ? all : all.filter((s) => s.stage === 'built');
+    selected = new Set((params.get('tags') || '').split(',').filter((t) => t in tagDefs));
+    const titleOf = (id) => (all.find((s) => s.id === id) || { title: id }).title;
+    const box = $('songs');
+    box.innerHTML = '';
+    for (const s of catalogue) {
+      const el = document.createElement('div');
+      el.className = 'song'; el.id = 'song-' + s.id;
+      const mins = Math.round(s.passSeconds / 60);
+      el.innerHTML = `
+        <div>
+          <div class="t">${esc(s.title)}<span class="v">v${s.version}</span></div>
+          <div class="s">${esc(s.subtitle)} · ${esc(s.key)} · ${s.bpm} bpm · ${mins} min, repeats</div>
+        </div>
+        <button data-id="${s.id}">play</button>
+        <div class="tags">${(s.tags || []).map((t) => '<a href="?tags=' + esc(t) + '" data-tag="' + esc(t) + '" title="' + esc(tagDefs[t] || '') + '">' + esc(t) + '</a>').join(' · ')}${s.variantOf ? (s.tags.length ? ' · ' : '') + 'a variant of <a href="?song=' + esc(s.variantOf) + '">' + esc(titleOf(s.variantOf)) + '</a>' : ''}</div>
+        <div class="links">
+          ${s.stage !== 'built' ? '<span class="tag draft">draft: not yet measured</span>' : ''}
+          <span class="tag ${s.status}">${s.status === 'compliant' ? 'meets every rule' : 'legacy: exceptions ' + s.exceptions.join(', ')}</span>
+          <a href="https://github.com/franccesco/slow-tide/blob/main/songs/${s.id}/README.md">why it sounds this way</a>
+          <a href="lab.html?song=${s.id}">lab</a>
+          <a href="songs/${s.id}/song.js">code</a>
+        </div>`;
+      el.querySelector('button').onclick = () => choose(s.id, true);
+      el.querySelectorAll('.tags a').forEach((a) => (a.onclick = (ev) => { ev.preventDefault(); toggleTag(a.dataset.tag); }));
+      box.appendChild(el);
+    }
+    applyFilter();
+    const wanted = params.get('song');
+    if (wanted && catalogue.some((s) => s.id === wanted)) choose(wanted, false);
+  }
+
+  async function choose(id, andPlay) {
+    current = catalogue.find((s) => s.id === id);
+    document.querySelectorAll('.song').forEach((el) => el.classList.toggle('now', el.id === 'song-' + id));
+    $('state').textContent = 'loading ' + current.title + '…';
+    const r = await fetch('songs/' + id + '/song.js');
+    code = await r.text();
+    $('play').disabled = false; $('stop').disabled = false;
+    $('state').textContent = current.title + ' · ready';
+    setQuery({ song: id });
+    if (andPlay) start();
+  }
+
+  async function start() {
+    if (!code) return;
+    if (typeof getAudioContext === 'function') {
+      const ctx = getAudioContext();
+      if (ctx.state !== 'running') ctx.resume().catch(() => {});
+    }
+    try {
+      clearTimers();
+      setVolume($('vol').value / 100);
+      await evaluate(code);
+      playing = true;
+      document.querySelectorAll('.song button').forEach((b) => (b.textContent = b.dataset.id === current.id ? 'playing' : 'play'));
+      $('play').classList.add('on');
+      armTimer();
+    } catch (e) {
+      $('state').textContent = 'could not start: ' + e.message;
+    }
+  }
+
+  function stop() {
+    clearTimers();
+    hush();
+    setVolume(0);
+    setTimeout(() => setVolume($('vol').value / 100), 400);
+    playing = false;
+    document.querySelectorAll('.song button').forEach((b) => (b.textContent = 'play'));
+    $('play').classList.remove('on');
+    $('state').textContent = current ? current.title + ' · stopped' : 'stopped';
+  }
+
+  // Sleep timer: after N minutes, fade the master gain to zero over 60 s
+  // (rule R15), then stop the clock.
+  function armTimer() {
+    const mins = +$('timer').value;
+    if (!mins) { $('state').textContent = current.title + ' · playing, no timer'; return; }
+    const end = Date.now() + mins * 60000;
+    const tick = () => {
+      const left = Math.max(0, end - Date.now());
+      $('state').textContent = current.title + ' · playing · fades in ' + Math.ceil(left / 60000) + ' min';
+    };
+    tick();
+    timerHandle = setInterval(tick, 15000);
+    fadeHandle = setTimeout(() => {
+      clearInterval(timerHandle);
+      $('state').textContent = current.title + ' · fading out';
+      for (const g of window.__masterGains) {
+        const now = g.context.currentTime;
+        g.gain.cancelScheduledValues(now);
+        g.gain.setValueAtTime(g.gain.value, now);
+        g.gain.linearRampToValueAtTime(0, now + 60);
+      }
+      fadeHandle = setTimeout(() => { hush(); playing = false; $('play').classList.remove('on');
+        document.querySelectorAll('.song button').forEach((b) => (b.textContent = 'play'));
+        $('state').textContent = current.title + ' · timer done'; }, 61000);
+    }, mins * 60000);
+  }
+  function clearTimers() { clearInterval(timerHandle); clearTimeout(fadeHandle); timerHandle = fadeHandle = null; }
+  $('timer').onchange = () => { if (playing) armTimer(); };
+
+  $('play').onclick = start;
+  $('stop').onclick = stop;
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+
+  loadCatalogue().catch((e) => { $('songs').innerHTML = '<p class="lede">could not load the catalogue: ' + esc(e.message) + '</p>'; });
+})();
+</script>
+</body>
+</html>
