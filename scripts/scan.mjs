@@ -24,8 +24,9 @@
 
   It uses index.html's player (no samples needed) and captures the master
   output with a ScriptProcessor installed before the page loads, so it does
-  not depend on lab.html's worklet recorder. lab.html remains the tool for
-  listening and looking at the spectrum.
+  not depend on the lab view's worklet recorder. The lab view
+  (index.html?view=lab) remains the tool for listening and looking at the
+  spectrum.
 */
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';

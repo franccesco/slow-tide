@@ -18,7 +18,8 @@ published research:
 
 A checker (`node scripts/check-song.mjs`) rejects a song that breaks a
 machine-checkable rule or cites a study that is not in the notes, and
-`lab.html?song=<id>` measures the audio for clicks, clipping and level.
+the lab view (`index.html?view=lab&song=<id>`) measures the audio for clicks,
+clipping and level.
 
 Each song is versioned in place, so a change is a new version with a
 changelog entry and a fresh measurement, not a second copy. A different
@@ -53,7 +54,7 @@ version; for a different take, make a variant.
 ```
 python3 -m http.server 8080
 # http://localhost:8080/            the site
-# http://localhost:8080/lab.html    the lab
+# http://localhost:8080/?view=lab   the lab (a view of the same page; the song keeps playing)
 ```
 
 No build, no install. Node 18+ for the checker.
