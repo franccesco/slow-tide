@@ -120,7 +120,7 @@ jobs:
         run: |
           marker='<!-- pr-preview -->'
           body="$marker
-          **Preview:** $URL ([with drafts](${URL}index.html?drafts=1) · [lab](${URL}lab.html))
+          **Preview:** $URL ([with drafts](${URL}index.html?drafts=1) · [lab](${URL}index.html?view=lab))
 
           Built from ${HEAD_SHA:0:7}. Updated on every push; removed when the PR closes."
           id="$(gh api "repos/${{ github.repository }}/issues/$PR/comments" --paginate \
