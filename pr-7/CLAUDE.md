@@ -15,7 +15,7 @@ Read, in this order, before touching a song:
 
 ```
 index.html                  the site: catalogue, player, safety notice
-lab.html                    measurement lab: lab.html?song=<id> (spectrum, scan for clicks/clips/level)
+lab.html                    measurement lab: lab.html?song=<id> (spectrum and meters; Lab.scan() from the console)
 songs/<id>/song.js          the strudel source (also pasteable into strudel.cc)
 songs/<id>/meta.json        title, bpm, key, bars, status, version, stage, tags, variantOf, research keys
 songs/tags.json             the tag vocabulary (a tag must be defined here before a song uses it)
@@ -156,7 +156,8 @@ the code that is playing.
 ## Rules for the site copy
 
 - Claims are limited to "may help your baby settle and fall asleep" (R21).
-- The safety notice (R19) stays on every page and is not softened.
+- The safety notice (R19) stays on the player page (`index.html`) and is not
+  softened; the lab page does not carry it.
 - Never state a decibel figure the page cannot measure as a fact about the
   user's room; the guidance is what the parent should check.
 
