@@ -1,0 +1,259 @@
+{
+  "generated": "2026-09-21",
+  "sources": {
+    "bainbridge2021": {
+      "title": "Infants relax in response to unfamiliar foreign lullabies",
+      "grade": "A/B",
+      "doi": "https://doi.org/10.1038/s41562-020-00963-z",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8220405/",
+      "openAccess": true
+    },
+    "hilton2022": {
+      "title": "Acoustic regularities in infant-directed speech and song across cultures",
+      "grade": "B",
+      "doi": "https://doi.org/10.1038/s41562-022-01410-x",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10101735/",
+      "openAccess": true
+    },
+    "mehr2019": {
+      "title": "Universality and diversity in human song",
+      "grade": "B",
+      "doi": "https://doi.org/10.1126/science.aax0868",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7001657/",
+      "openAccess": true
+    },
+    "nguyen2023": {
+      "title": "Sing to me, baby: infants show neural tracking and rhythmic movements to live and dynamic maternal singing",
+      "grade": "B",
+      "doi": "https://doi.org/10.1016/j.dcn.2023.101313",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10618693/",
+      "openAccess": true
+    },
+    "bruder2025": {
+      "title": "CoVox: a dataset of contrasting vocalizations",
+      "grade": "B",
+      "doi": "https://doi.org/10.3758/s13428-025-02664-9",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11991967/",
+      "openAccess": true
+    },
+    "cirelli2020": {
+      "title": "Effects of maternal singing style on mother–infant arousal and behavior",
+      "grade": "B",
+      "doi": "https://doi.org/10.1162/jocn_a_01402",
+      "url": "https://utoronto.scholaris.ca/bitstreams/b5581668-c250-4593-979f-5aa7a7133166/download",
+      "openAccess": true
+    },
+    "yarahmadi2024": {
+      "title": "The effect of simulated intrauterine sound on behavioral and physiological indices of pain during capillary blood sampling in preterm infants",
+      "grade": "A/B",
+      "doi": "https://doi.org/10.1186/s12887-024-04604-6",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10863201/",
+      "openAccess": true
+    },
+    "vanderheijden2016": {
+      "title": "Do hospitalized premature infants benefit from music interventions? A systematic review of RCTs",
+      "grade": "A",
+      "doi": "https://doi.org/10.1371/journal.pone.0161848",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5015899/",
+      "openAccess": true
+    },
+    "parga2018": {
+      "title": "A description of externally recorded womb sounds in human subjects during gestation",
+      "grade": "B",
+      "doi": "https://doi.org/10.1371/journal.pone.0197045",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5944959/",
+      "openAccess": true
+    },
+    "wang2025": {
+      "title": "Elements of music that work to improve sleep, a narrative review",
+      "grade": "C",
+      "doi": "https://doi.org/10.3389/frsle.2025.1707162",
+      "url": "https://www.frontiersin.org/articles/10.3389/frsle.2025.1707162/full",
+      "openAccess": true
+    },
+    "oz2025": {
+      "title": "Applications of white noise in maternal and neonatal care: a comprehensive review",
+      "grade": "C",
+      "doi": "https://doi.org/10.4103/nah.nah_154_25",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12818530/",
+      "openAccess": true
+    },
+    "li2025": {
+      "title": "Task-based functional connectivity in infants after exposure to regular white noise during natural sleep",
+      "grade": "B",
+      "doi": "https://doi.org/10.1038/s41598-025-14774-7",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12340116/",
+      "openAccess": true
+    },
+    "mccallig2024": {
+      "title": "Evaluation of noise levels and noise sources in an Irish neonatal intensive care unit",
+      "grade": "D",
+      "doi": "https://doi.org/10.1093/annweh/wxae031",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11153338/",
+      "openAccess": true
+    },
+    "basner2018": {
+      "title": "WHO environmental noise guidelines for the European region: a systematic review on environmental noise and effects on sleep",
+      "grade": "C",
+      "doi": "https://doi.org/10.3390/ijerph15030519",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5877064/",
+      "openAccess": true
+    },
+    "canessapollard2025": {
+      "title": "Chants across seven traditions share acoustic traits that enhance subjective relaxation",
+      "grade": "C",
+      "doi": "https://doi.org/10.1073/pnas.2506480122",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12415189/",
+      "openAccess": true
+    },
+    "carvalho2024": {
+      "title": "Maternal humming during kangaroo care: effects on preterm dyads' physiological parameters",
+      "grade": "B",
+      "doi": "https://doi.org/10.3390/children11030373",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10969544/",
+      "openAccess": true
+    },
+    "weinkoetz2025": {
+      "title": "Effects of live-performed sansula music versus storytelling on physiological and behavioral parameters in preterm infants: a randomized controlled trial",
+      "grade": "A",
+      "doi": "https://doi.org/10.1038/s41598-025-25875-8",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12594991/",
+      "openAccess": true
+    }
+  },
+  "songs": [
+    {
+      "id": "low-hum",
+      "title": "Low Hum",
+      "subtitle": "a chant-like hum in A minor",
+      "bpm": 60,
+      "key": "A minor",
+      "bars": 64,
+      "passSeconds": 256,
+      "added": "2026-09-21",
+      "status": "compliant",
+      "exceptions": [],
+      "research": [
+        "canessapollard2025",
+        "carvalho2024",
+        "weinkoetz2025",
+        "bainbridge2021",
+        "basner2018",
+        "bruder2025",
+        "cirelli2020",
+        "hilton2022",
+        "li2025",
+        "mccallig2024",
+        "mehr2019",
+        "nguyen2023",
+        "oz2025",
+        "parga2018",
+        "vanderheijden2016",
+        "wang2025",
+        "yarahmadi2024"
+      ],
+      "version": 1,
+      "stage": "built",
+      "tags": [
+        "bedtime",
+        "minor",
+        "melodic",
+        "heartbeat",
+        "noise-bed",
+        "drone"
+      ],
+      "variantOf": null,
+      "verified": {
+        "version": 1,
+        "scan": "2026-09-21"
+      },
+      "fingerprint": "92f502e48f92"
+    },
+    {
+      "id": "first-light",
+      "title": "First Light",
+      "subtitle": "a slow lullaby in C major",
+      "bpm": 60,
+      "key": "C major",
+      "bars": 64,
+      "passSeconds": 256,
+      "added": "2026-09-20",
+      "status": "compliant",
+      "exceptions": [],
+      "research": [
+        "bainbridge2021",
+        "basner2018",
+        "bruder2025",
+        "cirelli2020",
+        "hilton2022",
+        "li2025",
+        "mccallig2024",
+        "mehr2019",
+        "nguyen2023",
+        "oz2025",
+        "parga2018",
+        "vanderheijden2016",
+        "wang2025",
+        "yarahmadi2024"
+      ],
+      "version": 1,
+      "stage": "built",
+      "tags": [
+        "bedtime",
+        "major",
+        "melodic",
+        "heartbeat",
+        "noise-bed"
+      ],
+      "variantOf": null,
+      "verified": {
+        "version": 1,
+        "scan": "2026-09-20"
+      },
+      "fingerprint": "8327da58cfd2"
+    },
+    {
+      "id": "slow-tide",
+      "title": "Slow Tide",
+      "subtitle": "a calm piece in D minor (the original test song)",
+      "bpm": 54,
+      "key": "D minor",
+      "bars": 50,
+      "passSeconds": 222,
+      "added": "2026-09-01",
+      "status": "legacy",
+      "exceptions": [
+        "R2",
+        "R4",
+        "R5",
+        "R8",
+        "R9",
+        "R11",
+        "R12",
+        "R13",
+        "R14"
+      ],
+      "research": [
+        "hilton2022",
+        "mehr2019",
+        "oz2025",
+        "parga2018",
+        "wang2025"
+      ],
+      "version": 1,
+      "stage": "built",
+      "tags": [
+        "minor",
+        "melodic",
+        "noise-bed",
+        "reference"
+      ],
+      "variantOf": null,
+      "verified": {
+        "version": 1,
+        "scan": "2026-09-20"
+      },
+      "fingerprint": "a27aa6aa39bb"
+    }
+  ]
+}
