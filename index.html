@@ -612,7 +612,51 @@ script rejects a song that breaks a rule or cites a study that is not in the not
   // Declaring playback intent (iOS 17+) makes the page behave like a music app.
   try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
 
-  initStrudel();   // no samples: every song is synthesised (rules R2/R8/R16)
+  // ---- keeping the sound alive when the phone locks
+  // iOS Safari lets a page keep sounding in the background only while an
+  // <audio> element is playing. Web Audio on its own is put to sleep when the
+  // screen locks, and the page's timers (strudel's clock) freeze with it. So:
+  //  1. a looping, silent <audio> element plays alongside the song, started
+  //     inside the same tap as the song (iOS needs the gesture) and stopped
+  //     with it. It also puts play/pause on the lock screen (Media Session).
+  //  2. strudel's clock ticks from a Worker, whose timers keep running while
+  //     the page is in the background.
+  //  3. an audio context iOS has interrupted (a call, Siri, the lock) is
+  //     resumed as soon as the page is back.
+  const keepAlive = (() => {
+    const rate = 8000, n = rate;                       // one second of digital silence, 16-bit mono
+    const buf = new ArrayBuffer(44 + n * 2), v = new DataView(buf);
+    const str = (o, t) => { for (let i = 0; i < t.length; i++) v.setUint8(o + i, t.charCodeAt(i)); };
+    str(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); str(8, 'WAVE');
+    str(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+    v.setUint32(24, rate, true); v.setUint32(28, rate * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true);
+    str(36, 'data'); v.setUint32(40, n * 2, true);
+    const el = new Audio(URL.createObjectURL(new Blob([buf], { type: 'audio/wav' })));
+    el.loop = true;
+    el.preload = 'auto';
+    el.setAttribute('playsinline', '');
+    return el;
+  })();
+  const keepAliveOn = () => { try { const p = keepAlive.play(); if (p) p.catch(() => {}); } catch (e) {} };
+  const keepAliveOff = () => { try { keepAlive.pause(); } catch (e) {} };
+
+  const workerTimers = (() => {
+    try {
+      const src = 'const t={};onmessage=e=>{const{id,ms,stop}=e.data;if(stop){clearInterval(t[id]);delete t[id]}else t[id]=setInterval(()=>postMessage(id),ms)}';
+      const w = new Worker(URL.createObjectURL(new Blob([src], { type: 'text/javascript' })));
+      const fns = new Map();
+      let nextId = 1;
+      w.onmessage = (ev) => { const f = fns.get(ev.data); if (f) f(); };
+      return {
+        setInterval: (f, ms) => { const id = nextId++; fns.set(id, f); w.postMessage({ id, ms }); return id; },
+        clearInterval: (id) => { fns.delete(id); w.postMessage({ id, stop: true }); },
+      };
+    } catch (e) {   // no Worker (or blob URLs blocked): the page's own timers
+      return { setInterval: (f, ms) => setInterval(f, ms), clearInterval: (id) => clearInterval(id) };
+    }
+  })();
+
+  initStrudel(workerTimers);   // no samples: every song is synthesised (rules R2/R8/R16)
   // initStrudel publishes note(), stack() and evaluate() asynchronously.
   const ready = new Promise((resolve, reject) => {
     (function poll(tries) {
@@ -632,6 +676,37 @@ script rejects a song that breaks a rule or cites a study that is not in the not
     }
   }
   $('vol').oninput = () => setVolume($('vol').value / 100);
+
+  // A context the system interrupted (lock, call, Siri) reports 'interrupted'
+  // or 'suspended'; while the song should be sounding, bring it back.
+  const watched = new WeakSet();
+  function wake() {
+    if (!playing || paused) return;
+    try {
+      const ctx = getAudioContext();
+      if (!watched.has(ctx)) { watched.add(ctx); ctx.addEventListener('statechange', () => setTimeout(wake, 0)); }
+      if (ctx.state !== 'running') ctx.resume().catch(() => {});
+    } catch (e) {}
+    if (keepAlive.paused) keepAliveOn();
+  }
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) wake(); });
+  window.addEventListener('pageshow', wake);
+  window.addEventListener('focus', wake);
+
+  // Lock screen and control centre: title plus play, pause and stop.
+  function syncMediaSession() {
+    if (!('mediaSession' in navigator)) return;
+    try {
+      if (current) navigator.mediaSession.metadata = new MediaMetadata({ title: current.title, artist: 'Slow Tide', album: 'sleep songs' });
+      navigator.mediaSession.playbackState = playing ? (paused ? 'paused' : 'playing') : 'none';
+    } catch (e) {}
+  }
+  if ('mediaSession' in navigator) {
+    const on = (name, f) => { try { navigator.mediaSession.setActionHandler(name, f); } catch (e) {} };
+    on('play', () => { if (playing && paused) pause(); else if (current) start(); });
+    on('pause', () => { if (playing && !paused) pause(); });
+    on('stop', () => stop());
+  }
 
   // Tag filter: ?tags=a,b keeps the songs carrying every listed tag (AND).
   let tagDefs = {}, selected = new Set();
@@ -804,6 +879,7 @@ script rejects a song that breaks a rule or cites a study that is not in the not
       const ctx = getAudioContext();
       if (ctx.state !== 'running') ctx.resume().catch(() => {});
     }
+    keepAliveOn();   // also inside the gesture: this is what keeps iOS playing after the lock
     try {
       clearTimers();
       paused = false;
@@ -817,6 +893,8 @@ script rejects a song that breaks a rule or cites a study that is not in the not
       document.querySelectorAll('.song button').forEach((b) => (b.textContent = b.dataset.id === current.id ? 'playing' : 'play'));
       $('play').classList.add('on');
       armTimer();
+      wake();
+      syncMediaSession();
     } catch (e) {
       $('state').textContent = 'could not start: ' + e.message;
     }
@@ -827,8 +905,9 @@ script rejects a song that breaks a rule or cites a study that is not in the not
   function pause() {
     if (!playing) return;
     const ctx = getAudioContext();
-    if (paused) { ctx.resume(); paused = false; $('pause').textContent = 'pause'; $('state').textContent = current.title + ' · playing'; }
-    else { ctx.suspend(); paused = true; $('pause').textContent = 'resume'; $('state').textContent = current.title + ' · paused'; }
+    if (paused) { ctx.resume(); paused = false; keepAliveOn(); $('pause').textContent = 'pause'; $('state').textContent = current.title + ' · playing'; }
+    else { ctx.suspend(); paused = true; keepAliveOff(); $('pause').textContent = 'resume'; $('state').textContent = current.title + ' · paused'; }
+    syncMediaSession();
   }
 
   function stop() {
@@ -840,6 +919,8 @@ script rejects a song that breaks a rule or cites a study that is not in the not
     $('pause').textContent = 'pause';
     setVolume(0);   // notes already sounding keep their release and reverb tail; start() restores the volume
     playing = false;
+    keepAliveOff();
+    syncMediaSession();
     document.querySelectorAll('.song button').forEach((b) => (b.textContent = 'play'));
     $('play').classList.remove('on');
     $('state').textContent = current ? current.title + ' · stopped' : 'stopped';
@@ -866,7 +947,7 @@ script rejects a song that breaks a rule or cites a study that is not in the not
         g.gain.setValueAtTime(g.gain.value, now);
         g.gain.linearRampToValueAtTime(0, now + 60);
       }
-      fadeHandle = setTimeout(() => { hush(); playing = false; $('play').classList.remove('on');
+      fadeHandle = setTimeout(() => { hush(); playing = false; keepAliveOff(); syncMediaSession(); $('play').classList.remove('on');
         document.querySelectorAll('.song button').forEach((b) => (b.textContent = 'play'));
         $('state').textContent = current.title + ' · timer done'; }, 61000);
     }, mins * 60000);
