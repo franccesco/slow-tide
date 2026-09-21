@@ -84,7 +84,7 @@
 <p class="lede">Slow, quiet instrumental songs for settling a baby to sleep. Each one is
 written to <a href="https://github.com/franccesco/slow-tide/blob/main/docs/COMPOSITION_RULES.md">rules
 drawn from published research</a>, and each song's page shows which studies
-it relies on. They may help your baby settle; nothing here is a treatment.</p>
+it relies on, each one free to read in full. They may help your baby settle; nothing here is a treatment.</p>
 
 <div class="notice" id="safety">
   <b>Before you press play</b>
@@ -94,10 +94,12 @@ it relies on. They may help your baby settle; nothing here is a treatment.</p>
       (under about 50 dB; a phone sound-meter app will tell you). Set it once, with the loudest song.</li>
     <li>Use the sleep timer instead of playing all night. It fades out over a minute.</li>
   </ul>
-  <p style="margin:8px 0 0;font-size:13px;color:var(--dim)">Why: consumer sleep machines have been measured above hazardous levels at crib distance
-    (Hugh et al., <i>Pediatrics</i> 2014); the AAP's ceiling for infant environments is 45 dB and its 2023 noise
-    policy asks parents to use sleep sound at low volume and limited duration.
-    Sources are in <a href="https://github.com/franccesco/slow-tide/blob/main/docs/RESEARCH.md">the research notes</a>.</p>
+  <p style="margin:8px 0 0;font-size:13px;color:var(--dim)">Why: the published ceiling for a newborn's sound environment is 45 dB
+    (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11153338/">McCallig et al. 2024</a>); white noise at 55 dB measurably reaches
+    the sleeping infant brain (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12340116/">Li et al. 2025</a>); and the review of
+    white noise in newborn care asks parents to limit volume and duration
+    (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12818530/">Öz and Demirci 2025</a>). Every study behind these songs is open access,
+    listed under each song and in <a href="https://github.com/franccesco/slow-tide/blob/main/docs/RESEARCH.md">the research notes</a>.</p>
 </div>
 
 <h2>Songs</h2>
@@ -285,7 +287,7 @@ script rejects a song that breaks a rule or cites a study that is not in the not
         return `<li>${p.url ? `<a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>` : esc(p.title)}${grade}</li>`;
       });
       if (!items.length) return '';
-      return `<details><summary>${items.length} paper${items.length === 1 ? '' : 's'} it relies on</summary><ol>${items.join('')}</ol></details>`;
+      return `<details><summary>${items.length} paper${items.length === 1 ? '' : 's'} it relies on, free to read</summary><ol>${items.join('')}</ol></details>`;
     }
   }
 
