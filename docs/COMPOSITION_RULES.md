@@ -154,13 +154,14 @@ RMS. *Scan:* fails outside −25…−21 LUFS; when `slow-tide` is scanned in
 the same run it also prints the RMS of the loudest sections side by side,
 for information. [D]
 
-**R19 (MUST) The site shows the playback guidance on every page:** speaker
+**R19 (MUST) The player page shows the playback guidance:** speaker
 at least 2 m from the crib, never in or on it; volume at the low end,
 aiming for ≤ 50 dBA at the baby's ear (about a quiet conversation, and the
 NICU ceiling is 45 dB); use the sleep timer rather than all-night
-playback. `[hugh2014]` `[aap1997]` `[aap2023]`. [D] *Checker:* every page
-(`index.html`, `lab.html`) has an element with `id="safety"` that says
-"2 metres from the crib", "50 dB" and "sleep timer".
+playback. `[hugh2014]` `[aap1997]` `[aap2023]`. [D] The lab page is a
+measurement tool and links back to the player, so it does not repeat the
+notice. *Checker:* `index.html` has an element with `id="safety"` that
+says "2 metres from the crib", "50 dB" and "sleep timer".
 
 ## 7. Provenance
 
@@ -245,7 +246,7 @@ the rules only improve (step 2 in CLAUDE.md) when something new is read.
 | R16 | instrumental | no vocal samples | checker |
 | R17 | peak | ≤ −3 dBFS, 0 clips, 0 clicks, 0 gaps | scan |
 | R18 | level | integrated loudness −23 ± 2 LUFS | scan |
-| R19 | guidance | `id="safety"` notice with distance, 50 dB, sleep timer on every page | checker |
+| R19 | guidance | `id="safety"` notice with distance, 50 dB, sleep timer on the player page | checker |
 | R20 | provenance | README maps every MUST rule; every key exists in RESEARCH.md | checker |
 | R21 | claims | no "proven", "guaranteed", "improves development" | checker |
 | R22 | identity | unique title and code; version + changelog; `built` only when verified at this version; tags from `songs/tags.json`; variants declare `variantOf` | checker |

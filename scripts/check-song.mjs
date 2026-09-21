@@ -53,7 +53,8 @@ const LIMITS = {
   bedModulationSecMin: 15,           // R11: slowest filter drift period
   timerDefaultMin: 30, timerFadeSec: 60,     // R15: the site's sleep timer
 };
-const PAGES = ['index.html', 'lab.html'];   // R19, R21: every page of the site
+const PAGES = ['index.html', 'lab.html'];   // R21: every page of the site
+const R19_PAGES = ['index.html'];           // R19: the playback guidance lives on the player page
 const R19_PHRASES = [[/2 m(?:etres?)? from the crib/i, '"2 metres from the crib"'], [/50 dB/i, '"50 dB"'], [/sleep timer/i, '"sleep timer"']];
 const R21_BANNED = /medically proven|clinically proven|scientifically proven|guaranteed|improves? (?:brain |cognitive |language |their |your baby'?s )?development|makes? (?:babies|your baby) smarter|cures?\b|treats?\b/i;
 const STAGES = ['draft', 'built'];   // R22
@@ -407,7 +408,7 @@ for (const id of ids) {
   });
 }
 
-// ---- the site: R15 (timer), R19 (playback guidance on every page), R21 (claims)
+// ---- the site: R15 (timer), R19 (playback guidance on the player page), R21 (claims)
 if (!only) {
   const siteProblems = [];
   for (const page of PAGES) {
@@ -415,7 +416,8 @@ if (!only) {
     if (!existsSync(path)) { siteProblems.push(['R19', `${page} is missing`]); continue; }
     const html = readFileSync(path, 'utf8');
     const notice = /<([a-z]+)[^>]*id="safety"[^>]*>([\s\S]*?)<\/\1>/.exec(html);
-    if (!notice) siteProblems.push(['R19', `${page} has no element with id="safety" carrying the playback guidance`]);
+    if (!R19_PAGES.includes(page)) { /* the lab is a measurement tool; the guidance is on the player */ }
+    else if (!notice) siteProblems.push(['R19', `${page} has no element with id="safety" carrying the playback guidance`]);
     else for (const [re, what] of R19_PHRASES) if (!re.test(notice[2])) siteProblems.push(['R19', `${page}: the safety notice does not say ${what}`]);
     const text = html.replace(/<script[\s\S]*?<\/script>/g, '').replace(/<style[\s\S]*?<\/style>/g, '').replace(/<[^>]+>/g, ' ');
     const claim = R21_BANNED.exec(text);

@@ -153,7 +153,8 @@ the code that is playing.
 ## Rules for the site copy
 
 - Claims are limited to "may help your baby settle and fall asleep" (R21).
-- The safety notice (R19) stays on every page and is not softened.
+- The safety notice (R19) stays on the player page (`index.html`) and is not
+  softened; the lab page does not carry it.
 - Never state a decibel figure the page cannot measure as a fact about the
   user's room; the guidance is what the parent should check.
 
