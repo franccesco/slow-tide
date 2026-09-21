@@ -34,6 +34,9 @@
     padding: 14px; margin: 10px 0; display: grid; grid-template-columns: 1fr auto; gap: 8px 14px; align-items: center;
   }
   .song.now { border-color: var(--accent); }
+  .song { cursor: pointer; }
+  .song:hover { border-color: var(--dim); }
+  .song.now:hover { border-color: var(--accent); }
   .song .t { font-size: 18px; }
   .song .s { color: var(--dim); font-size: 14px; }
   .song .tag { font-size: 12px; color: var(--dim); letter-spacing: .06em; }
@@ -251,11 +254,13 @@ script rejects a song that breaks a rule or cites a study that is not in the not
           ${s.stage !== 'built' ? '<span class="tag draft">draft: not yet measured</span>' : ''}
           <span class="tag ${s.status}">${s.status === 'compliant' ? 'meets every rule' : 'legacy: exceptions ' + s.exceptions.join(', ')}</span>
           <a href="https://github.com/franccesco/slow-tide/blob/main/songs/${s.id}/README.md">why it sounds this way</a>
-          <a href="lab.html?song=${s.id}">lab</a>
           <a href="songs/${s.id}/song.js">code</a>
         </div>`;
-      el.querySelector('button').onclick = () => choose(s.id, true);
-      el.querySelectorAll('.tags a').forEach((a) => (a.onclick = (ev) => { ev.preventDefault(); toggleTag(a.dataset.tag); }));
+      el.querySelector('button').onclick = (ev) => { ev.stopPropagation(); choose(s.id, true); };
+      el.querySelectorAll('.tags a').forEach((a) => (a.onclick = (ev) => { ev.preventDefault(); ev.stopPropagation(); toggleTag(a.dataset.tag); }));
+      el.querySelectorAll('.links a').forEach((a) => (a.onclick = (ev) => ev.stopPropagation()));
+      el.title = 'open ' + s.title + ' in the lab';
+      el.onclick = () => { location.href = 'lab.html?song=' + s.id; };
       box.appendChild(el);
     }
     applyFilter();
