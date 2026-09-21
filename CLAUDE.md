@@ -15,7 +15,10 @@ Read, in this order, before touching a song:
 
 ```
 index.html                  the site: catalogue, player, safety notice
-lab.html                    measurement lab: lab.html?song=<id> (spectrum and meters; Lab.scan() from the console)
+                            the lab is a view of the same page: index.html?view=lab&song=<id>
+                            (spectrum and meters; Lab.scan() from the console); a song keeps
+                            playing while moving between home and lab via the floating player
+lab.html                    redirect for old links: lab.html?song=<id> -> index.html?view=lab&song=<id>
 songs/<id>/song.js          the strudel source (also pasteable into strudel.cc)
 songs/<id>/meta.json        title, bpm, key, bars, status, version, stage, tags, variantOf, research keys
 songs/tags.json             the tag vocabulary (a tag must be defined here before a song uses it)
@@ -111,7 +114,7 @@ verification log and set `meta.verified` to
 `npm pack @strudel/web@1.3.0`, extract it, and set
 `STRUDEL_WEB_JS=<dir>/package/dist/index.js`. For listening and the
 spectrum view, serve the repo (`python3 -m http.server 8080`) and open
-`http://localhost:8080/lab.html?song=<id>`.
+`http://localhost:8080/index.html?view=lab&song=<id>`.
 
 **Step 7. Listen once** in `index.html` for at least one full pass
 (the seam at the loop is where mistakes hide; drafts show up with
