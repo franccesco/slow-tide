@@ -20,7 +20,7 @@ songs/<id>/song.js          the strudel source (also pasteable into strudel.cc)
 songs/<id>/meta.json        title, bpm, key, bars, status, version, stage, tags, variantOf, research keys
 songs/tags.json             the tag vocabulary (a tag must be defined here before a song uses it)
 songs/<id>/README.md        the rule-by-rule justification with citations
-songs/index.json            generated catalogue, do not edit by hand
+songs/index.json            generated catalogue (songs plus each cited paper's title and link), do not edit by hand
 docs/RESEARCH.md            literature notes
 docs/COMPOSITION_RULES.md   numbered rules R1…R23
 scripts/check-song.mjs      enforces rules + citations + identity (R22) + fresh evidence (R23) + site copy (R15, R19, R21), writes songs/index.json
@@ -44,7 +44,9 @@ or citations. Europe PMC's REST search works from the sandbox
 PubMed and Crossref are fine too. Blog posts and product pages are not
 sources. Each song must add **at least two entries** to `docs/RESEARCH.md`
 that no earlier song cites (rule R23; the checker enforces it), following
-its "How to add an entry" section: what was measured, what it supports,
+its "How to add an entry" section: the citation with its `https://doi.org/…`
+link (the site links every paper a song cites, and the checker fails an
+entry without a link), what was measured, what it supports,
 what it does **not** show, and a grade. Reusing existing keys is expected,
 but on their own they do not satisfy step 1. If a genuine search finds
 nothing new, log it instead (step 4): the search is the requirement, the
@@ -68,7 +70,8 @@ parses both. Annotate choices with the rule they satisfy (`// R7`).
 
 **Step 4. Write `meta.json` and `README.md`.** The README's table maps every
 MUST rule to the concrete choice in the code and cites research keys in
-backticks: `` `[trainor1997]` ``. Add a "What the new research changed" section
+backticks: `` `[trainor1997]` ``. List every cited key in `meta.research`;
+that is what the site turns into the song's list of linked papers. Add a "What the new research changed" section
 (R23) with one line per key added in step 1 saying what that finding
 changed in the composition, or confirmed if nothing changed. If step 1
 found nothing new, that section instead holds a search log table (date,

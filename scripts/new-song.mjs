@@ -62,7 +62,9 @@ ${parent ? `A variant of [${src.title}](../${parent}/).` : 'One paragraph on wha
 Status: **draft** until the checker passes, \`scripts/scan.mjs\` is logged
 below and someone has listened through a full pass; then set
 \`meta.stage\` to \`built\`. Research keys refer to
-[docs/RESEARCH.md](../../docs/RESEARCH.md).
+[docs/RESEARCH.md](../../docs/RESEARCH.md); every entry cited here must
+carry its DOI link there, and \`meta.research\` lists every key, because
+the site links each paper under the song.
 ${parent ? `
 ## What differs from ${src.title}
 
@@ -98,7 +100,7 @@ writeFileSync(join(songsDir, id, 'song.js'), readFileSync(join(songsDir, source,
 writeFileSync(join(songsDir, id, 'meta.json'), JSON.stringify(meta, null, 2) + '\n');
 writeFileSync(join(songsDir, id, 'README.md'), readme);
 console.log(`created songs/${id}/ from songs/${source}/ (version 1, draft${parent ? ', variant of ' + parent : ''})`);
-console.log('next: search the literature and add ≥ 2 new entries to docs/RESEARCH.md (R23), edit song.js and README.md, pick tags from songs/tags.json, then node scripts/check-song.mjs');
+console.log('next: search the literature and add ≥ 2 new entries to docs/RESEARCH.md (R23, each with its https://doi.org link), edit song.js and README.md, pick tags from songs/tags.json, then node scripts/check-song.mjs');
 console.log('the checker will fail until song.js differs enough from ' + source + (parent ? '' : ' or you declare variantOf'));
 
 function die(msg) { console.error(msg); process.exit(1); }

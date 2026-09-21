@@ -67,7 +67,7 @@ Trainor LJ, Clark ED, Huntley A, Adams BA. *Infant Behavior and Development*
 
 ### `[cirelli2020]` Effects of maternal singing style on mother–infant arousal and behavior — grade B
 Cirelli LK, Jurewicz ZB, Trehub SE. *Journal of Cognitive Neuroscience*
-32(7), 1213–1220 (2020). PubMed 30912725.
+32(7), 1213–1220 (2020). PubMed 30912725. https://doi.org/10.1162/jocn_a_01402
 
 - Mothers sang the same song in playsong style and in lullaby style to
   their infants while skin conductance (arousal) was recorded.
@@ -251,7 +251,11 @@ International Telecommunication Union, Recommendation ITU-R BS.1770-5
 2. Read the abstract at minimum; the methods section if the rule will carry
    a number.
 3. Write: key, full citation with DOI, what was measured, what it supports,
-   what it does **not** show, grade.
+   what it does **not** show, grade. The citation lines must carry one
+   `https://` link to the paper (a `https://doi.org/…` link, or the
+   publisher, PubMed or Europe PMC page when there is no DOI). The site
+   shows that link under every song that cites the entry, and the checker
+   fails a cited entry without one.
 4. Cite the key from a rule or from a song README. An entry nothing cites
    is removed at the next survey.
 5. Every new song adds at least two entries here that no earlier song

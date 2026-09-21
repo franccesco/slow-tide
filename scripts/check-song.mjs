@@ -2,7 +2,8 @@
 /*
   check-song.mjs — enforces the machine-checkable parts of
   docs/COMPOSITION_RULES.md on every song in songs/, verifies citations
-  against docs/RESEARCH.md, and writes songs/index.json for the site.
+  against docs/RESEARCH.md (every cited entry must link its paper), and
+  writes songs/index.json, with each paper's title and link, for the site.
 
     node scripts/check-song.mjs            check all songs, write the index
     node scripts/check-song.mjs first-light check one song, do not write
@@ -64,6 +65,14 @@ const PERCUSSION_SAMPLES = ['bd', 'sd', 'hh', 'oh', 'cp', 'rs', 'rim', 'cr', 'ri
 
 const research = readFileSync(join(root, 'docs/RESEARCH.md'), 'utf8');
 const researchKeys = new Set([...research.matchAll(/^### `\[([a-z0-9]+)\]`/gm)].map((m) => m[1]));
+// Each entry's title and its link to the paper (the first https:// URL in the
+// citation lines, before the first bullet); the site shows these under every song.
+const sources = {};
+for (const m of research.matchAll(/^### `\[([a-z0-9]+)\]` (.+?)(?: — grade ([A-D/]+))?\s*\n([\s\S]*?)(?=^### |^## |(?![\s\S]))/gm)) {
+  const head = m[4].split(/^\s*-/m)[0];
+  const url = /https?:\/\/\S+/.exec(head);
+  sources[m[1]] = { title: m[2].trim(), grade: m[3] || null, url: url ? url[0].replace(/[.,;]+$/, '') : null };
+}
 
 const songsDir = join(root, 'songs');
 const allIds = readdirSync(songsDir).filter((d) => statSync(join(songsDir, d)).isDirectory()).sort();
@@ -366,6 +375,7 @@ for (const id of ids) {
     if (!researchKeys.has(k)) fail('R20', `meta.research lists "${k}" but docs/RESEARCH.md has no such entry`);
     if (!cited.has(k)) fail('R20', `meta.research lists "${k}" but the README never cites it`);
     citedAnywhere.add(k);
+    if (researchKeys.has(k) && !sources[k].url) fail('R20', `[${k}] in docs/RESEARCH.md has no https:// link to the paper; add the DOI link to its citation lines so the site can link it`);
   }
   if (!cited.size) fail('R20', 'README cites no research keys');
 
@@ -453,7 +463,9 @@ if (write) {
   index.sort((a, b) => a.stage !== b.stage ? (a.stage === 'built' ? -1 : 1)
     : a.status !== b.status ? (a.status === 'compliant' ? -1 : 1)
     : a.added < b.added ? 1 : -1);
-  const out = { generated: new Date().toISOString().slice(0, 10), songs: index };
+  const used = new Set(index.flatMap((s) => s.research));
+  const papers = Object.fromEntries(Object.entries(sources).filter(([k]) => used.has(k)));
+  const out = { generated: new Date().toISOString().slice(0, 10), sources: papers, songs: index };
   writeFileSync(join(songsDir, 'index.json'), JSON.stringify(out, null, 2) + '\n');
   console.log(`wrote songs/index.json (${index.length} songs)`);
 }
