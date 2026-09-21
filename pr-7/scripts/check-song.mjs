@@ -55,7 +55,7 @@ const LIMITS = {
   bedModulationSecMin: 15,           // R11: slowest filter drift period
   timerDefaultMin: 30, timerFadeSec: 60,     // R15: the site's sleep timer
 };
-const PAGES = ['index.html', 'lab.html'];   // R21: every page of the site
+const PAGES = ['index.html', 'lab.html'];   // R21: every page of the site (lab.html only redirects into index.html?view=lab)
 const R19_PAGES = ['index.html'];           // R19: the playback guidance lives on the player page
 const R19_PHRASES = [[/2 m(?:etres?)? from the crib/i, '"2 metres from the crib"'], [/50 dB/i, '"50 dB"'], [/sleep timer/i, '"sleep timer"']];
 const R21_BANNED = /medically proven|clinically proven|scientifically proven|guaranteed|improves? (?:brain |cognitive |language |their |your baby'?s )?development|makes? (?:babies|your baby) smarter|cures?\b|treats?\b/i;
