@@ -36,6 +36,8 @@
   h1 { font-size: 17px; font-weight: 400; letter-spacing: .12em; margin: 0; white-space: nowrap; }
   .lede { color: var(--dim); margin: 0; }
   .spacer { flex: 1; }
+  .home { color: var(--accent); text-decoration: none; white-space: nowrap; }
+  .home:hover { text-decoration: underline; }
   button, select {
     font: inherit; color: var(--ink); background: var(--panel);
     border: 1px solid var(--line); border-radius: 6px; padding: 5px 12px; cursor: pointer;
@@ -100,6 +102,7 @@
   <button id="showcode">code</button>
   <span class="spacer"></span>
   <span class="lede" id="state">loading&hellip;</span>
+  <a class="home" href="index.html" title="Back to the player">&larr; home</a>
 </header>
 
 <div class="readout" id="readout"></div>
