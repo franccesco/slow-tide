@@ -1,0 +1,58 @@
+{
+  "id": "cradle-sway",
+  "title": "Cradle Sway",
+  "subtitle": "a pad-only sway in F major, no melody",
+  "bpm": 60,
+  "key": "F major",
+  "bars": 64,
+  "passSeconds": 256,
+  "added": "2026-09-22",
+  "status": "compliant",
+  "version": 1,
+  "stage": "built",
+  "verified": {
+    "version": 1,
+    "scan": "2026-09-22"
+  },
+  "tags": [
+    "naptime",
+    "bedtime",
+    "major",
+    "pad-only",
+    "sway",
+    "noise-bed"
+  ],
+  "changelog": [
+    {
+      "version": 1,
+      "date": "2026-09-22",
+      "note": "first version"
+    }
+  ],
+  "layers": [
+    "pad",
+    "padR",
+    "breath",
+    "high",
+    "bed"
+  ],
+  "research": [
+    "fan2024",
+    "vulturar2024",
+    "provasi2021",
+    "bainbridge2021",
+    "basner2018",
+    "bruder2025",
+    "cirelli2020",
+    "hilton2022",
+    "li2025",
+    "mccallig2024",
+    "mehr2019",
+    "nguyen2023",
+    "oz2025",
+    "parga2018",
+    "vanderheijden2016",
+    "wang2025"
+  ],
+  "exceptions": []
+}

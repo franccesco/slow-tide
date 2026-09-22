@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-21",
+  "generated": "2026-09-22",
   "sources": {
     "bainbridge2021": {
       "title": "Infants relax in response to unfamiliar foreign lullabies",
@@ -98,9 +98,76 @@
       "doi": "https://doi.org/10.3390/ijerph15030519",
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5877064/",
       "openAccess": true
+    },
+    "fan2024": {
+      "title": "Binaural beats at 0.25 Hz shorten the latency to slow-wave sleep during daytime naps",
+      "grade": "C",
+      "doi": "https://doi.org/10.1038/s41598-024-76059-9",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11525714/",
+      "openAccess": true
+    },
+    "vulturar2024": {
+      "title": "Non-pharmacological intervention for personalizing sleep quality through gentle rocking motion",
+      "grade": "C",
+      "doi": "https://doi.org/10.3390/jpm14020218",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10890667/",
+      "openAccess": true
+    },
+    "provasi2021": {
+      "title": "The importance of rhythmic stimulation for preterm infants in the NICU",
+      "grade": "C",
+      "doi": "https://doi.org/10.3390/children8080660",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8393990/",
+      "openAccess": true
     }
   },
   "songs": [
+    {
+      "id": "cradle-sway",
+      "title": "Cradle Sway",
+      "subtitle": "a pad-only sway in F major, no melody",
+      "bpm": 60,
+      "key": "F major",
+      "bars": 64,
+      "passSeconds": 256,
+      "added": "2026-09-22",
+      "status": "compliant",
+      "exceptions": [],
+      "research": [
+        "fan2024",
+        "vulturar2024",
+        "provasi2021",
+        "bainbridge2021",
+        "basner2018",
+        "bruder2025",
+        "cirelli2020",
+        "hilton2022",
+        "li2025",
+        "mccallig2024",
+        "mehr2019",
+        "nguyen2023",
+        "oz2025",
+        "parga2018",
+        "vanderheijden2016",
+        "wang2025"
+      ],
+      "version": 1,
+      "stage": "built",
+      "tags": [
+        "naptime",
+        "bedtime",
+        "major",
+        "pad-only",
+        "sway",
+        "noise-bed"
+      ],
+      "variantOf": null,
+      "verified": {
+        "version": 1,
+        "scan": "2026-09-22"
+      },
+      "fingerprint": "f91b82dd2617"
+    },
     {
       "id": "first-light",
       "title": "First Light",
