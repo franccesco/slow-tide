@@ -4,6 +4,7 @@
   "naptime": "shorter daytime settle; a parent may stop it after one pass",
   "noise-bed": "a band-limited pink or brown noise layer runs under the music (R10, R11)",
   "heartbeat": "a slow low pulse every beat or two, heartbeat-like (R3)",
+  "sway": "the sound moves slowly from side to side or breathes in level, rocking-like, at about one swing every four seconds",
   "major": "in a major key",
   "minor": "in a minor key",
   "pad-only": "no melody layer; sustained chords only",

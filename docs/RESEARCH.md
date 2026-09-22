@@ -301,6 +301,75 @@ Open access: https://pmc.ncbi.nlm.nih.gov/articles/PMC5877064/ (CC BY; full text
 - **What it does not show:** infants (adult sleepers), or anything about
   music.
 
+### `[fan2024]` Binaural beats at 0.25 Hz shorten the latency to slow-wave sleep during daytime naps — grade C
+Fan Z, Zhu Y, Suzuki C, Suzuki Y, Watanabe Y, Watanabe T, Abe T. *Scientific
+Reports* 14, 26062 (2024). https://doi.org/10.1038/s41598-024-76059-9
+Open access: https://pmc.ncbi.nlm.nih.gov/articles/PMC11525714/ (CC BY; full text read 2026-09-22)
+
+- 12 healthy adults (25 ± 3 years), four 90-minute afternoon naps each
+  in a sound-proof room with polysomnography: no sound, a steady 250 Hz
+  tone in both ears (0 Hz beat), a 0.25 Hz binaural beat (250 Hz left,
+  250.25 Hz right) and a 1 Hz beat, through earphones for the whole nap.
+- With the **0.25 Hz** beat, N2 latency (p = 0.023) and N3 latency
+  (p = 0.045) were shorter than with no sound (rank-biserial effect sizes
+  0.77 and 0.68); the 1 Hz beat changed nothing. No entrainment of brain
+  activity at 0.25 Hz was found, so the mechanism is open; the authors
+  raise a soothing effect and a "sensory mismatch" like that of rocking.
+- **What it supports:** a very slow periodic change in the sound, one
+  swing every four seconds, as a feature adults fell asleep faster with;
+  this catalogue uses it as the rate of a pan sway and a level breath, not
+  as a binaural beat (a speaker cannot deliver one).
+- **What it does not show:** infants, nighttime sleep, speakers, or any
+  effect of a slow sway in a loudspeaker signal; 12 participants, no
+  correction for multiple comparisons, and screening kept only listeners
+  who could hear the beats.
+
+### `[vulturar2024]` Non-pharmacological intervention for personalizing sleep quality through gentle rocking motion — grade C
+Vulturar D-M, Moacă L-Ș, Chețan IM, Vesa ȘC, Alexescu T-G, Grigorescu C,
+Trofor AC, Stoia M-A, Nemes AF, Todea D-A. *Journal of Personalized
+Medicine* 14(2), 218 (2024). https://doi.org/10.3390/jpm14020218
+Open access: https://pmc.ncbi.nlm.nih.gov/articles/PMC10890667/ (CC BY; full text read 2026-09-22)
+
+- 60 adults (median age 26, no sleep disorder), one polysomnography
+  night in a normal bed and one in a bed rocked side to side by silent
+  actuators (4 cm travel, 20 dBA, oscillation frequency adjustable
+  between **0.05 and 0.25 Hz**), prospective observational, no
+  randomisation.
+- On the rocking night total sleep time was longer, N1 shorter
+  (p < 0.001), N2 latency shorter (p = 0.01) and N3 longer (p = 0.004);
+  sleep efficiency trended up.
+- **What it supports:** slow rocking at up to one swing every four
+  seconds as the movement adults slept better with; the piece that cites
+  it moves its sound at that rate as a stand-in for the rocking a parent
+  gives, not as a claim that sound rocks.
+- **What it does not show:** infants, sound, or which frequency in the
+  band was used for the recorded nights; the design has no control group
+  beyond the same sleepers' normal night.
+
+### `[provasi2021]` The importance of rhythmic stimulation for preterm infants in the NICU — grade C
+Provasi J, Blanc L, Carchon I. *Children* 8(8), 660 (2021).
+https://doi.org/10.3390/children8080660
+Open access: https://pmc.ncbi.nlm.nih.gov/articles/PMC8393990/ (CC BY; full text read 2026-09-22)
+
+- Narrative review of the rhythms a fetus is bathed in (maternal
+  heartbeat, breathing, walking, voice) and of the vestibular, breathing,
+  sucking and multimodal rhythmic stimulations tried with preterm infants,
+  plus a small skin-to-skin lullaby study of the authors' own.
+- Reports that the maternal heartbeat is audible in utero at 25 dB over
+  the background, that the fetus perceives the mother's breathing rate
+  (12 to 20 per minute) and synchronises its heart rate to hers, and that
+  preterm infants given a "breathing bear" whose sinusoidal oscillation
+  was set to **half the infant's own breathing rate** spent more time in
+  quiet sleep over two weeks than infants with a still bear or none.
+- **What it supports:** a slow sinusoidal movement in the sound at about
+  half a sleeping infant's breathing rate (a term infant breathes about
+  30 to 40 times a minute asleep, so half is one swing every three to four
+  seconds) as a rhythm infants have settled to; a low periodic pulse (R3);
+  the womb's low, periodic sound (R9).
+- **What it does not show:** anything measured by the review itself
+  about sound; the breathing-bear result is tactile and in preterm
+  infants, and the lullaby study is a pilot with few dyads.
+
 ### `[itu2023]` Algorithms to measure audio programme loudness and true-peak audio level — grade D
 International Telecommunication Union, Recommendation ITU-R BS.1770-5
 (11/2023). https://www.itu.int/rec/R-REC-BS.1770
