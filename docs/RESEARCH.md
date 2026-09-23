@@ -284,6 +284,76 @@ Open access: https://pmc.ncbi.nlm.nih.gov/articles/PMC11153338/ (CC BY; full tex
 - **What it does not show:** anything about music or sleep; it is a
   workplace-noise measurement.
 
+### `[costa2024]` Pentatonic sequences and monaural beats to facilitate relaxation: an EEG study — grade B/C
+Costa M, Visentin C, Occhionero M, Tonetti L, Prodi N, Natale V. *Frontiers
+in Psychology* 15, 1369485 (2024). https://doi.org/10.3389/fpsyg.2024.1369485
+Open access: https://pmc.ncbi.nlm.nih.gov/articles/PMC11056517/ (CC BY; full text read 2026-09-23)
+
+- Two studies in adults. Study I (n = 47): ratings of monaural beats and of
+  pure-tone **pentatonic sequences** (C minor pentatonic, C3–C4, one note
+  at a time, no repeated note, no minor-seventh step; each note a 40 %
+  parabolic rise then a linear decay to 30 % of peak) at 4, 2 and
+  **0.2 Hz** (one 5 s note every 5 s). Study II (n = 31): 10 min of the
+  0.2 Hz sequences at **34 dB(A)** with 64-channel EEG, against silence.
+- Pentatonic sequences were rated more pleasant and more relaxing than
+  beats at every rate (relaxation main effect p < 0.001); relaxation fell
+  as the rate rose, and **0.2 Hz** was the most relaxing rate. In Study
+  II the sequences were rated as pleasant as silence and more relaxing
+  than beats (d = 0.52), and in the last 3 min raised frontal **delta**
+  power over silence (1.46 → 2.08 µV²/Hz, p = 0.02). No entrainment at
+  0.2 Hz was found.
+- **What it supports:** a melody of single pure-tone pentatonic notes, one
+  every 4–5 s, with a long rise and a decay that does not reach silence
+  (R4, R7, R8); a slow rate of events (R2).
+- **What it does not show:** infants (adult university students), sleep
+  onset (relaxation ratings and resting EEG only), or a comparison with
+  ordinary melodies. The sequence design is patent-pending by a company
+  that funded the work.
+
+### `[bianco2026]` Human newborns form musical predictions based on rhythmic but not melodic structure — grade B
+Bianco R, Tóth B, Bigand F, Nguyen T, Sziller I, Háden GP, Winkler I,
+Novembre G. *PLOS Biology* 24(2), e3003600 (2026). https://doi.org/10.1371/journal.pbio.3003600
+Open access: https://pmc.ncbi.nlm.nih.gov/articles/PMC12875487/ (CC BY; full text read 2026-09-23)
+
+- EEG from **49 sleeping newborns** (a few days old) listening through
+  insert earphones (about 70 dB SPL) to monophonic Bach piano melodies
+  (47–140 bpm) and shuffled controls; temporal response functions tested
+  whether the brain tracked statistical expectations about **timing**
+  (note onsets) and about **pitch**, over and above the acoustics.
+- Newborns' EEG encoded timing expectations (surprise about when the
+  next note comes) for real but not shuffled music, with larger evoked
+  responses to temporally unexpected notes; there was **no evidence of
+  tracking pitch expectations** or of local pitch intervals.
+- **What it supports:** the part of a piece a newborn's brain follows is
+  its timing, so a lullaby's pulse and note placement are kept perfectly
+  regular and predictable (R2, R3), and melodic interest is not what the
+  song is built on (R4).
+- **What it does not show:** anything about arousal, settling or sleep
+  (the infants were already asleep, and the outcome is neural tracking);
+  nor that pitch is irrelevant to older infants.
+
+### `[basner2026]` Efficacy of pink noise and earplugs for mitigating the effects of intermittent environmental noise exposure on sleep — grade B
+Basner M, Smith MG, Cordoza M, Kayser MS, Carlin M, Ecker AJ, Gilad Y,
+Park-Chavar S, Rennie K, Schneller V, Walsh S, Shou H, Cao Q, Younes M,
+Aeschbach D, Jones CW. *Sleep* 49(5), zsag001 (2026). https://doi.org/10.1093/sleep/zsag001
+Open access: https://pmc.ncbi.nlm.nih.gov/articles/PMC13163165/ (CC BY; full text read 2026-09-23)
+
+- Seven-night polysomnographic laboratory study in **25 healthy adults**:
+  intermittent environmental noise events (45–65 dBA maximum), continuous
+  **pink noise at 40 or 50 dBA**, earplugs, and combinations, against a
+  quiet control night.
+- Continuous pink noise on its own **reduced REM sleep** (p < 0.001;
+  −18.6 min at 50 dBA, exchanged for lighter N2 sleep); added to the
+  noise events it worsened sleep structure despite a small reduction in
+  fragmentation. Earplugs removed nearly all effects of the events.
+  Subjective sleep, alertness and mood were worse after pink-noise nights.
+- **What it supports:** a broadband bed is optional and, when present,
+  quiet and secondary (R10, R11); a song can carry its steady floor with
+  tonal layers instead of noise, and the page keeps asking for a low
+  level at the ear (R19).
+- **What it does not show:** infants (adults, whose REM architecture
+  differs), pink noise below 40 dBA, or music.
+
 ### `[basner2018]` WHO environmental noise guidelines for the European region: a systematic review on environmental noise and effects on sleep — grade C
 Basner M, McGuire S. *International Journal of Environmental Research and
 Public Health* 15(3), 519 (2018). https://doi.org/10.3390/ijerph15030519

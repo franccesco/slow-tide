@@ -871,6 +871,7 @@ script rejects a song that breaks a rule or cites a study that is not in the not
 
   // expr, from the lab, is an expression appended to the song (a section or
   // a solo); the whole song plays without it.
+  let audioReady = false;
   async function start(expr) {
     if (!code) return;
     // iOS creates the context suspended and only lets a user gesture start
@@ -888,6 +889,11 @@ script rejects a song that breaks a rule or cites a study that is not in the not
       // Anchor the cycle clock only when starting from stopped: strudel's
       // clock keeps running between pattern swaps.
       if (!playing) anchor = { ctx: getAudioContext(), t0: getAudioContext().currentTime };
+      // superdough loads its AudioWorklet effects (tremolo, the LFOs) on the
+      // page's first mousedown; a tap, a keyboard, Media Session or a script
+      // may never send one, and a voice that uses them then fails silently.
+      // Load them here, once, before the first pattern needs them.
+      if (!audioReady && typeof initAudio === 'function') { try { await initAudio(); } catch (e) {} audioReady = true; }
       await evaluate(typeof expr === 'string' && expr ? code + '\n; ' + expr : code);
       playing = true;
       document.querySelectorAll('.song button').forEach((b) => (b.textContent = b.dataset.id === current.id ? 'playing' : 'play'));

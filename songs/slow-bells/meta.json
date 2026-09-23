@@ -1,0 +1,58 @@
+{
+  "id": "slow-bells",
+  "title": "Slow Bells",
+  "subtitle": "pentatonic bells over a steady pulse, no noise bed",
+  "bpm": 54,
+  "key": "G major pentatonic",
+  "bars": 64,
+  "passSeconds": 284,
+  "added": "2026-09-23",
+  "status": "compliant",
+  "version": 1,
+  "stage": "built",
+  "tags": [
+    "bedtime",
+    "major",
+    "melodic",
+    "heartbeat",
+    "bells",
+    "no-noise-bed"
+  ],
+  "changelog": [
+    {
+      "version": 1,
+      "date": "2026-09-23",
+      "note": "first version"
+    }
+  ],
+  "layers": [
+    "pad",
+    "sub",
+    "pulse",
+    "melody"
+  ],
+  "research": [
+    "bainbridge2021",
+    "basner2018",
+    "basner2026",
+    "bianco2026",
+    "bruder2025",
+    "cirelli2020",
+    "costa2024",
+    "hilton2022",
+    "li2025",
+    "mccallig2024",
+    "mehr2019",
+    "nguyen2023",
+    "oz2025",
+    "parga2018",
+    "vanderheijden2016",
+    "wang2025",
+    "yarahmadi2024"
+  ],
+  "exceptions": [],
+  "verified": {
+    "version": 1,
+    "scan": "2026-09-23"
+  }
+}

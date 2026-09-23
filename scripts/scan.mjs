@@ -116,8 +116,14 @@ try {
     if (process.env.STRUDEL_WEB_JS) {
       await page.route('https://unpkg.com/@strudel/web**', (route) => route.fulfill({ path: process.env.STRUDEL_WEB_JS, contentType: 'text/javascript' }));
     }
-    page.on('console', (m) => { if (m.type() === 'error' && !/ERR_|Failed to fetch/.test(m.text())) console.error('  [browser]', m.text().slice(0, 300)); });
-    await page.goto(`http://127.0.0.1:${port}/index.html?song=${id}`);
+    // strudel reports a note that failed to sound as a console.log, not an error; a
+    // song whose voices fail (a missing worklet, a bad parameter) records as its bed alone
+    let triggerErrors = 0;
+    page.on('console', (m) => {
+      if (m.type() === 'error' && !/ERR_|Failed to fetch/.test(m.text())) console.error('  [browser]', m.text().slice(0, 300));
+      if (/\[getTrigger\] error/.test(m.text())) { triggerErrors++; if (triggerErrors <= 3) console.error('  [browser]', m.text().replace(/%c|background-color[^\n]*/g, '').slice(0, 300)); }
+    });
+    await page.goto(`http://127.0.0.1:${port}/index.html?song=${id}&drafts=1`);
     await page.waitForFunction(() => /ready$/.test(document.getElementById('state').textContent), null, { timeout: 60000 });
     process.stdout.write(`\n=== ${id} · ${totalBars} bars · recording ${Math.round(seconds)} s `);
 
@@ -162,6 +168,7 @@ try {
     console.log('done · ' + rec.samples + ' samples at ' + rec.sr + ' Hz');
 
     results[id] = r;
+    if (triggerErrors) console.log(`  ${triggerErrors} note(s) failed to sound ([getTrigger] error); if the level below is far too low, that is why`);
     console.log(`peak ${r.peakDb} dBFS · rms ${r.rmsDb} dB · ${r.lufs} LUFS integrated · short-term max ${r.stMax} LUFS · clips ${r.clips} · clicks ${r.clicks.length} · gaps ${r.gaps.length}`);
     console.log(`spectrum: ${r.below2kPct}% of energy below 2 kHz · >5 kHz band ${r.above5kDb} dB below the total on average · sustained in ${r.above5kSustainedPct}% of frames`);
     for (const c of r.clicks.slice(0, 10)) console.log(`  click at ${c.t.toFixed(2)} s (bar ${c.bar}) step ${c.step.toFixed(3)}`);
