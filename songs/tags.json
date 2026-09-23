@@ -7,6 +7,8 @@
   "major": "in a major key",
   "minor": "in a minor key",
   "pad-only": "no melody layer; sustained chords only",
+  "bells": "soft pure-tone bells carry the tune, one long note at a time",
+  "no-noise-bed": "no noise layer at all; the music alone carries the steady floor",
   "melodic": "has a melody layer",
   "reference": "used by the lab as the level-matching reference (R18)"
 }
