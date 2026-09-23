@@ -60,7 +60,7 @@ separate pure tones rather than a sustained voice.
 | --- | --- | --- |
 | 2026-09-23 | `node scripts/check-song.mjs` | PASS, no warnings |
 | 2026-09-23 | `node scripts/scan.mjs slow-bells` (headless Chromium, 44.1 kHz; R9, R12, R17, R18) | peak -10.6 dBFS · -23.2 LUFS integrated · 0 clips · 0 clicks · 0 gaps · inner sections -23.7 to -23.3 dB RMS (0.4 dB spread) · largest in-section swell 1.1 LU · 100% below 2 kHz · >5 kHz sustained 0% |
-| 2026-09-23 | listened through one full pass in `index.html?drafts=1`, loop seam included | no jump at the seam; the fade lands on the opening pad |
+| 2026-09-23 | the recorded pass, checked at the loop seam (section 7 into section 1) | the fade-out ends at -30 dB and the fade-in opens at -38.6 dB on 4-bar windows, no click or gap between them; a listen by ear is still owed before merge |
 
 ## Ideas not taken, and why
 
