@@ -1,0 +1,14 @@
+{
+  "_comment": "The tag vocabulary. scripts/check-song.mjs rejects a meta.tags entry that is not a key here, so a new tag is added here first, with a one-line meaning. Keep tags about what a parent would pick by: use, mood, what carries the sound.",
+  "bedtime": "long settling before the night's sleep",
+  "naptime": "shorter daytime settle; a parent may stop it after one pass",
+  "noise-bed": "a band-limited pink or brown noise layer runs under the music (R10, R11)",
+  "heartbeat": "a slow low pulse every beat or two, heartbeat-like (R3)",
+  "major": "in a major key",
+  "minor": "in a minor key",
+  "pad-only": "no melody layer; sustained chords only",
+  "bells": "soft pure-tone bells carry the tune, one long note at a time",
+  "no-noise-bed": "no noise layer at all; the music alone carries the steady floor",
+  "melodic": "has a melody layer",
+  "reference": "used by the lab as the level-matching reference (R18)"
+}

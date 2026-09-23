@@ -1,0 +1,1839 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Slow, quiet instrumental songs for settling a baby to sleep. Every song is written to rules drawn from published research, and each one cites its sources.">
+<link rel="icon" href="data:,">
+<title>Slow Tide · sleep songs</title>
+<style>
+  :root {
+    --bg: #0b0f14; --panel: #11171f; --ink: #e8e6df; --dim: #8a929d;
+    --line: #1e2733; --accent: #7fb3a3; --warn: #d8a657; --bad: #e07a5f;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 20px 16px 60px;
+  }
+  #home { max-width: 720px; margin-inline: auto; padding-bottom: 130px; }
+  body.lab { padding: 0; overflow: hidden; height: 100vh; }
+  body.lab #home { display: none; }
+  h1 { font-weight: 400; letter-spacing: .1em; font-size: 22px; margin: 0 0 4px; }
+  h2 { font-weight: 400; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); margin: 28px 0 10px; }
+  p { margin: 0 0 10px; }
+  a { color: var(--accent); }
+  .lede { color: var(--dim); margin-bottom: 18px; }
+  .notice {
+    background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--warn);
+    border-radius: 8px; padding: 12px 14px; margin: 14px 0; font-size: 15px;
+  }
+  .notice b { color: var(--warn); font-weight: 500; }
+  .notice ul { margin: 6px 0 0; padding-left: 20px; }
+  .notice li { margin: 2px 0; }
+  .song {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px; margin: 10px 0; display: grid; grid-template-columns: 1fr auto; gap: 8px 14px; align-items: center;
+  }
+  .song.now { border-color: var(--accent); }
+  .song { cursor: pointer; }
+  .song:hover { border-color: var(--dim); }
+  .song.now:hover { border-color: var(--accent); }
+  .song .t { font-size: 18px; }
+  .song .s { color: var(--dim); font-size: 14px; }
+  .song .tag { font-size: 12px; color: var(--dim); letter-spacing: .06em; }
+  .song .tag.legacy { color: var(--warn); }
+  .song .tag.draft { color: var(--bad); }
+  .song .v { color: var(--dim); font-size: 12px; margin-left: 6px; letter-spacing: .06em; }
+  .song .tags { grid-column: 1 / -1; font-size: 12px; color: var(--dim); letter-spacing: .06em; }
+  .song .tags a { color: var(--dim); text-decoration: none; border-bottom: 1px dotted var(--line); }
+  .song .tags a:hover, .song .tags a.on { color: var(--accent); border-bottom-color: var(--accent); }
+  .song.hidden { display: none; }
+  #tagbar { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; }
+  #tagbar button { padding: 4px 10px; min-height: 30px; font-size: 13px; letter-spacing: .04em; }
+  #tagbar button small { color: var(--dim); margin-left: 4px; }
+  #tagbar button:disabled small { color: inherit; }
+  #tagbar .count { flex: 1 1 100%; color: var(--dim); font-size: 13px; }
+  .song .links { grid-column: 1 / -1; font-size: 13px; color: var(--dim); }
+  .song .links a { margin-right: 12px; }
+  .song details { grid-column: 1 / -1; font-size: 13px; color: var(--dim); }
+  .song details summary { cursor: pointer; }
+  .song details ol { margin: 6px 0 0; padding-left: 20px; }
+  .song details li { margin: 3px 0; }
+  button, select {
+    font: inherit; color: var(--ink); background: var(--bg);
+    border: 1px solid var(--line); border-radius: 8px; padding: 10px 18px; cursor: pointer;
+    min-height: 44px;
+  }
+  button:hover, select:hover { border-color: var(--accent); }
+  button.on { border-color: var(--accent); color: var(--accent); }
+  button:disabled { opacity: .5; cursor: default; }
+  /* The floating player: fixed to the bottom of both views, so the song
+     keeps playing while the visitor moves between the home page and the lab. */
+  .bar {
+    position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 20; max-width: 720px; margin-inline: auto;
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 10px 12px; display: flex; flex-wrap: wrap;
+    gap: 8px 14px; align-items: center; box-shadow: 0 -8px 30px rgba(0,0,0,.5);
+  }
+  .bar .now { flex: 1 1 100%; display: flex; flex-direction: column; min-width: 0; line-height: 1.35; }
+  .bar .now > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  body.lab .bar { max-width: 980px; }
+  .bar .now b { font-weight: 400; font-size: 15px; }
+  .bar .now a { font-size: 13px; white-space: nowrap; margin-left: 6px; }
+  .bar .now a[hidden] { display: none; }
+  .bar label { color: var(--dim); font-size: 13px; display: flex; align-items: center; gap: 6px; }
+  .bar input[type=range] { width: 120px; accent-color: var(--accent); }
+  #state { color: var(--dim); font-size: 13px; }
+  @media (min-width: 720px) { .bar .now { flex: 1 1 160px; } }
+  footer { color: var(--dim); font-size: 13px; margin-top: 30px; }
+  footer p { margin: 4px 0; }
+  /* ---- the lab view (lab.html folded in; it shares the player) ---- */
+  #lab {
+    --dim: #77808c;
+    height: calc(100vh - 92px);
+    color: var(--ink);
+    font: 13px/1.5 ui-monospace, "SF Mono", Menlo, monospace;
+    padding: 14px;
+    display: grid;
+    grid-template-rows: auto auto minmax(0, 1.5fr) minmax(0, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    overflow: hidden;
+  }
+
+  /* ---- header ---- */
+  #lab[hidden] { display: none; }
+  #lab header { grid-row: 1; grid-column: 1 / -1; display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  #lab h1 { font-size: 17px; font-weight: 400; letter-spacing: .12em; margin: 0; white-space: nowrap; }
+  #lab .lede { color: var(--dim); margin: 0; }
+  .spacer { flex: 1; }
+  .home { color: var(--accent); text-decoration: none; white-space: nowrap; }
+  .home:hover { text-decoration: underline; }
+  #lab button {
+    font: inherit; color: var(--ink); background: var(--panel);
+    border: 1px solid var(--line); border-radius: 6px; padding: 5px 12px; cursor: pointer; min-height: 0;
+  }
+  #lab button:hover { border-color: var(--accent); }
+
+  /* ---- readouts ---- */
+  .readout { grid-row: 2; grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px 26px; }
+  .readout div { min-width: 84px; }
+  .readout span { display: block; color: var(--dim); font-size: 10.5px; letter-spacing: .08em; }
+  .readout b { font-weight: 400; font-size: 16px; }
+  .ok { color: var(--accent); } .warn { color: var(--warn); } .bad { color: var(--bad); }
+
+  /* ---- panels ---- */
+  .panel {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+    padding: 8px 10px; display: flex; flex-direction: column; min-height: 0; min-width: 0;
+  }
+  .panel h2 {
+    font-size: 10.5px; font-weight: 400; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--dim); margin: 0 0 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  canvas { display: block; width: 100%; flex: 1; min-height: 0; }
+  .wide { grid-row: 3; grid-column: 1 / -1; }
+  .legend { display: flex; gap: 10px; flex-wrap: wrap; color: var(--dim); font-size: 10.5px; margin-top: 5px; }
+  .legend i { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 4px; }
+
+  /* ---- drawer ---- */
+  .drawer {
+    position: fixed; left: 14px; right: 14px; bottom: 96px; z-index: 5;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+    max-height: 40vh; display: flex; flex-direction: column;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, .55);
+  }
+  .drawer[hidden] { display: none; }
+  .drawerbar {
+    display: flex; align-items: center; gap: 10px; padding: 8px 10px;
+    border-bottom: 1px solid var(--line); color: var(--dim);
+  }
+  .drawer pre {
+    margin: 0; padding: 10px 12px; overflow: auto; color: var(--dim);
+    font-size: 11.5px; white-space: pre-wrap;
+  }
+  @media (max-width: 1080px) {
+    body.lab { overflow: auto; height: auto; }
+    #lab { height: auto; padding-bottom: 190px; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto auto minmax(190px, 40vh) minmax(190px, 30vh) minmax(190px, 30vh); }
+    .panel { min-height: 190px; }
+  }
+</style>
+</head>
+<body>
+
+<main id="home">
+<h1>🌊 slow tide</h1>
+<p class="lede">Slow, quiet instrumental songs for settling a baby to sleep. Each one is
+written to <a href="https://github.com/franccesco/slow-tide/blob/main/docs/COMPOSITION_RULES.md">rules
+drawn from published research</a>, and each song's page shows which studies
+it relies on, each one free to read in full. They may help your baby settle; nothing here is a treatment.</p>
+
+<div class="notice" id="safety">
+  <b>Before you press play</b>
+  <ul>
+    <li>Put the speaker at least 2 metres from the crib. Never in it or on it.</li>
+    <li>Keep the volume low: at the baby's ear it should be quieter than a calm conversation
+      (under about 50 dB; a phone sound-meter app will tell you). Set it once, with the loudest song.</li>
+    <li>Use the sleep timer instead of playing all night. It fades out over a minute.</li>
+  </ul>
+  <p style="margin:8px 0 0;font-size:13px;color:var(--dim)">Why: the published ceiling for a newborn's sound environment is 45 dB
+    (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11153338/">McCallig et al. 2024</a>); white noise at 55 dB measurably reaches
+    the sleeping infant brain (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12340116/">Li et al. 2025</a>); and the review of
+    white noise in newborn care asks parents to limit volume and duration
+    (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12818530/">Öz and Demirci 2025</a>). Every study behind these songs is open access,
+    listed under each song and in <a href="https://github.com/franccesco/slow-tide/blob/main/docs/RESEARCH.md">the research notes</a>.</p>
+</div>
+
+<h2>Songs</h2>
+<div id="tagbar" hidden></div>
+<div id="songs"><p class="lede">loading the catalogue…</p></div>
+
+<h2>How the songs are made</h2>
+<p>An agent surveys the literature on infant sleep and infant-directed song, keeps the
+findings in <a href="https://github.com/franccesco/slow-tide/blob/main/docs/RESEARCH.md">RESEARCH.md</a>,
+distils them into numbered rules in
+<a href="https://github.com/franccesco/slow-tide/blob/main/docs/COMPOSITION_RULES.md">COMPOSITION_RULES.md</a>,
+and writes each song in <a href="https://strudel.cc">strudel</a> against those rules. A checker
+script rejects a song that breaks a rule or cites a study that is not in the notes, and the
+<a href="?view=lab" id="lablink">lab</a> measures the audio for clicks, clipping and level.</p>
+
+<footer>
+  <p>Songs play in your browser with <a href="https://strudel.cc">strudel</a>; nothing is uploaded.</p>
+  <p><a href="https://github.com/franccesco/slow-tide">source and research on GitHub</a></p>
+</footer>
+</main>
+
+<section id="lab" hidden>
+<header>
+  <h1 id="labtitle">Lab</h1>
+  <span class="lede"><span id="lablede"></span><span id="bars">&hellip;</span></span>
+  <button id="showcode">code</button>
+  <span class="spacer"></span>
+  <span class="lede" id="labstate">loading&hellip;</span>
+  <a class="home" href="./" id="homelink" title="Back to the songs">&larr; home</a>
+</header>
+
+<div class="readout" id="readout"></div>
+
+<div class="panel wide">
+  <h2>Spectrum &middot; log frequency &middot; note grid &middot; EQ curves</h2>
+  <canvas id="spectrum"></canvas>
+  <div class="legend" id="eqlegend"></div>
+</div>
+
+<div class="panel">
+  <h2>Waveform (L / R)</h2>
+  <canvas id="wave"></canvas>
+</div>
+
+<div class="panel">
+  <h2>Stereo &mdash; correlation &amp; goniometer</h2>
+  <canvas id="stereo"></canvas>
+</div>
+
+<div class="panel">
+  <h2>Tonal balance &mdash; octave bands</h2>
+  <canvas id="bands"></canvas>
+</div>
+
+<div class="panel">
+  <h2>Pitch content &mdash; chroma</h2>
+  <canvas id="chroma"></canvas>
+  <div class="legend"><span id="chordline">&nbsp;</span></div>
+</div>
+
+<div class="drawer" id="drawer" hidden>
+  <div class="drawerbar">
+    <span id="drawertitle">report</span>
+    <span class="spacer"></span>
+    <button id="copy">copy</button>
+    <button id="drawerclose">close</button>
+  </div>
+  <pre id="report"></pre>
+</div>
+</section>
+
+<div class="bar" id="player">
+  <span class="now"><span><b id="nowtitle">pick a song</b> <a id="nowlink" href="?view=lab" hidden>lab</a></span><span id="state">pick a song</span></span>
+  <button id="play" disabled>play</button>
+  <button id="pause" disabled>pause</button>
+  <button id="stop" disabled>stop</button>
+  <label>volume <input type="range" id="vol" min="0" max="100" value="60"></label>
+  <label>timer
+    <select id="timer">
+      <option value="30">30 min</option>
+      <option value="45">45 min</option>
+      <option value="60">60 min</option>
+      <option value="0">off</option>
+    </select>
+  </label>
+</div>
+
+<script>
+/*
+  analysis — audio measurement engine for the lab view.
+
+  It taps the audio output before the speakers, so it can measure the true
+  stereo mix. Load it BEFORE any audio starts. The tap's input gain is also
+  the page's master volume (window.__masterGains): the player sets it and
+  the sleep timer fades it out.
+
+  It gives you:
+    Analysis.metrics()        one frame: peak, rms, crest, correlation, width,
+                              centroid, octave bands, chroma, sounding notes
+    Analysis.report(ms)       the same values, averaged over a time window
+    Analysis.filterCurve(...) the frequency response of a filter, for EQ plots
+    Analysis.NOTE_NAMES       pitch class names
+*/
+
+(function () {
+  const origConnect = AudioNode.prototype.connect;
+  const taps = new WeakMap();
+
+  // ---- the tap ---------------------------------------------------
+  // Everything that tries to reach ctx.destination goes through a gain
+  // node first. From there we branch off to the analysers.
+  window.__masterGains = [];
+  function makeTap(ctx) {
+    const input = ctx.createGain();
+    input.gain.value = window.__volume ?? 0.6;
+    window.__masterGains.push(input);
+
+    const mono = ctx.createAnalyser();
+    mono.fftSize = 8192;
+    mono.smoothingTimeConstant = 0.72;
+
+    const raw = ctx.createAnalyser(); // no smoothing, for true peaks
+    raw.fftSize = 8192;
+    raw.smoothingTimeConstant = 0;
+
+    const splitter = ctx.createChannelSplitter(2);
+    const anL = ctx.createAnalyser();
+    const anR = ctx.createAnalyser();
+    for (const a of [anL, anR]) {
+      a.fftSize = 2048;
+      a.smoothingTimeConstant = 0;
+    }
+
+    origConnect.call(input, mono);
+    origConnect.call(input, raw);
+    origConnect.call(input, splitter);
+    origConnect.call(splitter, anL, 0);
+    origConnect.call(splitter, anR, 1);
+    origConnect.call(input, ctx.destination);
+
+    return { ctx, input, mono, raw, anL, anR };
+  }
+
+  AudioNode.prototype.connect = function (dest, ...rest) {
+    if (typeof AudioDestinationNode !== 'undefined' && dest instanceof AudioDestinationNode) {
+      const ctx = dest.context;
+      let tap = taps.get(ctx);
+      if (!tap) {
+        tap = makeTap(ctx);
+        taps.set(ctx, tap);
+        Analysis.tap = tap;
+      }
+      return origConnect.call(this, tap.input, ...rest);
+    }
+    return origConnect.call(this, dest, ...rest);
+  };
+
+  // ---- helpers ---------------------------------------------------
+  const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+  const db = (x) => (x > 0 ? Math.max(20 * Math.log10(x), -120) : -120);
+  const round = (x, n = 1) => (isFinite(x) ? +x.toFixed(n) : null);
+
+  // Octave bands. Each one is a musical octave, which is why a mix reads
+  // more honestly here than on a linear scale.
+  const BANDS = [
+    { name: 'sub', lo: 20, hi: 45 },
+    { name: 'bass', lo: 45, hi: 90 },
+    { name: 'low', lo: 90, hi: 180 },
+    { name: 'lowmid', lo: 180, hi: 360 },
+    { name: 'mid', lo: 360, hi: 720 },
+    { name: 'himid', lo: 720, hi: 1440 },
+    { name: 'pres', lo: 1440, hi: 2880 },
+    { name: 'bril', lo: 2880, hi: 5760 },
+    { name: 'air', lo: 5760, hi: 11520 },
+    { name: 'top', lo: 11520, hi: 20000 },
+  ];
+
+  function noteOf(freq) {
+    const midi = 69 + 12 * Math.log2(freq / 440);
+    const near = Math.round(midi);
+    return {
+      name: NOTE_NAMES[((near % 12) + 12) % 12] + (Math.floor(near / 12) - 1),
+      pc: ((near % 12) + 12) % 12,
+      cents: Math.round((midi - near) * 100),
+      midi: near,
+    };
+  }
+
+  // ---- one frame of measurement ----------------------------------
+  function metrics() {
+    const tap = currentTap();
+    if (!tap) return null;
+    const { ctx, mono, raw, anL, anR } = tap;
+    const sr = ctx.sampleRate;
+
+    const L = new Float32Array(anL.fftSize);
+    const R = new Float32Array(anR.fftSize);
+    anL.getFloatTimeDomainData(L);
+    anR.getFloatTimeDomainData(R);
+
+    let peak = 0, sumL = 0, sumR = 0, sumLR = 0, sumMid = 0, sumSide = 0, maxStep = 0;
+    for (let i = 0; i < L.length; i++) {
+      const l = L[i], r = R[i];
+      if (i) {
+        // A click is a step: the sample jumps much further in one frame than
+        // a band limited signal can. Compare this against the peak level.
+        const step = Math.max(Math.abs(l - L[i - 1]), Math.abs(r - R[i - 1]));
+        if (step > maxStep) maxStep = step;
+      }
+      const a = Math.max(Math.abs(l), Math.abs(r));
+      if (a > peak) peak = a;
+      sumL += l * l;
+      sumR += r * r;
+      sumLR += l * r;
+      const m = (l + r) / 2, s = (l - r) / 2;
+      sumMid += m * m;
+      sumSide += s * s;
+    }
+    const rms = Math.sqrt((sumL + sumR) / (2 * L.length));
+    const corr = sumL > 0 && sumR > 0 ? sumLR / Math.sqrt(sumL * sumR) : 1;
+    const width = sumMid > 0 ? Math.sqrt(sumSide / sumMid) : 0;
+
+    // spectrum
+    const bins = mono.frequencyBinCount;
+    const spec = new Float32Array(bins);
+    mono.getFloatFrequencyData(spec);
+    const binHz = sr / mono.fftSize;
+
+    const bands = {};
+    for (const b of BANDS) bands[b.name] = 0;
+    let magSum = 0, freqSum = 0;
+    const chroma = new Array(12).fill(0);
+
+    for (let i = 1; i < bins; i++) {
+      const f = i * binHz;
+      if (f > 20000) break;
+      const mag = Math.pow(10, spec[i] / 20);
+      magSum += mag;
+      freqSum += f * mag;
+      for (const b of BANDS) {
+        if (f >= b.lo && f < b.hi) { bands[b.name] += mag * mag; break; }
+      }
+      if (f >= 55 && f <= 5000) chroma[noteOf(f).pc] += mag;
+    }
+    const centroid = magSum > 0 ? freqSum / magSum : 0;
+
+    const bandsDb = {};
+    for (const b of BANDS) bandsDb[b.name] = round(db(Math.sqrt(bands[b.name])), 1);
+
+    const chromaMax = Math.max(...chroma) || 1;
+    const chromaNorm = chroma.map((v) => round(v / chromaMax, 3));
+
+    // sounding notes: spectral peaks, read as pitches
+    const peaks = [];
+    let loudest = -Infinity;
+    for (let i = 2; i < bins - 2; i++) if (spec[i] > loudest) loudest = spec[i];
+    for (let i = 2; i < bins - 2; i++) {
+      const f = i * binHz;
+      if (f < 55 || f > 5000) continue;
+      if (spec[i] > spec[i - 1] && spec[i] >= spec[i + 1] && spec[i] > loudest - 30) {
+        // A note stands well above the spectrum around it. A bump in a noise
+        // wash does not, so this keeps the wash from being read as pitches.
+        let floorSum = 0, floorCount = 0;
+        for (let k = i - 8; k <= i + 8; k++) {
+          if (k > 0 && k < bins && Math.abs(k - i) > 2) { floorSum += spec[k]; floorCount++; }
+        }
+        if (floorCount && spec[i] - floorSum / floorCount < 8) continue;
+        // parabolic interpolation for a sharper frequency estimate
+        const d = (0.5 * (spec[i - 1] - spec[i + 1])) / (spec[i - 1] - 2 * spec[i] + spec[i + 1] || 1);
+        const fi = (i + d) * binHz;
+        const n = noteOf(fi);
+        peaks.push({ note: n.name, cents: n.cents, hz: round(fi, 1), db: round(spec[i], 1) });
+      }
+    }
+    peaks.sort((a, b) => b.db - a.db);
+    const notes = [];
+    for (const p of peaks) {
+      if (notes.length >= 8) break;
+      if (!notes.some((q) => q.note === p.note)) notes.push(p);
+    }
+
+    // raw (unsmoothed) true peak of the summed signal
+    const t = new Float32Array(raw.fftSize);
+    raw.getFloatTimeDomainData(t);
+    let truePeak = 0;
+    for (const v of t) { const a = Math.abs(v); if (a > truePeak) truePeak = a; }
+
+    return {
+      peak: round(peak, 4),
+      truePeak: round(truePeak, 4),
+      peakDb: round(db(peak), 1),
+      rms: round(rms, 4),
+      rmsDb: round(db(rms), 1),
+      crestDb: round(db(peak) - db(rms), 1),
+      correlation: round(corr, 3),
+      width: round(width, 3),
+      centroidHz: round(centroid, 0),
+      maxStep: round(maxStep, 4),
+      stepRatio: round(peak > 0 ? maxStep / peak : 0, 3),
+      bandsDb,
+      chroma: chromaNorm,
+      notes,
+      clipping: peak >= 0.99,
+      spectrum: spec,
+      binHz,
+      wave: { L, R },
+    };
+  }
+
+  // ---- averaged report over a window ------------------------------
+  async function report(ms = 8000, everyMs = 25) {
+    const acc = {
+      frames: 0, peak: 0, rmsSq: 0, corr: 0, width: 0, centroid: 0,
+      clip: 0, bands: {}, chroma: new Array(12).fill(0), notes: {},
+      maxStep: 0, stepRatio: 0, stepFrames: 0,
+    };
+    for (const b of BANDS) acc.bands[b.name] = 0;
+    const t0 = performance.now();
+    while (performance.now() - t0 < ms) {
+      await new Promise((r) => setTimeout(r, everyMs));
+      const m = metrics();
+      if (!m) continue;
+      acc.frames++;
+      if (m.truePeak > acc.peak) acc.peak = m.truePeak;
+      acc.rmsSq += m.rms * m.rms;
+      acc.corr += m.correlation;
+      acc.width += m.width;
+      acc.centroid += m.centroidHz;
+      if (m.clipping) acc.clip++;
+      if (m.maxStep > acc.maxStep) acc.maxStep = m.maxStep;
+      if (m.stepRatio > acc.stepRatio) acc.stepRatio = m.stepRatio;
+      if (m.stepRatio > 0.5 && m.maxStep > 0.02) acc.stepFrames++;
+      for (const b of BANDS) acc.bands[b.name] += Math.pow(10, (m.bandsDb[b.name] ?? -120) / 10);
+      m.chroma.forEach((v, i) => (acc.chroma[i] += v));
+      for (const n of m.notes.slice(0, 5)) acc.notes[n.note] = (acc.notes[n.note] || 0) + 1;
+    }
+    if (!acc.frames) return { error: 'no audio — is something playing?' };
+
+    const bandsDb = {};
+    for (const b of BANDS) bandsDb[b.name] = round(10 * Math.log10(acc.bands[b.name] / acc.frames), 1);
+    const chromaMax = Math.max(...acc.chroma) || 1;
+    const chroma = {};
+    acc.chroma.forEach((v, i) => (chroma[NOTE_NAMES[i]] = round(v / chromaMax, 2)));
+    const topNotes = Object.entries(acc.notes)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(([n, c]) => n + ' (' + Math.round((100 * c) / acc.frames) + '%)');
+
+    const rms = Math.sqrt(acc.rmsSq / acc.frames);
+    return {
+      seconds: round(ms / 1000, 1),
+      frames: acc.frames,
+      peak: round(acc.peak, 3),
+      peakDb: round(db(acc.peak), 1),
+      rmsDb: round(db(rms), 1),
+      crestDb: round(db(acc.peak) - db(rms), 1),
+      clippingFrames: acc.clip,
+      correlation: round(acc.corr / acc.frames, 3),
+      width: round(acc.width / acc.frames, 3),
+      centroidHz: round(acc.centroid / acc.frames, 0),
+      worstStep: round(acc.maxStep, 4),
+      worstStepRatio: round(acc.stepRatio, 3),
+      stepFrames: acc.stepFrames,
+      bandsDb,
+      chroma,
+      topNotes,
+    };
+  }
+
+  // ---- EQ curves --------------------------------------------------
+  // Give it a filter description, get back the curve it draws on the mix.
+  function filterCurve(ctx, { type = 'lowpass', freq = 1000, q = 1 }, freqs) {
+    const f = ctx.createBiquadFilter();
+    f.type = type;
+    f.frequency.value = Math.max(10, Math.min(freq, ctx.sampleRate / 2 - 1));
+    f.Q.value = Math.max(0.0001, q);
+    const mag = new Float32Array(freqs.length);
+    const phase = new Float32Array(freqs.length);
+    f.getFrequencyResponse(freqs, mag, phase);
+    return mag;
+  }
+
+  function currentTap() {
+    // strudel can build more than one AudioContext; always read the one
+    // that is actually playing.
+    try {
+      if (typeof getAudioContext === 'function') {
+        const t = taps.get(getAudioContext());
+        if (t) return t;
+      }
+    } catch (e) {}
+    return Analysis.tap;
+  }
+
+  window.Analysis = {
+    tap: null,
+    tapFor: (ctx) => taps.get(ctx),
+    // a connect that skips the destination patch, for nodes that must NOT
+    // route back through the tap (that would make a gain cycle)
+    rawConnect: (from, to, ...rest) => origConnect.call(from, to, ...rest),
+    currentTap,
+    metrics,
+    report,
+    filterCurve,
+    noteOf,
+    NOTE_NAMES,
+    BANDS,
+    db,
+  };
+})();
+</script>
+<script src="https://unpkg.com/@strudel/web@1.3.0"></script>
+<script>
+// Everything lives in closures. Strudel puts several hundred names on
+// window when it starts (fit, loop, hold, size ...), so top level names
+// here would be overwritten.
+// ---- the player and the home view
+(() => {
+  const $ = (id) => document.getElementById(id);
+  let catalogue = [], current = null, code = '', playing = false, paused = false, timerHandle = null, fadeHandle = null;
+  let anchor = null;                 // { ctx, t0 }: where the song clock started, for the lab's readouts
+  const stopHooks = [];              // the lab cancels a running scan when the player stops
+  window.__volume = $('vol').value / 100;
+
+  // iOS files Web Audio under "ambient": the Ring/Silent switch mutes it.
+  // Declaring playback intent (iOS 17+) makes the page behave like a music app.
+  try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+
+  // ---- keeping the sound alive when the phone locks
+  // iOS Safari lets a page keep sounding in the background only while an
+  // <audio> element is playing. Web Audio on its own is put to sleep when the
+  // screen locks, and the page's timers (strudel's clock) freeze with it. So:
+  //  1. a looping, silent <audio> element plays alongside the song, started
+  //     inside the same tap as the song (iOS needs the gesture) and stopped
+  //     with it. It also puts play/pause on the lock screen (Media Session).
+  //  2. strudel's clock ticks from a Worker, whose timers keep running while
+  //     the page is in the background.
+  //  3. an audio context iOS has interrupted (a call, Siri, the lock) is
+  //     resumed as soon as the page is back.
+  const keepAlive = (() => {
+    const rate = 8000, n = rate;                       // one second of digital silence, 16-bit mono
+    const buf = new ArrayBuffer(44 + n * 2), v = new DataView(buf);
+    const str = (o, t) => { for (let i = 0; i < t.length; i++) v.setUint8(o + i, t.charCodeAt(i)); };
+    str(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); str(8, 'WAVE');
+    str(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+    v.setUint32(24, rate, true); v.setUint32(28, rate * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true);
+    str(36, 'data'); v.setUint32(40, n * 2, true);
+    const el = new Audio(URL.createObjectURL(new Blob([buf], { type: 'audio/wav' })));
+    el.loop = true;
+    el.preload = 'auto';
+    el.setAttribute('playsinline', '');
+    return el;
+  })();
+  const keepAliveOn = () => { try { const p = keepAlive.play(); if (p) p.catch(() => {}); } catch (e) {} };
+  const keepAliveOff = () => { try { keepAlive.pause(); } catch (e) {} };
+
+  const workerTimers = (() => {
+    try {
+      const src = 'const t={};onmessage=e=>{const{id,ms,stop}=e.data;if(stop){clearInterval(t[id]);delete t[id]}else t[id]=setInterval(()=>postMessage(id),ms)}';
+      const w = new Worker(URL.createObjectURL(new Blob([src], { type: 'text/javascript' })));
+      const fns = new Map();
+      let nextId = 1;
+      w.onmessage = (ev) => { const f = fns.get(ev.data); if (f) f(); };
+      return {
+        setInterval: (f, ms) => { const id = nextId++; fns.set(id, f); w.postMessage({ id, ms }); return id; },
+        clearInterval: (id) => { fns.delete(id); w.postMessage({ id, stop: true }); },
+      };
+    } catch (e) {   // no Worker (or blob URLs blocked): the page's own timers
+      return { setInterval: (f, ms) => setInterval(f, ms), clearInterval: (id) => clearInterval(id) };
+    }
+  })();
+
+  initStrudel(workerTimers);   // no samples: every song is synthesised (rules R2/R8/R16)
+  // initStrudel publishes note(), stack() and evaluate() asynchronously.
+  const ready = new Promise((resolve, reject) => {
+    (function poll(tries) {
+      if (typeof note === 'function' && typeof stack === 'function' && typeof evaluate === 'function') resolve();
+      else if (tries > 0) setTimeout(() => poll(tries - 1), 50);
+      else reject(new Error('strudel did not load — check the network'));
+    })(400);
+  });
+
+  function setVolume(v) {
+    window.__volume = v;
+    for (const g of window.__masterGains) {
+      const now = g.context.currentTime;
+      g.gain.cancelScheduledValues(now);
+      g.gain.setValueAtTime(g.gain.value, now);
+      g.gain.linearRampToValueAtTime(v, now + 0.05);
+    }
+  }
+  $('vol').oninput = () => setVolume($('vol').value / 100);
+
+  // A context the system interrupted (lock, call, Siri) reports 'interrupted'
+  // or 'suspended'; while the song should be sounding, bring it back.
+  const watched = new WeakSet();
+  function wake() {
+    if (!playing || paused) return;
+    try {
+      const ctx = getAudioContext();
+      if (!watched.has(ctx)) { watched.add(ctx); ctx.addEventListener('statechange', () => setTimeout(wake, 0)); }
+      if (ctx.state !== 'running') ctx.resume().catch(() => {});
+    } catch (e) {}
+    if (keepAlive.paused) keepAliveOn();
+  }
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) wake(); });
+  window.addEventListener('pageshow', wake);
+  window.addEventListener('focus', wake);
+
+  // Lock screen and control centre: title plus play, pause and stop.
+  function syncMediaSession() {
+    if (!('mediaSession' in navigator)) return;
+    try {
+      if (current) navigator.mediaSession.metadata = new MediaMetadata({ title: current.title, artist: 'Slow Tide', album: 'sleep songs' });
+      navigator.mediaSession.playbackState = playing ? (paused ? 'paused' : 'playing') : 'none';
+    } catch (e) {}
+  }
+  if ('mediaSession' in navigator) {
+    const on = (name, f) => { try { navigator.mediaSession.setActionHandler(name, f); } catch (e) {} };
+    on('play', () => { if (playing && paused) pause(); else if (current) start(); });
+    on('pause', () => { if (playing && !paused) pause(); });
+    on('stop', () => stop());
+  }
+
+  // Tag filter: ?tags=a,b keeps the songs carrying every listed tag (AND).
+  let tagDefs = {}, selected = new Set();
+  function setQuery(patch) {
+    const q = new URLSearchParams(location.search);
+    for (const [k, v] of Object.entries(patch)) v == null || v === '' ? q.delete(k) : q.set(k, v);
+    const qs = q.toString().replace(/%2C/g, ',');
+    history.replaceState(history.state, '', qs ? '?' + qs : location.pathname);
+  }
+
+  // ---- views: home and lab are two views of this one page, so moving
+  // between them never touches the audio. ?view=lab&song=<id> is the lab.
+  function showView(name, push) {
+    const isLab = name === 'lab';
+    document.body.classList.toggle('lab', isLab);
+    $('lab').hidden = !isLab;
+    $('nowlink').textContent = isLab ? 'home' : 'lab';
+    $('nowlink').hidden = !current;
+    if (push) history.pushState({ view: name }, '', location.search);
+    setQuery({ view: isLab ? 'lab' : null });
+    document.title = isLab && current ? 'Lab · ' + current.title : 'Slow Tide · sleep songs';
+    if (isLab) window.dispatchEvent(new Event('resize'));
+    else window.scrollTo(0, 0);
+  }
+  async function openLab(id, push = true) {
+    if (!id && !current && catalogue.length) id = catalogue[0].id;
+    if (id && (!current || current.id !== id)) await choose(id, false);
+    if (!current) return;
+    showView('lab', push);
+    window.Lab.open(current, code);
+  }
+  function openHome(push = true) { showView('home', push); }
+  window.addEventListener('popstate', () => applyRoute(false));
+  function applyRoute(push) {
+    const params = new URLSearchParams(location.search);
+    const id = params.get('song');
+    if (params.get('view') === 'lab') openLab(id || (current && current.id), push);
+    else openHome(push);
+  }
+  function toggleTag(tag) {
+    selected.has(tag) ? selected.delete(tag) : selected.add(tag);
+    applyFilter();
+  }
+  function applyFilter() {
+    setQuery({ tags: [...selected].join(',') });
+    const counts = {};
+    let shown = 0;
+    for (const s of catalogue) {
+      const tags = s.tags || [];
+      const show = [...selected].every((t) => tags.includes(t));
+      $('song-' + s.id).classList.toggle('hidden', !show);
+      if (show) { shown++; for (const t of tags) counts[t] = (counts[t] || 0) + 1; }
+    }
+    document.querySelectorAll('.song .tags a').forEach((a) => a.classList.toggle('on', selected.has(a.dataset.tag)));
+    const bar = $('tagbar');
+    bar.innerHTML = '';
+    const all = document.createElement('button');
+    all.textContent = 'all';
+    all.classList.toggle('on', !selected.size);
+    all.onclick = () => { selected.clear(); applyFilter(); };
+    bar.appendChild(all);
+    for (const t of Object.keys(tagDefs)) {
+      const b = document.createElement('button');
+      const n = counts[t] || 0;
+      b.innerHTML = esc(t) + '<small>' + n + '</small>';
+      b.title = tagDefs[t];
+      b.classList.toggle('on', selected.has(t));
+      b.disabled = !n && !selected.has(t);
+      b.onclick = () => toggleTag(t);
+      bar.appendChild(b);
+    }
+    const c = document.createElement('span');
+    c.className = 'count';
+    c.textContent = selected.size
+      ? shown + (shown === 1 ? ' song' : ' songs') + ' tagged ' + [...selected].join(' and ')
+      : 'pick tags to narrow the list';
+    bar.appendChild(c);
+    bar.hidden = false;
+  }
+
+  async function loadCatalogue() {
+    const r = await fetch('songs/index.json');
+    const index = await r.json();
+    const all = index.songs;
+    const sources = index.sources || {};
+    try {
+      const tj = await (await fetch('songs/tags.json')).json();
+      for (const [k, v] of Object.entries(tj)) if (k[0] !== '_') tagDefs[k] = v;
+    } catch (e) {}
+    for (const s of all) for (const t of s.tags || []) if (!(t in tagDefs)) tagDefs[t] = '';
+    // Drafts are songs not yet measured and listened to; they show only with ?drafts=1
+    const params = new URLSearchParams(location.search);
+    catalogue = params.get('drafts') !== null ? all : all.filter((s) => s.stage === 'built');
+    selected = new Set((params.get('tags') || '').split(',').filter((t) => t in tagDefs));
+    const titleOf = (id) => (all.find((s) => s.id === id) || { title: id }).title;
+    const box = $('songs');
+    box.innerHTML = '';
+    for (const s of catalogue) {
+      const el = document.createElement('div');
+      el.className = 'song'; el.id = 'song-' + s.id;
+      const mins = Math.round(s.passSeconds / 60);
+      el.innerHTML = `
+        <div>
+          <div class="t">${esc(s.title)}<span class="v">v${s.version}</span></div>
+          <div class="s">${esc(s.subtitle)} · ${esc(s.key)} · ${s.bpm} bpm · ${mins} min, repeats</div>
+        </div>
+        <button data-id="${s.id}">play</button>
+        <div class="tags">${(s.tags || []).map((t) => '<a href="?tags=' + esc(t) + '" data-tag="' + esc(t) + '" title="' + esc(tagDefs[t] || '') + '">' + esc(t) + '</a>').join(' · ')}${s.variantOf ? (s.tags.length ? ' · ' : '') + 'a variant of <a href="?song=' + esc(s.variantOf) + '">' + esc(titleOf(s.variantOf)) + '</a>' : ''}</div>
+        <div class="links">
+          ${s.stage !== 'built' ? '<span class="tag draft">draft: not yet measured</span>' : ''}
+          <span class="tag ${s.status}">${s.status === 'compliant' ? 'meets every rule' : 'legacy: exceptions ' + s.exceptions.join(', ')}</span>
+          <a href="https://github.com/franccesco/slow-tide/blob/main/songs/${s.id}/README.md">why it sounds this way</a>
+          <a href="songs/${s.id}/song.js">code</a>
+        </div>
+        ${papers(s)}`;
+      el.querySelector('button').onclick = (ev) => { ev.stopPropagation(); choose(s.id, true); };
+      el.querySelectorAll('details, details a').forEach((d) => (d.onclick = (ev) => ev.stopPropagation()));
+      el.querySelectorAll('.tags a').forEach((a) => (a.onclick = (ev) => { ev.preventDefault(); ev.stopPropagation(); toggleTag(a.dataset.tag); }));
+      el.querySelectorAll('.links a').forEach((a) => (a.onclick = (ev) => ev.stopPropagation()));
+      el.title = 'open ' + s.title + ' in the lab';
+      el.onclick = () => openLab(s.id);
+      box.appendChild(el);
+    }
+    applyFilter();
+    const wanted = params.get('song');
+    if (wanted && catalogue.some((s) => s.id === wanted)) await choose(wanted, false);
+    await ready.catch((e) => { $('state').textContent = e.message; });
+    applyRoute(false);
+
+    // Every paper the song cites, linked so it can be read (the checker
+    // requires each cited entry in docs/RESEARCH.md to carry its link).
+    function papers(s) {
+      const items = (s.research || []).map((k) => {
+        const p = sources[k];
+        if (!p) return `<li>${esc(k)}</li>`;
+        const grade = p.grade ? ` <span class="v">grade ${esc(p.grade)}</span>` : '';
+        return `<li>${p.url ? `<a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>` : esc(p.title)}${grade}</li>`;
+      });
+      if (!items.length) return '';
+      return `<details><summary>${items.length} paper${items.length === 1 ? '' : 's'} it relies on, free to read</summary><ol>${items.join('')}</ol></details>`;
+    }
+  }
+
+  async function choose(id, andPlay) {
+    const next = catalogue.find((s) => s.id === id);
+    if (!next) return;
+    if (current && current.id === id && code) { if (andPlay) start(); return; }
+    if (!andPlay && (playing || paused)) stop();   // the lab measures what plays: no mismatch
+    current = next;
+    document.querySelectorAll('.song').forEach((el) => el.classList.toggle('now', el.id === 'song-' + id));
+    $('state').textContent = 'loading ' + current.title + '…';
+    $('nowtitle').textContent = current.title;
+    $('nowlink').hidden = false;
+    $('nowlink').href = '?view=lab&song=' + id;
+    const r = await fetch('songs/' + id + '/song.js');
+    code = await r.text();
+    $('play').disabled = false; $('stop').disabled = false; $('pause').disabled = false;
+    $('state').textContent = current.title + ' · ready';
+    setQuery({ song: id });
+    if (andPlay) start();
+  }
+
+  // expr, from the lab, is an expression appended to the song (a section or
+  // a solo); the whole song plays without it.
+  let audioReady = false;
+  async function start(expr) {
+    if (!code) return;
+    // iOS creates the context suspended and only lets a user gesture start
+    // it. Resume synchronously, before any await breaks the gesture chain.
+    if (typeof getAudioContext === 'function') {
+      const ctx = getAudioContext();
+      if (ctx.state !== 'running') ctx.resume().catch(() => {});
+    }
+    keepAliveOn();   // also inside the gesture: this is what keeps iOS playing after the lock
+    try {
+      clearTimers();
+      paused = false;
+      $('pause').textContent = 'pause';
+      setVolume($('vol').value / 100);
+      // Anchor the cycle clock only when starting from stopped: strudel's
+      // clock keeps running between pattern swaps.
+      if (!playing) anchor = { ctx: getAudioContext(), t0: getAudioContext().currentTime };
+      // superdough loads its AudioWorklet effects (tremolo, the LFOs) on the
+      // page's first mousedown; a tap, a keyboard, Media Session or a script
+      // may never send one, and a voice that uses them then fails silently.
+      // Load them here, once, before the first pattern needs them.
+      if (!audioReady && typeof initAudio === 'function') { try { await initAudio(); } catch (e) {} audioReady = true; }
+      await evaluate(typeof expr === 'string' && expr ? code + '\n; ' + expr : code);
+      playing = true;
+      document.querySelectorAll('.song button').forEach((b) => (b.textContent = b.dataset.id === current.id ? 'playing' : 'play'));
+      $('play').classList.add('on');
+      armTimer();
+      wake();
+      syncMediaSession();
+    } catch (e) {
+      $('state').textContent = 'could not start: ' + e.message;
+    }
+  }
+
+  // Pause suspends the audio clock, so resume picks up mid-bar. strudel
+  // schedules against the context's time, which stands still meanwhile.
+  function pause() {
+    if (!playing) return;
+    const ctx = getAudioContext();
+    if (paused) { ctx.resume(); paused = false; keepAliveOn(); $('pause').textContent = 'pause'; $('state').textContent = current.title + ' · playing'; }
+    else { ctx.suspend(); paused = true; keepAliveOff(); $('pause').textContent = 'resume'; $('state').textContent = current.title + ' · paused'; }
+    syncMediaSession();
+  }
+
+  function stop() {
+    clearTimers();
+    for (const f of stopHooks) { try { f(); } catch (e) {} }
+    hush();
+    if (paused) { try { getAudioContext().resume(); } catch (e) {} }
+    paused = false;
+    $('pause').textContent = 'pause';
+    setVolume(0);   // notes already sounding keep their release and reverb tail; start() restores the volume
+    playing = false;
+    keepAliveOff();
+    syncMediaSession();
+    document.querySelectorAll('.song button').forEach((b) => (b.textContent = 'play'));
+    $('play').classList.remove('on');
+    $('state').textContent = current ? current.title + ' · stopped' : 'stopped';
+  }
+
+  // Sleep timer: after N minutes, fade the master gain to zero over 60 s
+  // (rule R15), then stop the clock.
+  function armTimer() {
+    const mins = +$('timer').value;
+    if (!mins) { $('state').textContent = current.title + ' · playing, no timer'; return; }
+    const end = Date.now() + mins * 60000;
+    const tick = () => {
+      const left = Math.max(0, end - Date.now());
+      $('state').textContent = current.title + ' · playing · fades in ' + Math.ceil(left / 60000) + ' min';
+    };
+    tick();
+    timerHandle = setInterval(tick, 15000);
+    fadeHandle = setTimeout(() => {
+      clearInterval(timerHandle);
+      $('state').textContent = current.title + ' · fading out';
+      for (const g of window.__masterGains) {
+        const now = g.context.currentTime;
+        g.gain.cancelScheduledValues(now);
+        g.gain.setValueAtTime(g.gain.value, now);
+        g.gain.linearRampToValueAtTime(0, now + 60);
+      }
+      fadeHandle = setTimeout(() => { hush(); playing = false; keepAliveOff(); syncMediaSession(); $('play').classList.remove('on');
+        document.querySelectorAll('.song button').forEach((b) => (b.textContent = 'play'));
+        $('state').textContent = current.title + ' · timer done'; }, 61000);
+    }, mins * 60000);
+  }
+  function clearTimers() { clearInterval(timerHandle); clearTimeout(fadeHandle); timerHandle = fadeHandle = null; }
+  $('timer').onchange = () => { if (playing) armTimer(); };
+
+  $('play').onclick = () => start();
+  $('pause').onclick = pause;
+  $('stop').onclick = stop;
+  $('lablink').onclick = (ev) => { ev.preventDefault(); openLab(current && current.id); };
+  $('nowlink').onclick = (ev) => { ev.preventDefault(); $('lab').hidden ? openLab(current.id) : openHome(); };
+  $('homelink').onclick = (ev) => { ev.preventDefault(); openHome(); };
+
+  // What the lab view needs from the player.
+  window.Player = {
+    ready,
+    play: start,
+    stop,
+    playing: () => playing,
+    anchor: () => anchor,
+    onStop: (f) => stopHooks.push(f),
+    unmute: () => setVolume($('vol').value / 100),
+    current: () => current,
+    openLab, openHome,
+  };
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+
+  loadCatalogue().catch((e) => { $('songs').innerHTML = '<p class="lede">could not load the catalogue: ' + esc(e.message) + '</p>'; });
+})();
+// ---- the lab view: measurement of whatever the player is playing
+(() => {
+  const LAYER_COLORS = {
+    pad: '#7fb3a3', bass: '#d8a657', bells: '#89b4fa', melody: '#e07a5f',
+    pulse: '#a6a6c8', ticks: '#8ec07c', rimshot: '#d3869b', air: '#5f7a8a',
+  };
+  const $ = (id) => document.getElementById(id);
+
+  let code = '', parts = {}, names = [], sections = [], master = 1, cpm = 13.5;
+  let lastRec = null, lastScan = null;
+  let loadedId = null;
+  const playing = () => Player.playing();
+  const anchorFor = (ctx) => { const a = Player.anchor(); return a && a.ctx === ctx ? a.t0 : null; };
+
+  // ---------------------------------------------------------- load song
+  // The player hands the lab the song it holds: Lab.open(meta, code).
+  // ?view=lab&song=<id> opens the lab on that song.
+  function open(meta, src) {
+    if (meta.id === loadedId) return;
+    loadedId = meta.id;
+    $('labtitle').textContent = meta.title;
+    $('lablede').textContent = meta.key + ' · ' + meta.bpm + ' bpm · v' + (meta.version || 1) + (meta.stage ? ' ' + meta.stage : '') + ' · ';
+    selection.value = 'song'; selection.text = 'whole song';
+    lastRec = lastScan = null;
+    loadSong(src);
+  }
+  function loadSong(src) {
+    code = src;
+    names = [...src.matchAll(/^const (\w+) = /gm)].map((m) => m[1])
+      .filter((n) => !['chords', 'roots'].includes(n));
+
+    // Plain eval, only to get hold of the layer patterns for the EQ curves.
+    // setcpm belongs to the strudel REPL; the stub only records the tempo,
+    // which the scanner needs to map seconds onto bars.
+    try {
+      const setcpm = (v) => { cpm = +v || cpm; };
+      parts = eval(src + '\n; ({' + names.join(',') + '})');
+      if (!Object.keys(parts).length) throw new Error('no layers parsed');
+    } catch (e) {
+      $('labstate').textContent = 'cannot read layers: ' + e.message;
+      console.error('layer parse failed', e);
+      return;
+    }
+
+    const mg = src.match(/\.postgain\(([\d.]+)\)/);
+    master = mg ? +mg[1] : 1;   // solos and sections get the song's master gain too
+
+    sections = [...src.matchAll(/\[\s*(\d+),\s*stack\(([^)]*)\)\s*\],?[^\S\n]*(?:\/\/\s*(?:\d+\.\s*)?(.*))?/g)]
+      .map((m, i) => ({ i, bars: +m[1], names: m[2].split(',').map((s) => s.trim()),
+                        label: (m[3] || '').trim() }));
+
+    const palette = Object.values(LAYER_COLORS);
+    names.forEach((n, i) => { if (!LAYER_COLORS[n]) LAYER_COLORS[n] = palette[i % palette.length]; });
+    $('eqlegend').innerHTML = names
+      .map((n) => `<span><i style="background:${LAYER_COLORS[n] || '#888'}"></i>${n}</span>`).join('');
+    const bars = sections.reduce((a, s) => a + s.bars, 0);
+    $('labstate').textContent = names.length + ' layers · ' + sections.length
+      + ' sections · ' + bars + ' bars · master ' + master + ' · ready';
+    $('bars').textContent = bars + ' bars';
+  }
+
+  // What to play, as a source expression appended to the song file. Going
+  // through strudel's own evaluate() keeps setcpm and mini notation exact.
+  function expressionFor(v) {
+    if (v === 'song') return '';
+    const tail = master !== 1 ? '.postgain(' + master + ')' : '';
+    if (v === 'all') return 'stack(' + names.join(', ') + ')' + tail;
+    if (v.startsWith('sec:')) return 'stack(' + sections[+v.slice(4)].names.join(', ') + ')' + tail;
+    return v.slice(5) + tail;
+  }
+  // What plays: the whole song by default. Sections and solos are still
+  // reachable from the console with Lab.select('sec:0' | 'solo:pad' | 'all').
+  const selection = { value: 'song', text: 'whole song' };
+  function selectionText(v) {
+    if (v === 'song') return 'whole song';
+    if (v === 'all') return 'everything at once';
+    if (v.startsWith('sec:')) { const s = sections[+v.slice(4)]; return 'section ' + (s.i + 1) + ' — ' + (s.label || s.names.join(' + ')); }
+    return 'solo: ' + v.slice(5);
+  }
+  function activeNames() {
+    const v = selection.value;
+    if (v.startsWith('solo:')) return [v.slice(5)];
+    if (v.startsWith('sec:')) return sections[+v.slice(4)].names;
+    return names;
+  }
+
+  // Playing goes through the shared player, so the floating bar, the
+  // sleep timer and the home page all agree on what is sounding.
+  async function start() {
+    await Player.play(expressionFor(selection.value));
+    if (playing()) $('labstate').textContent = 'playing · ' + selection.text;
+  }
+  function quietStop() { Player.stop(); }
+  Player.onStop(() => { if (scanState.running) scanState.cancel = true; });   // stop also aborts a scan
+  function openDrawer(title, text) {
+    $('drawertitle').textContent = title;
+    $('report').textContent = text;
+    $('drawer').hidden = false;
+  }
+  $('drawerclose').onclick = () => { $('drawer').hidden = true; };
+  $('showcode').onclick = () => openDrawer('the song — paste it into strudel.cc', code);
+  $('copy').onclick = async () => {
+    try {
+      await navigator.clipboard.writeText($('report').textContent);
+      $('copy').textContent = 'copied';
+      setTimeout(() => ($('copy').textContent = 'copy'), 1200);
+    } catch (e) { $('copy').textContent = 'select and copy'; }
+  };
+
+  // ============================================================ scanner
+  // "measure" reads the analysers while the song plays; the scanner records
+  // every sample of the mix, then measures the recording offline. That is
+  // the only way to catch one-sample defects: clipping, clicks, dropouts.
+  // An engine stall (the audio clock falling behind the wall clock) does not
+  // land in the recording at all, so it is watched separately during play.
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const r1 = (x) => (isFinite(x) ? Math.round(x * 10) / 10 : null);
+  const r2 = (x) => (isFinite(x) ? Math.round(x * 100) / 100 : null);
+  const r3 = (x) => (isFinite(x) ? Math.round(x * 1000) / 1000 : null);
+  const fmtT = (t) => Math.floor(Math.max(0, t) / 60) + ':' + (Math.max(0, t) % 60).toFixed(1).padStart(4, '0');
+
+  const scanState = { running: false, cancel: false, done: 0, total: 0 };
+
+  // The tap that is actually sounding right now. There can be two candidate
+  // taps (one per AudioContext); the one with signal on its analyser wins.
+  async function liveTap(ms = 8000) {
+    const t0 = performance.now();
+    const buf = new Float32Array(512);
+    while (true) {
+      const cands = [];
+      try { const t = Analysis.tapFor(getAudioContext()); if (t) cands.push(t); } catch (e) {}
+      if (Analysis.tap && !cands.includes(Analysis.tap)) cands.push(Analysis.tap);
+      let best = null, bestE = 0;
+      for (const t of cands) {
+        if (t.ctx.state !== 'running') { t.ctx.resume().catch(() => {}); continue; }
+        t.raw.getFloatTimeDomainData(buf);
+        let e = 0;
+        for (let i = 0; i < buf.length; i++) e += buf[i] * buf[i];
+        if (e > bestE) { bestE = e; best = t; }
+      }
+      if (best && bestE > 1e-9) return best;
+      // on timeout take any tap that exists: a sparse quiet layer (or a
+      // first-use sample download) can hold energy back for many seconds,
+      // and recording some leading silence costs nothing
+      if (performance.now() - t0 > ms) return cands[0] || null;
+      await sleep(150);
+    }
+  }
+
+  // The capture worklet runs on the audio thread, so recording cannot itself
+  // stutter the sound the way main-thread capture could. When its input goes
+  // quiet the browser hands it no channels; zeros keep the sample clock
+  // continuous so times stay exact.
+  const WORKLET_SRC = `
+class Capture extends AudioWorkletProcessor {
+  constructor() {
+    super();
+    this.on = false; this.l = []; this.r = []; this.n = 0;
+    this.port.onmessage = (e) => {
+      if (e.data === 'start') { this.on = true; this.l = []; this.r = []; this.n = 0; this.port.postMessage({ t0: currentTime }); }
+      if (e.data === 'stop') { this.on = false; this.flush(true); }
+    };
+  }
+  flush(done) {
+    const L = new Float32Array(this.n), R = new Float32Array(this.n);
+    let o = 0; for (const c of this.l) { L.set(c, o); o += c.length; }
+    o = 0; for (const c of this.r) { R.set(c, o); o += c.length; }
+    this.l = []; this.r = []; this.n = 0;
+    this.port.postMessage({ L, R, done: !!done }, [L.buffer, R.buffer]);
+  }
+  process(inputs) {
+    if (this.on) {
+      const inp = inputs[0];
+      if (inp && inp.length && inp[0]) {
+        this.l.push(new Float32Array(inp[0]));
+        this.r.push(new Float32Array(inp[1] || inp[0]));
+        this.n += inp[0].length;
+      } else {
+        this.l.push(new Float32Array(128));
+        this.r.push(new Float32Array(128));
+        this.n += 128;
+      }
+      if (this.n >= 32768) this.flush(false);
+    }
+    return true;
+  }
+}
+registerProcessor('capture', Capture);
+`;
+
+  const Recorder = (() => {
+    let node = null, sp = false, forCtx = null;
+    let chunksL = [], chunksR = [], t0 = 0, doneResolve = null, spOn = false;
+
+    async function ensure(tap) {
+      if (node && forCtx === tap.ctx) return;
+      const ctx = tap.ctx;
+      try {
+        const url = URL.createObjectURL(new Blob([WORKLET_SRC], { type: 'application/javascript' }));
+        await ctx.audioWorklet.addModule(url);
+        node = new AudioWorkletNode(ctx, 'capture', {
+          numberOfInputs: 1, numberOfOutputs: 1, channelCount: 2,
+          channelCountMode: 'explicit', channelInterpretation: 'speakers',
+        });
+        node.port.onmessage = (e) => {
+          const d = e.data;
+          if (d.t0 !== undefined) t0 = d.t0;
+          if (d.L) { chunksL.push(d.L); chunksR.push(d.R); }
+          if (d.done && doneResolve) doneResolve();
+        };
+        tap.input.connect(node);   // a plain connect; only destination is patched
+        sp = false;
+      } catch (err) {
+        // ScriptProcessor fallback. It only runs while it reaches the
+        // destination, and it goes there through rawConnect so it never
+        // routes back into the tap (that would be a muting gain cycle).
+        node = ctx.createScriptProcessor(4096, 2, 2);
+        node.onaudioprocess = (ev) => {
+          if (!spOn) return;
+          chunksL.push(new Float32Array(ev.inputBuffer.getChannelData(0)));
+          chunksR.push(new Float32Array(ev.inputBuffer.getChannelData(1)));
+        };
+        const zero = ctx.createGain(); zero.gain.value = 0;
+        tap.input.connect(node);
+        node.connect(zero);
+        Analysis.rawConnect(zero, ctx.destination);
+        sp = true;
+      }
+      forCtx = ctx;
+    }
+
+    let curTap = null;
+    return {
+      async start(tap) {
+        if (!tap) throw new Error('no audio tap yet');
+        curTap = tap;
+        await ensure(tap);
+        chunksL = []; chunksR = [];
+        if (sp) { t0 = tap.ctx.currentTime; spOn = true; }
+        else node.port.postMessage('start');
+      },
+      async stop() {
+        const tap = curTap;
+        if (sp) spOn = false;
+        else await new Promise((res) => { doneResolve = res; node.port.postMessage('stop'); });
+        doneResolve = null;
+        const n = chunksL.reduce((a, c) => a + c.length, 0);
+        const L = new Float32Array(n), R = new Float32Array(n);
+        let o = 0; for (const c of chunksL) { L.set(c, o); o += c.length; }
+        o = 0; for (const c of chunksR) { R.set(c, o); o += c.length; }
+        chunksL = []; chunksR = [];
+        return { L, R, sr: tap.ctx.sampleRate, t0 };
+      },
+    };
+  })();
+
+  async function scanSong(opts = {}) {
+    if (scanState.running) throw new Error('a scan is already running');
+    if (typeof note !== 'function') throw new Error('strudel is not ready yet');
+    const totalBars = sections.reduce((a, s) => a + s.bars, 0);
+    const barSec = 60 / cpm;
+    const wholeSong = selection.value === 'song';
+    const musicSecs = (wholeSong ? totalBars : 16) * barSec;
+    const secs = opts.seconds ?? musicSecs + 4;   // + tail for release and reverb
+    const label = selection.text;
+    scanState.running = true; scanState.cancel = false;
+    scanState.total = secs; scanState.done = 0;
+    try {
+      if (playing()) {
+        quietStop();
+        await sleep(2000);   // let the old tails die down
+      }
+
+      // Start playback FIRST: strudel may build a fresh AudioContext for a
+      // new evaluation, so the tap that carries this run's audio only exists
+      // (or only becomes the live one) after evaluate. Pick it by measured
+      // energy, then attach the recorder to it.
+      await start();
+      const tap = await liveTap(12000);
+      if (!tap) throw new Error('no audio appeared — press play once, then scan');
+      await Recorder.start(tap);
+      // same context as the play anchor: use the anchor. A context born
+      // during this evaluation instead started its clock near song zero.
+      const playAt = anchorFor(tap.ctx) ?? 0.2;
+      const ctx = tap.ctx;
+
+      // progress, and the stall watch: over each ~250 ms of wall time the
+      // audio clock must advance about as far, or the engine glitched
+      const stalls = [];
+      const wall0 = performance.now();
+      let lastWall = wall0, lastCtx = ctx.currentTime;
+      while (!scanState.cancel) {
+        await sleep(250);
+        // a suspended context never advances; bail on the wall clock
+        if (performance.now() - wall0 > secs * 1000 + 30000) { scanState.cancel = true; break; }
+        const wall = performance.now(), cnow = ctx.currentTime;
+        const dWall = (wall - lastWall) / 1000, dCtx = cnow - lastCtx;
+        if (dWall > 0.15 && dWall < 2 && dCtx < dWall * 0.55) {
+          stalls.push({ t: r2(cnow - playAt), wallMs: Math.round(dWall * 1000), ctxMs: Math.round(dCtx * 1000) });
+        }
+        lastWall = wall; lastCtx = cnow;
+        scanState.done = cnow - playAt;
+        if (scanState.done >= secs) break;
+        const pct = Math.round((100 * scanState.done) / secs);
+        $('labstate').textContent = 'scanning ' + pct + '% · ' + Math.round(scanState.done) + '/' + Math.round(secs) + ' s · ' + label;
+      }
+      const aborted = scanState.cancel;
+      if (!aborted) quietStop();
+      const rec = await Recorder.stop();
+      lastRec = { ...rec, offset: playAt - rec.t0, barSec, wholeSong, label, stalls, musicSecs, aborted };
+      lastScan = analyzeRecording(lastRec, opts);
+      window.Lab.lastScan = lastScan;
+      $('labstate').textContent = (aborted ? 'scan aborted · ' : 'scan done · ') + label
+        + ' — ' + lastScan.clipEvents.length + ' clips · ' + lastScan.clickCount + ' clicks · '
+        + lastScan.gaps.length + ' gaps · peak ' + lastScan.peakDb + ' dB';
+      openDrawer('scan — ' + label, scanText(lastScan));
+      return lastScan;
+    } finally {
+      scanState.running = false;
+    }
+  }
+
+  function analyzeRecording(rec, o = {}) {
+    const { L, R, sr, offset, barSec, wholeSong, label, stalls, musicSecs, aborted } = rec;
+    const n = L.length;
+    const clipLevel = o.clipLevel ?? 0.999;
+    const clickRatio = o.clickRatio ?? 10;
+    const clickAbs = o.clickAbs ?? 0.04;
+    const gapLevel = Math.pow(10, (o.gapDb ?? -60) / 20);
+    const gapSecs = o.gapSecs ?? 0.4;
+    const tOf = (i) => i / sr - offset;
+
+    function annotate(t) {
+      const bar = Math.max(1, Math.floor(t / barSec) + 1);
+      if (!wholeSong) return { bar };
+      let acc = 0;
+      for (const s of sections) {
+        if (bar <= acc + s.bars) return { bar, section: s.i + 1, sectionLabel: s.label || s.names.join('+') };
+        acc += s.bars;
+      }
+      return { bar };
+    }
+
+    // ---- envelope (50 ms), global peak / rms, full-scale samples
+    const hop = Math.max(1, Math.round(sr * 0.05));
+    const cols = Math.ceil(n / hop);
+    const envPeak = new Float32Array(cols), envRms = new Float32Array(cols);
+    let peak = 0, overs = 0, sumSq = 0;
+    for (let c = 0; c < cols; c++) {
+      const end = Math.min(n, (c + 1) * hop);
+      let p = 0, s = 0;
+      for (let i = c * hop; i < end; i++) {
+        const a = Math.max(Math.abs(L[i]), Math.abs(R[i]));
+        if (a > p) p = a;
+        if (a >= 1) overs++;
+        s += (L[i] * L[i] + R[i] * R[i]) / 2;
+      }
+      envPeak[c] = p;
+      envRms[c] = Math.sqrt(s / Math.max(1, end - c * hop));
+      if (p > peak) peak = p;
+      sumSq += s;
+    }
+    const rms = Math.sqrt(sumSq / Math.max(1, n));
+
+    // ---- clipping: runs of samples pinned at (or past) full scale
+    const clipEvents = [];
+    let run = 0, runPeak = 0, runStart = 0;
+    const endRun = () => {
+      if (run >= 3) {
+        const t = tOf(runStart), dur = run / sr;
+        const prev = clipEvents[clipEvents.length - 1];
+        if (prev && t - (prev.t + prev.durMs / 1000) < 0.1) {
+          prev.durMs = Math.round((t + dur - prev.t) * 1000);
+          prev.samples += run;
+          if (runPeak > prev.peak) prev.peak = r3(runPeak);
+        } else {
+          clipEvents.push({ t: r2(t), ...annotate(t), durMs: Math.round(dur * 1000), samples: run, peak: r3(runPeak) });
+        }
+      }
+      run = 0; runPeak = 0;
+    };
+    for (let i = 0; i < n; i++) {
+      const a = Math.max(Math.abs(L[i]), Math.abs(R[i]));
+      if (a >= clipLevel) { if (!run) runStart = i; run++; if (a > runPeak) runPeak = a; }
+      else if (run) endRun();
+    }
+    if (run) endRun();
+
+    // ---- clicks: a one-sample step far outside what the local signal does.
+    // Real audio is band limited, so its sample-to-sample steps stay near the
+    // local step rms; a truncated sample or a bad splice jumps 10x past it.
+    function clicksIn(X, ch) {
+      const found = [];
+      const block = 2048;
+      let prevRef = 0;
+      for (let b = 1; b < X.length; b += block) {
+        const end = Math.min(X.length, b + block);
+        let sum = 0;
+        for (let i = b; i < end; i++) { const d = X[i] - X[i - 1]; sum += d * d; }
+        const rmsD = Math.sqrt(sum / Math.max(1, end - b));
+        const ref = Math.max(prevRef ? (prevRef + rmsD) / 2 : rmsD, 1e-6);
+        const thr = Math.max(clickRatio * ref, clickAbs);
+        for (let i = b; i < end; i++) {
+          const d = Math.abs(X[i] - X[i - 1]);
+          if (d > thr) found.push({ i, d, ch });
+        }
+        prevRef = rmsD;
+      }
+      return found;
+    }
+    const rawClicks = [...clicksIn(L, 'L'), ...clicksIn(R, 'R')].sort((a, b) => a.i - b.i);
+    const clickEvents = [];
+    for (const c of rawClicks) {
+      const prev = clickEvents[clickEvents.length - 1];
+      if (prev && c.i - prev.iLast < sr * 0.02) {
+        prev.iLast = c.i; prev.n++;
+        if (c.d > prev.step) prev.step = c.d;
+        if (prev.ch !== c.ch) prev.ch = 'LR';
+      } else {
+        clickEvents.push({ i: c.i, iLast: c.i, n: 1, step: c.d, ch: c.ch });
+      }
+    }
+    const clicks = clickEvents
+      .map((c) => ({ t: r2(tOf(c.i)), ...annotate(tOf(c.i)), step: r3(c.step), n: c.n, ch: c.ch }))
+      .sort((a, b) => b.step - a.step)
+      .slice(0, 40)
+      .sort((a, b) => a.t - b.t);
+
+    // ---- gaps: silence inside the active part of the piece
+    let firstAct = -1, lastAct = -1;
+    for (let c = 0; c < cols; c++) if (envPeak[c] > gapLevel) { if (firstAct < 0) firstAct = c; lastAct = c; }
+    const gaps = [];
+    let g0 = -1;
+    for (let c = Math.max(0, firstAct); c <= lastAct; c++) {
+      if (envPeak[c] <= gapLevel) { if (g0 < 0) g0 = c; }
+      else if (g0 >= 0) {
+        const dur = ((c - g0) * hop) / sr;
+        if (dur >= gapSecs) { const t = tOf(g0 * hop); gaps.push({ t: r2(t), ...annotate(t), dur: r2(dur) }); }
+        g0 = -1;
+      }
+    }
+
+    // ---- dc offset, per second
+    const dcWindows = [];
+    for (let w0 = 0; w0 + sr <= n; w0 += sr) {
+      let mL = 0, mR = 0;
+      for (let i = w0; i < w0 + sr; i++) { mL += L[i]; mR += R[i]; }
+      mL /= sr; mR /= sr;
+      if (Math.abs(mL) > 0.005 || Math.abs(mR) > 0.005) {
+        const t = tOf(w0);
+        dcWindows.push({ t: r2(t), ...annotate(t), L: r3(mL), R: r3(mR) });
+      }
+    }
+
+    // ---- per-bar peak and rms
+    const totalBars = Math.max(1, Math.round(musicSecs / barSec));
+    const bars = [];
+    for (let b = 0; b < totalBars; b++) {
+      const i0 = Math.max(0, Math.round((b * barSec + offset) * sr));
+      const i1 = Math.min(n, Math.round(((b + 1) * barSec + offset) * sr));
+      if (i0 >= i1) break;
+      let p = 0, s = 0;
+      for (let i = i0; i < i1; i++) {
+        const a = Math.max(Math.abs(L[i]), Math.abs(R[i]));
+        if (a > p) p = a;
+        s += (L[i] * L[i] + R[i] * R[i]) / 2;
+      }
+      bars.push({ ...annotate((b + 0.5) * barSec), peakDb: r1(Analysis.db(p)), rmsDb: r1(Analysis.db(Math.sqrt(s / (i1 - i0)))) });
+    }
+    const loudestBar = bars.reduce((a, b) => (!a || b.peakDb > a.peakDb ? b : a), null);
+
+    return {
+      what: label, aborted: !!aborted,
+      seconds: r1(n / sr), sr,
+      thresholds: { clipLevel, clickRatio, clickAbs },
+      peak: r3(peak), peakDb: r1(Analysis.db(peak)),
+      oversamples: overs,
+      rmsDb: r1(Analysis.db(rms)),
+      crestDb: r1(Analysis.db(peak) - Analysis.db(rms)),
+      clipEvents, clickCount: clickEvents.length, clicks,
+      gaps,
+      stalls: (stalls || []).map((s) => ({ ...s, ...annotate(s.t) })),
+      dcWindows, bars, loudestBar,
+    };
+  }
+
+  function scanText(r) {
+    if (!r) return 'no scan yet — run Lab.scan()';
+    const where = (e) => 'bar ' + e.bar + (e.section ? ' · sec ' + e.section + (e.sectionLabel ? ' (' + e.sectionLabel + ')' : '') : '');
+    const lines = [];
+    lines.push((r.aborted ? 'ABORTED — partial scan · ' : '') + r.what + ' · ' + r.seconds + ' s at ' + r.sr + ' Hz');
+    lines.push('peak ' + r.peakDb + ' dBFS · rms ' + r.rmsDb + ' dB · crest ' + r.crestDb + ' dB');
+    lines.push('samples at/over full scale: ' + r.oversamples);
+    lines.push('');
+    lines.push('clip events (≥3 samples ≥ ' + r.thresholds.clipLevel + '): ' + r.clipEvents.length);
+    for (const e of r.clipEvents.slice(0, 20))
+      lines.push('  ' + fmtT(e.t) + '  ' + where(e) + '  ' + e.durMs + ' ms · ' + e.samples + ' smp · peak ' + e.peak);
+    lines.push('clicks (step outliers): ' + r.clickCount + (r.clicks.length < r.clickCount ? ' · top ' + r.clicks.length + ' shown' : ''));
+    for (const e of r.clicks.slice(0, 20))
+      lines.push('  ' + fmtT(e.t) + '  ' + where(e) + '  step ' + e.step + ' · ch ' + e.ch);
+    lines.push('gaps ≥ 0.4 s under -60 dB: ' + r.gaps.length);
+    for (const e of r.gaps.slice(0, 12))
+      lines.push('  ' + fmtT(e.t) + '  ' + where(e) + '  ' + e.dur + ' s');
+    lines.push('engine stalls: ' + r.stalls.length);
+    for (const e of r.stalls.slice(0, 12))
+      lines.push('  ' + fmtT(e.t) + '  ' + where(e) + '  rendered ' + e.ctxMs + ' ms of audio in ' + e.wallMs + ' ms');
+    lines.push('dc offset windows: ' + r.dcWindows.length);
+    for (const e of r.dcWindows.slice(0, 8))
+      lines.push('  ' + fmtT(e.t) + '  ' + where(e) + '  L ' + e.L + ' · R ' + e.R);
+    lines.push('');
+    if (r.loudestBar) lines.push('loudest bar: ' + where(r.loudestBar) + ' · peak ' + r.loudestBar.peakDb + ' dB · rms ' + r.loudestBar.rmsDb + ' dB');
+    lines.push('full data: Lab.lastScan · Lab.reanalyze({clickRatio,clickAbs,clipLevel}) · Lab.playBack(secs)');
+    return lines.join('\n');
+  }
+
+  Player.ready.catch((e) => { $('labstate').textContent = e.message; });
+
+  // ---------------------------------------------------------- drawing
+  function fitCanvas(id) {
+    const cv = $(id);
+    const dpr = devicePixelRatio || 1;
+    // Read the size from CSS layout, never from the canvas buffer: writing
+    // cv.height changes the attribute, so reading it back would compound.
+    const r = cv.getBoundingClientRect();
+    const w = Math.max(1, Math.round(r.width)), h = Math.max(1, Math.round(r.height));
+    if (cv.width !== w * dpr || cv.height !== h * dpr) { cv.width = w * dpr; cv.height = h * dpr; }
+    const g = cv.getContext('2d');
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { g, w, h };
+  }
+
+  const FMIN = 20, FMAX = 20000, LOGR = Math.log(FMAX / FMIN);
+  const fx = (f, w) => (Math.log(Math.max(f, FMIN) / FMIN) / LOGR) * w;
+  const dbY = (d, h, top = 0, bot = -100) => ((top - d) / (top - bot)) * h;
+
+  let holdArr = null, holdW = 0;
+
+  function drawSpectrum(m) {
+    const { g, w, h } = fitCanvas('spectrum');
+    const plotH = h - 12;
+    g.clearRect(0, 0, w, h);
+    g.font = '10px ui-monospace, monospace';
+
+    for (let oct = 1; oct <= 8; oct++) {
+      const x = fx(32.703 * Math.pow(2, oct - 1), w);
+      g.strokeStyle = '#1e2733';
+      g.beginPath(); g.moveTo(x, 0); g.lineTo(x, plotH); g.stroke();
+      g.fillStyle = '#4a5462'; g.fillText('C' + oct, x + 3, h - 2);
+    }
+    for (const f of [100, 1000, 10000]) {
+      const x = fx(f, w);
+      g.strokeStyle = '#26303d';
+      g.beginPath(); g.moveTo(x, 0); g.lineTo(x, plotH); g.stroke();
+      g.fillStyle = '#5b6675'; g.fillText(f >= 1000 ? f / 1000 + 'k' : String(f), x + 3, 11);
+    }
+    for (let d = -20; d >= -80; d -= 20) {
+      const y = dbY(d, plotH);
+      g.strokeStyle = '#182029';
+      g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke();
+      g.fillStyle = '#3d4653'; g.fillText(d + ' dB', 2, y - 2);
+    }
+    if (!m) { drawEqCurves(g, w, plotH); return; }
+
+    const cols = Math.max(1, Math.floor(w));
+    if (!holdArr || holdW !== cols) { holdArr = new Float32Array(cols).fill(-120); holdW = cols; }
+    const colDb = new Float32Array(cols).fill(-120);
+    for (let i = 1; i < m.spectrum.length; i++) {
+      const f = i * m.binHz;
+      if (f < FMIN) continue;
+      if (f > FMAX) break;
+      const c = Math.min(cols - 1, Math.floor(fx(f, w)));
+      if (m.spectrum[i] > colDb[c]) colDb[c] = m.spectrum[i];
+    }
+    for (let c = 1; c < cols; c++) if (colDb[c] === -120) colDb[c] = colDb[c - 1];
+
+    g.beginPath();
+    for (let c = 0; c < cols; c++) { const y = dbY(colDb[c], plotH); c ? g.lineTo(c, y) : g.moveTo(c, y); }
+    g.lineTo(cols, plotH); g.lineTo(0, plotH); g.closePath();
+    g.fillStyle = 'rgba(127,179,163,.16)'; g.fill();
+    g.strokeStyle = '#7fb3a3'; g.lineWidth = 1; g.stroke();
+
+    g.beginPath();
+    for (let c = 0; c < cols; c++) {
+      holdArr[c] = Math.max(colDb[c], holdArr[c] - 0.35);
+      const y = dbY(holdArr[c], plotH);
+      c ? g.lineTo(c, y) : g.moveTo(c, y);
+    }
+    g.strokeStyle = 'rgba(232,230,223,.3)'; g.stroke();
+
+    drawEqCurves(g, w, plotH);
+  }
+
+  // The EQ curves are read out of the patterns themselves, so they always
+  // show the filters the music actually uses.
+  let eqCache = null;
+  function eqCurves() {
+    if (eqCache) return eqCache;
+    if (!Analysis.tap || !Object.keys(parts).length) return null;
+    const ctx = Analysis.tap.ctx;
+    const freqs = new Float32Array(400);
+    for (let i = 0; i < freqs.length; i++) freqs[i] = FMIN * Math.exp((i / (freqs.length - 1)) * LOGR);
+    const out = {};
+    for (const [name, pat] of Object.entries(parts)) {
+      let haps = [];
+      try { haps = pat.queryArc(0, 4); } catch (e) { continue; }
+      const vals = haps.map((x) => x.value).filter(Boolean);
+      const med = (k) => {
+        const v = vals.map((x) => x[k]).filter((x) => typeof x === 'number').sort((a, b) => a - b);
+        return v.length ? v[Math.floor(v.length / 2)] : null;
+      };
+      const lp = med('cutoff'), hp = med('hcutoff'), q = med('resonance') || 1;
+      const mag = new Float32Array(freqs.length).fill(1);
+      let any = false;
+      if (lp) { const c = Analysis.filterCurve(ctx, { type: 'lowpass', freq: lp, q }, freqs); for (let i = 0; i < mag.length; i++) mag[i] *= c[i]; any = true; }
+      if (hp) { const c = Analysis.filterCurve(ctx, { type: 'highpass', freq: hp, q: 1 }, freqs); for (let i = 0; i < mag.length; i++) mag[i] *= c[i]; any = true; }
+      if (any) out[name] = { freqs, mag, lp, hp, q };
+    }
+    eqCache = out;
+    return out;
+  }
+
+  function drawEqCurves(g, w, plotH) {
+    const curves = eqCurves();
+    if (!curves) return;
+    const live = activeNames();
+    g.lineWidth = 1.5;
+    for (const [name, c] of Object.entries(curves)) {
+      if (!live.includes(name)) continue;
+      g.strokeStyle = LAYER_COLORS[name] || '#888';
+      g.globalAlpha = 0.7;
+      g.beginPath();
+      for (let i = 0; i < c.freqs.length; i++) {
+        const d = -12 + 20 * Math.log10(Math.max(c.mag[i], 1e-4));   // 0 dB sits on the -12 line
+        const x = fx(c.freqs[i], w), y = dbY(d, plotH);
+        i ? g.lineTo(x, y) : g.moveTo(x, y);
+      }
+      g.stroke();
+      g.globalAlpha = 1;
+    }
+    g.lineWidth = 1;
+  }
+
+  function drawWave(m) {
+    const { g, w, h } = fitCanvas('wave');
+    g.clearRect(0, 0, w, h);
+    g.strokeStyle = '#1e2733';
+    g.beginPath(); g.moveTo(0, h / 2); g.lineTo(w, h / 2); g.stroke();
+    g.strokeStyle = 'rgba(224,122,95,.35)';
+    for (const v of [1, -1]) {
+      const y = h / 2 - v * (h / 2) * 0.95;
+      g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke();
+    }
+    if (!m) return;
+    for (const [data, color] of [[m.wave.L, '#7fb3a3'], [m.wave.R, '#d8a657']]) {
+      g.strokeStyle = color; g.globalAlpha = 0.8; g.beginPath();
+      const step = data.length / w;
+      for (let x = 0; x < w; x++) {
+        const y = h / 2 - data[Math.floor(x * step)] * (h / 2) * 0.95;
+        x ? g.lineTo(x, y) : g.moveTo(x, y);
+      }
+      g.stroke(); g.globalAlpha = 1;
+    }
+  }
+
+  const corrHist = [];
+  function drawStereo(m) {
+    const { g, w, h } = fitCanvas('stereo');
+    g.clearRect(0, 0, w, h);
+    g.font = '10px ui-monospace, monospace';
+    const size = Math.min(h - 30, w * 0.42);
+    const cx = w - size / 2 - 4, cy = size / 2 + 6;
+
+    g.strokeStyle = '#1e2733';
+    g.strokeRect(cx - size / 2, cy - size / 2, size, size);
+    g.beginPath();
+    g.moveTo(cx, cy - size / 2); g.lineTo(cx, cy + size / 2);
+    g.moveTo(cx - size / 2, cy); g.lineTo(cx + size / 2, cy);
+    g.stroke();
+    if (m) {
+      g.fillStyle = 'rgba(127,179,163,.55)';
+      const { L, R } = m.wave;
+      for (let i = 0; i < L.length; i += 2) {
+        const mid = (L[i] + R[i]) / 2, side = (L[i] - R[i]) / 2;
+        g.fillRect(cx + side * size * 0.9, cy - mid * size * 0.9, 1, 1);
+      }
+    }
+    g.fillStyle = '#4a5462';
+    g.fillText('mono ↕  wide ↔', cx - size / 2, cy + size / 2 + 12);
+
+    const bw = Math.max(60, w - size - 24), bx = 0, by = 26, bh = 16;
+    g.strokeStyle = '#1e2733'; g.strokeRect(bx, by, bw, bh);
+    const zero = bx + bw / 2;
+    g.beginPath(); g.moveTo(zero, by); g.lineTo(zero, by + bh); g.stroke();
+    g.fillStyle = '#4a5462';
+    g.fillText('-1', bx + 2, by - 5); g.fillText('0', zero - 3, by - 5); g.fillText('+1', bx + bw - 13, by - 5);
+    if (m) {
+      const c = m.correlation;
+      g.fillStyle = c > 0.3 ? '#7fb3a3' : c > 0 ? '#d8a657' : '#e07a5f';
+      const x = bx + ((c + 1) / 2) * bw;
+      g.fillRect(Math.min(x, zero), by + 1, Math.abs(x - zero), bh - 2);
+      g.fillStyle = '#e8e6df';
+      g.fillText('correlation ' + c.toFixed(2), bx, by + bh + 14);
+      corrHist.push(c);
+      if (corrHist.length > bw) corrHist.shift();
+      g.strokeStyle = 'rgba(127,179,163,.5)';
+      g.beginPath();
+      const top = by + bh + 22, hh = Math.max(10, h - top - 4);
+      corrHist.forEach((v, i) => {
+        const y = top + (1 - (v + 1) / 2) * hh;
+        i ? g.lineTo(bx + i, y) : g.moveTo(bx + i, y);
+      });
+      g.stroke();
+    }
+  }
+
+  function drawBands(m) {
+    const { g, w, h } = fitCanvas('bands');
+    g.clearRect(0, 0, w, h);
+    const bands = Analysis.BANDS;
+    const bw = w / bands.length;
+    g.font = '9.5px ui-monospace, monospace';
+    bands.forEach((b, i) => {
+      const x = i * bw;
+      const d = m ? (m.bandsDb[b.name] ?? -120) : -120;
+      const top = Math.max(0, dbY(d, h - 24, -20, -100));
+      g.fillStyle = d > -25 ? '#e07a5f' : d > -45 ? '#7fb3a3' : '#3f6b60';
+      g.fillRect(x + 3, top, bw - 6, h - 24 - top);
+      // names run upwards, so ten of them fit in a narrow panel
+      g.save();
+      g.translate(x + bw / 2 + 3, h - 26);
+      g.rotate(-Math.PI / 2);
+      g.fillStyle = '#8b95a3';
+      g.fillText(b.name, 0, 0);
+      g.restore();
+      g.fillStyle = '#4a5462';
+      const label = m ? d.toFixed(0) : '–';
+      g.fillText(label, x + bw / 2 - g.measureText(label).width / 2, h - 3);
+    });
+    g.strokeStyle = 'rgba(216,166,87,.35)'; g.setLineDash([3, 3]); g.beginPath();
+    bands.forEach((b, i) => {
+      const y = dbY(-30 - i * 3.2, h - 24, -20, -100);
+      i ? g.lineTo(i * bw + bw / 2, y) : g.moveTo(i * bw + bw / 2, y);
+    });
+    g.stroke(); g.setLineDash([]);
+  }
+
+  const PC = { DB: 'C#', EB: 'D#', GB: 'F#', AB: 'G#', BB: 'A#' };
+  function intendedNotes() {
+    if (!parts.pad || !playing()) return [];
+    try {
+      const cps = typeof getCps === 'function' ? getCps() : 0.225;
+      const c = Math.floor((getAudioContext().currentTime - (anchorFor(getAudioContext()) ?? 0)) * cps);
+      return parts.pad.queryArc(c, c + 1).map((hp) => hp.value && hp.value.note).filter(Boolean).map(String);
+    } catch (e) { return []; }
+  }
+
+  function drawChroma(m) {
+    const { g, w, h } = fitCanvas('chroma');
+    g.clearRect(0, 0, w, h);
+    const bw = w / 12;
+    const want = new Set(intendedNotes().map((n) => {
+      const s = String(n).replace(/[0-9-]/g, '').toUpperCase();
+      return PC[s] || s;
+    }));
+    g.font = '10px ui-monospace, monospace';
+    Analysis.NOTE_NAMES.forEach((n, i) => {
+      const x = i * bw;
+      const v = m ? m.chroma[i] : 0;
+      const barH = (h - 30) * v;
+      g.fillStyle = want.has(n) ? '#7fb3a3' : n.includes('#') ? '#38424f' : '#4e5b6b';
+      g.fillRect(x + 3, h - 30 - barH, bw - 6, barH);
+      if (want.has(n)) { g.strokeStyle = 'rgba(127,179,163,.8)'; g.strokeRect(x + 3, 2, bw - 6, h - 32); }
+      g.fillStyle = want.has(n) ? '#7fb3a3' : '#77808c';
+      g.fillText(n, x + bw / 2 - (n.length > 1 ? 6 : 3), h - 16);
+    });
+    const heard = m && m.notes.length ? m.notes.slice(0, 6).map((p) => p.note).join(' ') : '–';
+    $('chordline').textContent = 'chord now: ' + ([...want].join(' ') || '–') + '   |   heard: ' + heard;
+  }
+
+  function drawReadout(m) {
+    const rows = [
+      ['peak', m ? m.peakDb + ' dB' : '–', m ? (m.peakDb > -1 ? 'bad' : m.peakDb > -6 ? 'warn' : 'ok') : ''],
+      ['rms', m ? m.rmsDb + ' dB' : '–', ''],
+      ['crest', m ? m.crestDb + ' dB' : '–', ''],
+      ['correlation', m ? m.correlation : '–',
+        m ? (m.correlation > 0.3 ? 'ok' : m.correlation > 0 ? 'warn' : 'bad') : ''],
+      ['width', m ? m.width : '–', ''],
+      ['centroid', m ? m.centroidHz + ' Hz' : '–', ''],
+      ['low − mid', m ? (m.bandsDb.low - m.bandsDb.mid).toFixed(0) + ' dB' : '–', ''],
+      ['step', m ? m.stepRatio : '–',
+        m ? (m.stepRatio > 0.7 ? 'bad' : m.stepRatio > 0.45 ? 'warn' : 'ok') : ''],
+    ];
+    $('readout').innerHTML = rows
+      .map(([k, v, c]) => `<div><span>${k}</span><b class="${c}">${v}</b></div>`).join('');
+  }
+
+  let last = 0, cached = null;
+  function frameLoop(t) {
+    if ($('lab').hidden) { requestAnimationFrame(frameLoop); return; }   // draw only while the lab is on screen
+    try {
+      if (t - last > 40) { cached = Analysis.metrics(); last = t; }
+      drawSpectrum(cached); drawWave(cached); drawStereo(cached);
+      drawBands(cached); drawChroma(cached); drawReadout(cached);
+    } catch (e) {
+      $('labstate').textContent = 'draw error: ' + e.message;
+    }
+    requestAnimationFrame(frameLoop);
+  }
+  requestAnimationFrame(frameLoop);
+
+  // handles for driving the lab from the console
+  window.Lab = {
+    open,                                 // Lab.open(meta, code): the player calls this
+    play: start,
+    stop: quietStop,
+    select: (v) => { selection.value = v; selection.text = selectionText(v); return start(); },
+    report: (ms) => Analysis.report(ms || 8000),
+    parts: () => parts,
+    eq: () => eqCurves(),
+    // ---- scanner ----
+    scan: scanSong,                       // Lab.scan({seconds?}) records + measures
+    scanState,
+    lastScan: null,                       // filled by scan/reanalyze
+    scanText: () => scanText(lastScan),
+    reanalyze: (opts) => {                // new thresholds, same recording
+      if (!lastRec) throw new Error('no recording yet — run Lab.scan() first');
+      lastScan = analyzeRecording(lastRec, opts || {});
+      window.Lab.lastScan = lastScan;
+      openDrawer('scan (reanalyzed)', scanText(lastScan));
+      return lastScan;
+    },
+    playBack: (t, dur = 3) => {           // audition the recording around t
+      if (!lastRec) return 'no recording yet — run Lab.scan() first';
+      const tap = Analysis.currentTap();
+      const sr = lastRec.sr;
+      const i0 = Math.max(0, Math.round((t + lastRec.offset - 0.5) * sr));
+      const len = Math.max(1, Math.min(lastRec.L.length - i0, Math.round((dur + 0.5) * sr)));
+      const buf = tap.ctx.createBuffer(2, len, sr);
+      buf.copyToChannel(lastRec.L.subarray(i0, i0 + len), 0);
+      buf.copyToChannel(lastRec.R.subarray(i0, i0 + len), 1);
+      const src = tap.ctx.createBufferSource();
+      src.buffer = buf;
+      src.connect(tap.input);
+      Player.unmute();
+      src.start();
+      return 'playing ' + r1(len / sr) + ' s around t=' + t;
+    },
+  };
+})();
+</script>
+</body>
+</html>
