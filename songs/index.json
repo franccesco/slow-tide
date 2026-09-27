@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-21",
+  "generated": "2026-09-27",
   "sources": {
     "bainbridge2021": {
       "title": "Infants relax in response to unfamiliar foreign lullabies",
@@ -98,6 +98,20 @@
       "doi": "https://doi.org/10.3390/ijerph15030519",
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5877064/",
       "openAccess": true
+    },
+    "giordano2021": {
+      "title": "The effect of music on aEEG cyclicity in preterm neonates",
+      "grade": "A",
+      "doi": "https://doi.org/10.3390/children8030208",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8000223/",
+      "openAccess": true
+    },
+    "baradel2026": {
+      "title": "The origins of embodiment: behavioral and cardiovascular responses to music in very preterm newborns",
+      "grade": "A/B",
+      "doi": "https://doi.org/10.1038/s41598-026-46395-z",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13538528/",
+      "openAccess": true
     }
   },
   "songs": [
@@ -186,6 +200,45 @@
         "scan": "2026-09-20"
       },
       "fingerprint": "a27aa6aa39bb"
+    },
+    {
+      "id": "night-harp",
+      "title": "Night Harp",
+      "subtitle": "a harp and flute lullaby in B major",
+      "bpm": 56,
+      "key": "B major",
+      "bars": 64,
+      "passSeconds": 274,
+      "added": "2026-09-27",
+      "status": "compliant",
+      "exceptions": [],
+      "research": [
+        "bainbridge2021",
+        "baradel2026",
+        "basner2018",
+        "bruder2025",
+        "cirelli2020",
+        "giordano2021",
+        "hilton2022",
+        "mccallig2024",
+        "mehr2019",
+        "nguyen2023",
+        "oz2025",
+        "parga2018",
+        "vanderheijden2016",
+        "wang2025"
+      ],
+      "version": 1,
+      "stage": "draft",
+      "tags": [
+        "bedtime",
+        "major",
+        "melodic",
+        "harp"
+      ],
+      "variantOf": null,
+      "verified": null,
+      "fingerprint": "a6fd4a70abc9"
     }
   ]
 }
