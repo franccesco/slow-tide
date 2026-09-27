@@ -1,0 +1,48 @@
+{
+  "id": "night-harp",
+  "title": "Night Harp",
+  "subtitle": "a harp and flute lullaby in B major",
+  "bpm": 56,
+  "key": "B major",
+  "bars": 64,
+  "passSeconds": 274,
+  "added": "2026-09-27",
+  "status": "compliant",
+  "version": 1,
+  "stage": "draft",
+  "tags": [
+    "bedtime",
+    "major",
+    "melodic",
+    "harp"
+  ],
+  "changelog": [
+    {
+      "version": 1,
+      "date": "2026-09-27",
+      "note": "first version"
+    }
+  ],
+  "layers": [
+    "pad",
+    "harp",
+    "melody"
+  ],
+  "research": [
+    "bainbridge2021",
+    "baradel2026",
+    "basner2018",
+    "bruder2025",
+    "cirelli2020",
+    "giordano2021",
+    "hilton2022",
+    "mccallig2024",
+    "mehr2019",
+    "nguyen2023",
+    "oz2025",
+    "parga2018",
+    "vanderheijden2016",
+    "wang2025"
+  ],
+  "exceptions": []
+}
