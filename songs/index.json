@@ -116,6 +116,48 @@
   },
   "songs": [
     {
+      "id": "night-harp",
+      "title": "Night Harp",
+      "subtitle": "a harp and flute lullaby in B major",
+      "bpm": 56,
+      "key": "B major",
+      "bars": 64,
+      "passSeconds": 274,
+      "added": "2026-09-27",
+      "status": "compliant",
+      "exceptions": [],
+      "research": [
+        "bainbridge2021",
+        "baradel2026",
+        "basner2018",
+        "bruder2025",
+        "cirelli2020",
+        "giordano2021",
+        "hilton2022",
+        "mccallig2024",
+        "mehr2019",
+        "nguyen2023",
+        "oz2025",
+        "parga2018",
+        "vanderheijden2016",
+        "wang2025"
+      ],
+      "version": 1,
+      "stage": "built",
+      "tags": [
+        "bedtime",
+        "major",
+        "melodic",
+        "harp"
+      ],
+      "variantOf": null,
+      "verified": {
+        "version": 1,
+        "scan": "2026-09-27"
+      },
+      "fingerprint": "a6fd4a70abc9"
+    },
+    {
       "id": "first-light",
       "title": "First Light",
       "subtitle": "a slow lullaby in C major",
@@ -200,45 +242,6 @@
         "scan": "2026-09-20"
       },
       "fingerprint": "a27aa6aa39bb"
-    },
-    {
-      "id": "night-harp",
-      "title": "Night Harp",
-      "subtitle": "a harp and flute lullaby in B major",
-      "bpm": 56,
-      "key": "B major",
-      "bars": 64,
-      "passSeconds": 274,
-      "added": "2026-09-27",
-      "status": "compliant",
-      "exceptions": [],
-      "research": [
-        "bainbridge2021",
-        "baradel2026",
-        "basner2018",
-        "bruder2025",
-        "cirelli2020",
-        "giordano2021",
-        "hilton2022",
-        "mccallig2024",
-        "mehr2019",
-        "nguyen2023",
-        "oz2025",
-        "parga2018",
-        "vanderheijden2016",
-        "wang2025"
-      ],
-      "version": 1,
-      "stage": "draft",
-      "tags": [
-        "bedtime",
-        "major",
-        "melodic",
-        "harp"
-      ],
-      "variantOf": null,
-      "verified": null,
-      "fingerprint": "a6fd4a70abc9"
     }
   ]
 }

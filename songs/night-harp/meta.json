@@ -9,7 +9,11 @@
   "added": "2026-09-27",
   "status": "compliant",
   "version": 1,
-  "stage": "draft",
+  "stage": "built",
+  "verified": {
+    "version": 1,
+    "scan": "2026-09-27"
+  },
   "tags": [
     "bedtime",
     "major",
