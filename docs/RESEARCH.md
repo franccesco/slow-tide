@@ -196,6 +196,72 @@ Open access: https://pmc.ncbi.nlm.nih.gov/articles/PMC5015899/ (CC BY; full text
 - **What it does not show:** sleep at home, term infants, or which musical
   parameter mattered.
 
+### `[giordano2021]` The effect of music on aEEG cyclicity in preterm neonates — grade A
+Giordano V, Goeral K, Schrage-Leitner L, Berger A, Olischar M. *Children*
+8(3), 208 (2021). https://doi.org/10.3390/children8030208
+Open access: https://pmc.ncbi.nlm.nih.gov/articles/PMC8000223/ (CC BY; full text read 2026-09-27)
+
+- Randomised trial, 64 very preterm infants (born before 32 weeks) in two
+  Vienna NICUs, three arms: live music therapy (21), recorded music (23)
+  and control (20); five were excluded for poor traces.
+- Live arm: a music therapist touched the infant, then whispered and
+  hummed, adapting the melody to the infant's breathing and expression,
+  and added "a children's harp (pentatonic tuning)". Recorded arm:
+  "Brahms' Lullaby" from an album arranged for preterm infants, played
+  from speakers 30 cm from the head with the in-ear level checked. Both
+  lasted **20 min** and began after the first quiet-sleep phase on
+  amplitude-integrated EEG.
+- The second quiet-sleep epoch was **longer in both music groups** than
+  in controls (p = 0.004), and its total cyclicity score (change from
+  baseline, quality and duration of the epoch) was higher (live vs
+  control p = 0.003, recorded vs control p = 0.006); both music groups
+  improved from the first to the second quiet-sleep epoch, the controls
+  did not. Heart rate and oxygen saturation did not differ significantly.
+- **What it supports:** humming with a pentatonic harp, or a recorded
+  instrumental lullaby, was followed by longer, better-defined quiet
+  sleep, one of the few infant trials with a sleep measure; the recorded
+  piece did about as well as the live one. A pentatonic harp is an
+  instrument with trial evidence behind it.
+- **What it does not show:** term infants at home; which element (harp,
+  humming, tune) did the work; tempo or level in numbers; falling asleep,
+  as opposed to the structure of sleep already under way. Small, single
+  centre.
+
+### `[baradel2026]` The origins of embodiment: behavioral and cardiovascular responses to music in very preterm newborns — grade A/B
+Baradel G, Lavezzo L, Menin D, Sa de Almeida J, Scilingo EP, Nardelli M,
+Hüppi P, Dondi M, Barcos-Munoz F, Filippa M. *Scientific Reports* 16,
+27645 (2026). https://doi.org/10.1038/s41598-026-46395-z
+Open access: https://pmc.ncbi.nlm.nih.gov/articles/PMC13538528/ (CC BY-NC-ND; full text read 2026-09-27)
+
+- 23 very preterm infants (born before 32 weeks) in Geneva, randomly
+  assigned: 12 heard a piece composed for the NICU about twice a day from
+  33–34 weeks until discharge, 11 wore headphones without music. At about
+  34.5 weeks each was recorded through 6 min of silence, 6 min of the
+  music (or silence) and 6 min of silence; behaviour was coded frame by
+  frame and ECG and respiration recorded.
+- The piece: 6 min in **B major**, built on "a harmonic base of human
+  vocal sounds, occasionally enhanced by the addition of harp, punji, and
+  bells"; the harp "adds a gentle texture", the punji (an Indian wind
+  instrument) "carries the primary melodic line" and the bells give
+  "subtle rhythmic accents". Level: 30 dBA for the background to **65 dBA
+  at the bell peaks**, kept at least 10 dB above the room.
+- In the music group, distress and eye blinking fell from the silent
+  baseline to the music and stayed lower afterwards, a pattern the
+  controls did not show; parasympathetic indices (HF power, RMSSD) rose
+  after the music in the music group only. Self-soothing hand movements
+  were already lower in the music group at baseline.
+- The authors attribute part of this to **familiarity**: these infants
+  had heard the same piece many times, and they cite an earlier study in
+  which preterm infants hearing a novel piece showed a fall in HF power,
+  read as heightened attention rather than calm.
+- **What it supports:** the instrumentation of a piece used with preterm
+  infants (a sustained voice-like base, a harp texture, one wind voice on
+  the melody); keeping a piece the same every time so it becomes
+  familiar; leaving out the element (bells) that made that piece's peaks.
+- **What it does not show:** sleep; which instrument mattered; whether
+  music, rather than any repeated sound, did it (the authors say so; the
+  controls heard nothing before or during the test); groups of 12 and 11.
+
 ### `[parga2018]` A description of externally recorded womb sounds in human subjects during gestation — grade B
 Parga JJ, Daland R, Kesavan K, Macey PM, Zeltzer L, Harper RM. *PLoS ONE*
 13(5), e0197045 (2018). https://doi.org/10.1371/journal.pone.0197045
@@ -344,7 +410,9 @@ Open access: https://www.itu.int/dms_pubrec/itu-r/rec/bs/R-REC-BS.1770-5-202311-
 - **Recorded vs live.** NICU evidence favours live, entrained music. A web
   page cannot entrain. Rules approximate this by pinning tempo near resting
   infant respiration/heartbeat sub-multiples and by keeping everything
-  steady.
+  steady. One aEEG trial found a recorded lullaby lengthened quiet sleep
+  about as much as live humming with a harp `[giordano2021]`, so the gap
+  may be smaller for sleep than for other outcomes.
 
 ## How to add an entry
 
