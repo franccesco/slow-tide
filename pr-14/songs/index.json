@@ -57,6 +57,20 @@
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5015899/",
       "openAccess": true
     },
+    "giordano2021": {
+      "title": "The effect of music on aEEG cyclicity in preterm neonates",
+      "grade": "A",
+      "doi": "https://doi.org/10.3390/children8030208",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8000223/",
+      "openAccess": true
+    },
+    "baradel2026": {
+      "title": "The origins of embodiment: behavioral and cardiovascular responses to music in very preterm newborns",
+      "grade": "A/B",
+      "doi": "https://doi.org/10.1038/s41598-026-46395-z",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13538528/",
+      "openAccess": true
+    },
     "parga2018": {
       "title": "A description of externally recorded womb sounds in human subjects during gestation",
       "grade": "B",
@@ -97,20 +111,6 @@
       "grade": "C",
       "doi": "https://doi.org/10.3390/ijerph15030519",
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5877064/",
-      "openAccess": true
-    },
-    "giordano2021": {
-      "title": "The effect of music on aEEG cyclicity in preterm neonates",
-      "grade": "A",
-      "doi": "https://doi.org/10.3390/children8030208",
-      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8000223/",
-      "openAccess": true
-    },
-    "baradel2026": {
-      "title": "The origins of embodiment: behavioral and cardiovascular responses to music in very preterm newborns",
-      "grade": "A/B",
-      "doi": "https://doi.org/10.1038/s41598-026-46395-z",
-      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13538528/",
       "openAccess": true
     }
   },
