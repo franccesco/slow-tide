@@ -244,6 +244,23 @@ function analyze({ sr, offset, L, R }, { barSec, sections, totalBars, swellBars 
     }
   }
   const songEnd = totalBars * barSec;
+  // A click the step test misses: a kink in the waveform (second difference) far above
+  // its 50 ms neighbourhood, landing on a 128-frame render quantum, which is where the
+  // audio graph changes (a reverb rebuilt, a node swapped). The first two quanta of each
+  // 4096-frame capture block are skipped: the recording shows kinks there that the song
+  // does not have (they never fall anywhere else in the block).
+  for (let s = 2; s + hop <= n; s += hop) {
+    let sum = 0, mx = 0, at = -1;
+    for (let i = s; i < s + hop; i++) {
+      const d = Math.max(Math.abs(L[i] - 2 * L[i - 1] + L[i - 2]), Math.abs(R[i] - 2 * R[i - 1] + R[i - 2]));
+      sum += d * d;
+      if (d > mx) { mx = d; at = i; }
+    }
+    if (mx > 1e-3 && mx > 12 * Math.sqrt(sum / hop) && at % 128 <= 1 && at % 4096 > 257) {
+      clicks.push({ t: at / sr + offset, bar: barOf(at / sr + offset), step: mx });
+    }
+  }
+  clicks.sort((a, b) => a.t - b.t);
 
   // ---- ITU-R BS.1770 loudness: K-weighting, then mean square per block
   const biquad = (b0, b1, b2, a0, a1, a2) => {

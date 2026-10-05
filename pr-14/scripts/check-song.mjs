@@ -274,6 +274,32 @@ for (const id of ids) {
     else if (padGain === undefined) warn('R11', 'no "pad" layer with a numeric gain to compare the bed against; check by ear that the bed sits under the music');
   }
 
+  // ---- R17: one reverb shape per orbit. Strudel keeps a single reverb per orbit and
+  // rebuilds its impulse response whenever a note asks for a different size, fade, lp or
+  // dim (an unset one keeps the last); the buffer swap cuts the reverb tail with a click.
+  const REVERB_SHAPE = { roomsize: ['roomsize', 'size', 'sz', 'rsize'], roomfade: ['roomfade', 'rfade'], roomlp: ['roomlp', 'rlp'], roomdim: ['roomdim', 'rdim'] };
+  const reverbs = new Map();   // "orbit/param" → Map(value → [layer names])
+  for (const l of sounding) {
+    const room = last(l, 'room');
+    if (!room || (isPlainNumber(room.args) && +room.args <= 0)) continue;
+    const o = last(l, 'orbit'), orbit = o ? o.args.trim() : '1';
+    for (const [param, names] of Object.entries(REVERB_SHAPE)) {
+      const c = l.chain.filter((x) => names.includes(x.method)).at(-1);
+      if (!c) continue;
+      if (!isPlainNumber(c.args)) { fail('R17', `layer "${l.name}": ${c.method}(${c.args}) changes from note to note, and every change rebuilds the reverb with a click; use one number`); continue; }
+      const key = orbit + '/' + param;
+      if (!reverbs.has(key)) reverbs.set(key, new Map());
+      const byValue = reverbs.get(key), v = String(+c.args);
+      byValue.set(v, [...(byValue.get(v) || []), l.name]);
+    }
+  }
+  for (const [key, byValue] of reverbs) {
+    if (byValue.size < 2) continue;
+    const [orbit, param] = key.split('/');
+    const list = [...byValue].map(([v, ls]) => `${v} (${ls.join(', ')})`).join(' vs ');
+    fail('R17', `orbit ${orbit}: layers set ${param} to ${list}; strudel rebuilds its one reverb on every change and the swap clicks. Give them one ${param}, or a layer its own .orbit()`);
+  }
+
   // ---- R2: density, per layer, from the mini-notation
   const events = new Map();
   for (const l of sounding) {

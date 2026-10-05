@@ -24,6 +24,11 @@ setcpm(56 / 4)   // R1: 56 bpm, one cycle is one bar of four beats
 // pentatonic scale, the tuning of a children's harp. It has no semitones,
 // so the harp's ringing tails never rub against the next chord.
 // Above the bass, one voice moves by a step at each change.
+//
+// Every layer shares one reverb, roomsize(6). Strudel keeps a single
+// reverb and rebuilds it whenever a note asks for a different size; the
+// swap cuts the reverb tail with a click (R17), which version 1, with three
+// sizes, did about once a bar.
 const chords = "<[b2,f#3,b3,d#4] [g#2,g#3,b3,d#4] [c#3,g#3,b3,c#4] [f#2,f#3,b3,c#4]>"
 
 // ----------------------------------------------------------------
@@ -37,7 +42,7 @@ const pad = note(chords)
   .lpf(sine.slow(37).range(560, 900))                  // R7: cutoff well under 2.5 kHz
   .lpq(0.7)                                            // R7: no resonant peak
   .vib(4.2).vibmod(0.05)
-  .room(0.8).roomsize(7)
+  .room(0.8).roomsize(6)                               // R17: one room size for every layer
   .gain(0.2)
 
 // The first and last sections carry the pad on a slow ramp, so the piece
@@ -57,7 +62,7 @@ const harp = note("<[b2 f#3 d#4 ~] [g#2 d#3 b3 ~] [c#3 g#3 b3 ~] [f#2 c#3 b3 ~]>
   .lpf(1300)                                          // R7, R9
   .lpq(0.5)
   .pan(0.42)
-  .room(0.6).roomsize(5)
+  .room(0.6).roomsize(6)                              // R17: the same room size as the pad
   .gain(0.3)
 
 // ----------------------------------------------------------------
@@ -74,7 +79,7 @@ const melody = note("<d#5 [c#5 b4] c#5 ~ b4 g#4 f#4 ~ [f#4 g#4] b4 c#5 ~ [c#5 d#
   .vib(4.8).vibmod(0.1)
   .lpf(2000)                                          // R7
   .pan(0.58)
-  .room(0.65).roomsize(6)
+  .room(0.65).roomsize(6)                             // R17: the same room size as the pad
   .gain(0.34)
 
 // ----------------------------------------------------------------
