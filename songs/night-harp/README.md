@@ -61,9 +61,10 @@ Keys no earlier song cites (R23), both found in a fresh Europe PMC search
 | 2026-09-27 | `node scripts/scan.mjs night-harp` at `.postgain(1.4)` (headless Chromium, 44.1 kHz; R9, R12, R17, R18) | peak -10.3 dBFS · -23.1 LUFS integrated · 0 clips · 0 clicks · 0 gaps · inner sections -25.2 to -24.1 dB RMS (1.1 dB spread) · largest in-section swell 1.6 LU · 100% below 2 kHz · >5 kHz sustained 0% |
 | 2026-09-27 | the loop seam (bar 64 into bar 1), from the recording, which runs 4 s past the pass | the fade-out's last bar sits near −42 dB RMS and the next pass opens near −48 dB, with no click or gap between them; a listen by ear is still owed before merge |
 | 2026-10-05 | a listen on headphones (version 1) | clicks about once a bar, each cutting the reverb tail, so the tune seemed to change abruptly |
-| 2026-10-05 | the version 1 recording, re-read with the scan's new kink test (R17) | 78 clicks, all on 128-frame render quanta, none in the pad-only first section: the reverb rebuilt each time a note with another `roomsize` (7 pad, 5 harp, 6 melody) followed |
+| 2026-10-05 | the version 1 recording, re-read with the scan's new kink test (R17) | 59 clicks, all on 128-frame render quanta and in both channels, none in the pad-only first section: the reverb rebuilt each time a note with another `roomsize` (7 pad, 5 harp, 6 melody) followed |
 | 2026-10-05 | `node scripts/check-song.mjs` (version 2, every layer `roomsize(6)`) | PASS; version 1 now fails it on R17 (three reverb sizes on one orbit) |
-| 2026-10-05 | `node scripts/scan.mjs night-harp` (version 2) | peak -9.5 dBFS · -22.3 LUFS integrated · 0 clips · 0 clicks · 0 gaps · inner sections -24.6 to -23.2 dB RMS (1.4 dB spread) · largest in-section swell 1.0 LU · 100% below 2 kHz · >5 kHz sustained 0% |
+| 2026-10-05 | `node scripts/scan.mjs night-harp` (version 2), three runs | 0 clicks in both channels on every run. One run also showed a single 0.34 jump in bar 29 that the other two did not, and kinks in one channel that moved from run to run (First Light has them too); both come from the headless recording, not the song. The scan now skips one-channel kinks |
+| 2026-10-05 | `node scripts/scan.mjs night-harp` (version 2), the run logged | peak -9.5 dBFS · -22.3 LUFS integrated · 0 clips · 0 clicks · 0 gaps · inner sections -24.6 to -23.2 dB RMS (1.4 dB spread) · largest in-section swell 1.0 LU · 100% below 2 kHz · >5 kHz sustained 0% |
 
 ## Ideas not taken, and why
 

@@ -246,18 +246,23 @@ function analyze({ sr, offset, L, R }, { barSec, sections, totalBars, swellBars 
   const songEnd = totalBars * barSec;
   // A click the step test misses: a kink in the waveform (second difference) far above
   // its 50 ms neighbourhood, landing on a 128-frame render quantum, which is where the
-  // audio graph changes (a reverb rebuilt, a node swapped). The first two quanta of each
-  // 4096-frame capture block are skipped: the recording shows kinks there that the song
-  // does not have (they never fall anywhere else in the block).
-  for (let s = 2; s + hop <= n; s += hop) {
+  // audio graph changes (a reverb rebuilt, a node swapped). It must show in both channels
+  // at once, as a rebuilt reverb does. The recording itself adds kinks the song does not
+  // have, in one channel only and in a different place on every run, and in the first two
+  // quanta of each 4096-frame capture block; those are skipped.
+  const kink = (X, s) => {
     let sum = 0, mx = 0, at = -1;
     for (let i = s; i < s + hop; i++) {
-      const d = Math.max(Math.abs(L[i] - 2 * L[i - 1] + L[i - 2]), Math.abs(R[i] - 2 * R[i - 1] + R[i - 2]));
+      const d = Math.abs(X[i] - 2 * X[i - 1] + X[i - 2]);
       sum += d * d;
       if (d > mx) { mx = d; at = i; }
     }
-    if (mx > 1e-3 && mx > 12 * Math.sqrt(sum / hop) && at % 128 <= 1 && at % 4096 > 257) {
-      clicks.push({ t: at / sr + offset, bar: barOf(at / sr + offset), step: mx });
+    return mx > 1e-3 && mx > 12 * Math.sqrt(sum / hop) && at % 128 <= 1 && at % 4096 > 257 ? { at, mx } : null;
+  };
+  for (let s = 2; s + hop <= n; s += hop) {
+    const l = kink(L, s), r = kink(R, s);
+    if (l && r && Math.abs(l.at - r.at) <= 1) {
+      clicks.push({ t: l.at / sr + offset, bar: barOf(l.at / sr + offset), step: Math.max(l.mx, r.mx) });
     }
   }
   clicks.sort((a, b) => a.t - b.t);

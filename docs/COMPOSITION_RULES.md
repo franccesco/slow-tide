@@ -159,7 +159,8 @@ sleep trials favoured instrumental music `[wang2025]`. [A, C]
 (verified with `scripts/scan.mjs`, or `Lab.scan()` in the lab page console).** A click is a harsh onset (R8);
 a gap is an abrupt change (R12). *Scan:* a click is a jump of more than
 0.3 between samples, or a kink in the waveform far above its 50 ms
-surroundings on a 128-frame render quantum, where the audio graph changes.
+surroundings, in both channels at once, on a 128-frame render quantum,
+where the audio graph changes.
 *Checker:* layers that share an orbit set one `roomsize` (and one
 `roomfade`, `roomlp`, `roomdim`): strudel keeps one reverb per orbit and
 rebuilds it whenever a note asks for a different one, and the swap cuts
