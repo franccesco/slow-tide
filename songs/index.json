@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-27",
+  "generated": "2026-10-05",
   "sources": {
     "bainbridge2021": {
       "title": "Infants relax in response to unfamiliar foreign lullabies",
@@ -142,7 +142,7 @@
         "vanderheijden2016",
         "wang2025"
       ],
-      "version": 1,
+      "version": 2,
       "stage": "built",
       "tags": [
         "bedtime",
@@ -152,10 +152,10 @@
       ],
       "variantOf": null,
       "verified": {
-        "version": 1,
-        "scan": "2026-09-27"
+        "version": 2,
+        "scan": "2026-10-05"
       },
-      "fingerprint": "a6fd4a70abc9"
+      "fingerprint": "91186b6a4fb4"
     },
     {
       "id": "first-light",

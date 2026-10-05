@@ -11,8 +11,8 @@
   "version": 2,
   "stage": "built",
   "verified": {
-    "version": 1,
-    "scan": "2026-09-27"
+    "version": 2,
+    "scan": "2026-10-05"
   },
   "tags": [
     "bedtime",
@@ -29,7 +29,7 @@
     {
       "version": 2,
       "date": "2026-10-05",
-      "note": "one reverb size (6) for every layer: version 1's three sizes made strudel rebuild its reverb about once a bar, which clicked and cut the reverb tail (heard by Fran)"
+      "note": "one reverb size (6) for every layer: version 1's three sizes made strudel rebuild its reverb about once a bar, which clicked and cut the reverb tail (heard on headphones)"
     }
   ],
   "layers": [
