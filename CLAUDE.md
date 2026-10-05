@@ -106,7 +106,9 @@ It must print `PASS` for every song and for the site, and rewrite
 `songs/index.json`. Commit the regenerated index. Besides tempo, filters,
 form and citations, it reads every layer's mini-notation: density (R2),
 the `melody` layer's range, leaps and phrases (R4, R5, warns on R6),
-attacks per layer (R8) and the noise bed's gain and drift (R11). Name the
+attacks per layer (R8), the noise bed's gain and drift (R11) and that
+layers sharing a reverb share its size (R17: strudel rebuilds its reverb,
+with a click, whenever the size changes). Name the
 melody layer `melody` and write patterns as plain mini-notation strings
 (a layer the reader cannot follow is reported for review by hand).
 

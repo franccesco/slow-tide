@@ -1,0 +1,57 @@
+{
+  "id": "night-harp",
+  "title": "Night Harp",
+  "subtitle": "a harp and flute lullaby in B major",
+  "bpm": 56,
+  "key": "B major",
+  "bars": 64,
+  "passSeconds": 274,
+  "added": "2026-09-27",
+  "status": "compliant",
+  "version": 2,
+  "stage": "built",
+  "verified": {
+    "version": 2,
+    "scan": "2026-10-05"
+  },
+  "tags": [
+    "bedtime",
+    "major",
+    "melodic",
+    "harp"
+  ],
+  "changelog": [
+    {
+      "version": 1,
+      "date": "2026-09-27",
+      "note": "first version"
+    },
+    {
+      "version": 2,
+      "date": "2026-10-05",
+      "note": "one reverb size (6) for every layer: version 1's three sizes made strudel rebuild its reverb about once a bar, which clicked and cut the reverb tail (heard on headphones)"
+    }
+  ],
+  "layers": [
+    "pad",
+    "harp",
+    "melody"
+  ],
+  "research": [
+    "bainbridge2021",
+    "baradel2026",
+    "basner2018",
+    "bruder2025",
+    "cirelli2020",
+    "giordano2021",
+    "hilton2022",
+    "mccallig2024",
+    "mehr2019",
+    "nguyen2023",
+    "oz2025",
+    "parga2018",
+    "vanderheijden2016",
+    "wang2025"
+  ],
+  "exceptions": []
+}
