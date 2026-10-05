@@ -157,7 +157,13 @@ sleep trials favoured instrumental music `[wang2025]`. [A, C]
 
 **R17 (MUST) Master peak ≤ −3 dBFS, no clipping, no clicks, no gaps
 (verified with `scripts/scan.mjs`, or `Lab.scan()` in the lab page console).** A click is a harsh onset (R8);
-a gap is an abrupt change (R12).
+a gap is an abrupt change (R12). *Scan:* a click is a jump of more than
+0.3 between samples, or a kink in the waveform far above its 50 ms
+surroundings on a 128-frame render quantum, where the audio graph changes.
+*Checker:* layers that share an orbit set one `roomsize` (and one
+`roomfade`, `roomlp`, `roomdim`): strudel keeps one reverb per orbit and
+rebuilds it whenever a note asks for a different one, and the swap cuts
+the reverb tail with a click.
 
 **R18 (MUST) Songs are level-matched: integrated loudness −23 ± 2 LUFS.**
 A parent sets the volume once; a louder song must not surprise them.
@@ -267,7 +273,7 @@ the rules only improve (step 2 in CLAUDE.md) when something new is read.
 | R14 | fade in | ≥ 8 bars; last section matches the first | checker |
 | R15 | timer | pass 3–6 min (warns); site timer 30 min, 60 s fade | checker |
 | R16 | instrumental | no vocal samples | checker |
-| R17 | peak | ≤ −3 dBFS, 0 clips, 0 clicks, 0 gaps | scan |
+| R17 | peak, clicks | ≤ −3 dBFS, 0 clips, 0 clicks, 0 gaps; one reverb shape per orbit | scan; checker (reverb) |
 | R18 | level | integrated loudness −23 ± 2 LUFS | scan |
 | R19 | guidance | `id="safety"` notice with distance, 50 dB, sleep timer on the player page | checker |
 | R20 | provenance | README maps every MUST rule; every key exists in RESEARCH.md | checker |
